@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_material"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activity.home.HomeActivity"
+    tools:showIn="@layout/app_bar_home">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <com.bookservice.utils.view.BsTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center|start"
+            android:padding="10dp"
+            android:text="Best Deals"
+            android:textColor="@color/grey_33"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/navigation_line" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_best_deals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.bookservice.utils.view.BsTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center|start"
+            android:padding="10dp"
+            android:text="Categories"
+            android:textColor="@color/grey_33"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/navigation_line" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.bookservice.utils.view.BsTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center|start"
+            android:padding="10dp"
+            android:text="Discounts for you"
+            android:textColor="@color/grey_33"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/navigation_line" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_discounts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
+

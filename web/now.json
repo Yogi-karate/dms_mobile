@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "bas-biolerplate",
+  "builds": [
+    { "src": "next.config.js", "use": "@now/next" },
+    { "src": "server/api/*.js", "use": "@now/node" }
+  ]
+}

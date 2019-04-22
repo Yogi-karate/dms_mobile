@@ -1,0 +1,20 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./nginx
+    links:
+        - node1:node1
+    ports:
+        - "49160:80"
+  node1:
+    build:
+      context: ./web
+    links:
+        - redis
+    ports:
+        - "8000"
+  redis:
+    image: redis:4-alpine
+    ports:
+        - "6379"

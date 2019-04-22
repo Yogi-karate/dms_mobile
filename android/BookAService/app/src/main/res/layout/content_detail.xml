@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activity.offer.OfferDetailActivity"
+    tools:showIn="@layout/activity_detail">
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/book_offer"
+        android:layout_marginBottom="0dp"
+        android:background="@color/light_grey">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/snow"
+                android:elevation="5dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.bookservice.utils.view.BsTextViewMedium
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Offer"
+                        android:textColor="@color/grey_33"
+                        android:textSize="18sp"
+                        android:layout_weight="0.8"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/share"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.1"
+                        android:tint="@color/rust"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_share"/>
+                </LinearLayout>
+
+
+
+                    <View
+                        android:id="@+id/navigation_header_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/navigation_line" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_View"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/d7_grey"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:padding="15dp"
+                            android:src="@drawable/ic_add_service" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.8"
+                            android:gravity="center|start"
+                            android:text="Like to add more offers!"
+                            android:textColor="@color/grey_33"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:padding="15dp"
+                            android:src="@drawable/ic_arrow_right" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/snow"
+                android:elevation="5dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <com.bookservice.utils.view.BsTextViewMedium
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0.8"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Customer"
+                            android:textColor="@color/grey_33"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:id="@+id/edit_customer"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0.2"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Edit"
+                            android:textColor="@color/rust"
+                            android:textSize="16sp" />
+
+                        <!--<ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0.1"
+                            android:padding="10dp"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_edit" />-->
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/navigation_line" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:gravity="center|start"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="Nikhil Vivaan"
+                            android:textColor="@color/grey"
+                            android:textSize="16sp" />
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dp"
+                            android:background="@color/ice"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="Self"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <com.bookservice.utils.view.BsTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="nikhil@gmail.com"
+                        android:textColor="@color/grey"
+                        android:textSize="16sp" />
+
+                    <com.bookservice.utils.view.BsTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="9739797397"
+                        android:textColor="@color/grey"
+                        android:textSize="16sp" />
+
+                    <!--<com.dealermanagamentsystem.utils.view.BsButton
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_margin="5dp"
+                        android:text="Change"
+                        android:background="@drawable/button_bg_border"
+                        android:textColor="@color/mt_gray3" />-->
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/snow"
+                android:elevation="5dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.bookservice.utils.view.BsTextViewMedium
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0.8"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Vehicle"
+                            android:textColor="@color/grey_33"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:id="@+id/edit_vehicle"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0.2"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Edit"
+                            android:textColor="@color/rust"
+                            android:textSize="16sp" />
+
+                        <!--  <ImageView
+                              android:layout_width="0dp"
+                              android:layout_height="50dp"
+                              android:layout_weight="0.1"
+                              android:padding="10dp"
+                              android:src="@drawable/ic_edit" />-->
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/navigation_line" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:gravity="center|start"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="Hyundai"
+                            android:textColor="@color/grey"
+                            android:textSize="16sp" />
+
+                        <com.bookservice.utils.view.BsTextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dp"
+                            android:background="@color/ice"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="Self"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <com.bookservice.utils.view.BsTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Creta"
+                        android:textColor="@color/grey"
+                        android:textSize="16sp" />
+
+                    <com.bookservice.utils.view.BsTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="2018"
+                        android:textColor="@color/grey"
+                        android:textSize="16sp" />
+
+                    <!--  <com.dealermanagamentsystem.utils.view.BsButton
+                          android:layout_width="match_parent"
+                          android:layout_height="45dp"
+                          android:layout_margin="5dp"
+                          android:background="@color/rust"
+                          android:text="Change or Add Details"
+                          android:textColor="@color/ice" />-->
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/snow"
+                android:elevation="5dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <com.bookservice.utils.view.BsTextViewMedium
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Date of service"
+                        android:textColor="@color/grey_33"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                    <com.bookservice.utils.view.BsTextView
+                        android:id="@+id/select_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="SELECT DATE"
+                        android:textColor="@color/rust"
+                        android:textSize="16sp"
+
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/book_offer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/rust"
+        android:orientation="horizontal"
+        app:layout_anchor="@id/app_bar">
+
+        <com.bookservice.utils.view.BsTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9"
+            android:gravity="center"
+            android:text="BOOK OFFER"
+            android:textColor="@color/ice" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:background="@color/rustDarker"
+            android:padding="15dp"
+            android:src="@drawable/ic_arrow_right" />
+    </LinearLayout>
+</RelativeLayout>

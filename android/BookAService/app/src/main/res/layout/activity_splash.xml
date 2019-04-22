@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/drab"
+    android:orientation="vertical"
+    tools:context=".ui.activity.splash.SplashActivity">
+
+    <include layout="@layout/include_logo_bg">
+
+    </include>
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg"
+        android:gravity="top|center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:src="@drawable/ic_logo" />
+
+        <com.bookservice.utils.view.BsTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BOOK A SERVICE"
+            android:padding="10dp"
+            android:textSize="34sp"
+            android:textColor="@color/ice"
+            android:gravity="center"
+            android:textStyle="bold"/>
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.bookservice.utils.view.BsTextViewBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="35dp"
+                    android:paddingTop="30dp"
+                    android:text="Book a Service"
+                    android:textColor="@color/snow"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="35dp"
+                    android:background="@color/ice"
+                    android:text="Book a Service"
+                    android:textColor="@color/ice"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <com.bookservice.utils.view.BsTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="35dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="35dp"
+                    android:text="A one stop shop for your service needs with exciting packages"
+                    android:textColor="@color/snow"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/get_started"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/rust"
+                android:orientation="horizontal">
+
+                <com.bookservice.utils.view.BsTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="GET STARTED"
+                    android:textColor="@color/ice" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:background="@color/rustDarker"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
