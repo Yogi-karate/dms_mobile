@@ -15,7 +15,7 @@ const muserSchema = new Schema({
         required: true,
     },
     pin: {
-        type: Number,
+        type: String,
         required: true,
     },
     mobile: {

@@ -18,16 +18,54 @@ require('dotenv').config();
 const STATIC_HOST = process.env.STATIC_WEB_HOST;
 
 function auth_pass({ server }) {
-
+  passport.use(
+    'register',
+    new LocalStrategy(
+      {
+        usernameField: 'mobile',
+        passwordField: 'pin',
+        passReqToCallback: true,
+        session: false,
+      },
+      (req,mobile, pin,done) => {
+        console.log(req.body.username);
+        console.log(mobile);
+        console.log(pin);
+        console.log(done);
+        try {
+          User.findOne({
+            mobile: mobile
+          }).then((user) => {
+            if (user === null) {
+              bcrypt.hash(pin, BCRYPT_SALT_ROUNDS).then((hashedPin) => {
+                User.add({
+                  mobile,
+                  pin: hashedPin,
+                  name:req.body.username,
+                }).then((user) => {
+                  console.log('user created');
+                  return done(null, user);
+                });
+              });
+            } else {
+              return done(null, false, { message: 'Duplicate Mobile - Cannot register' });
+            }
+          });
+        } catch (err) {
+          return done(err);
+        }
+      },
+    ),
+  );
   passport.use(
     'login',
     new LocalStrategy(
       {
         usernameField: 'mobile',
-        passwordField: 'password',
+        passwordField: 'pin',
         session: false,
       },
-      (mobile, password, done) => {
+      (mobile, pin, done) => {
         try {
           console.log("Hello from passport login");
           console.log("mobile and pin : " + mobile + pin);
@@ -37,14 +75,20 @@ function auth_pass({ server }) {
             if (user === null) {
               return done(null, false, { message: 'bad username' });
             }
-            console.log("Trying to create Odoo Session");
-            oserver = odoo.getOdoo(user.username, user.password);
-            if (oserver === undefined) {
-              console.log('Odoo server connection issue');
-              return done(null, false, { message: 'cannot connect to DMS' });
-            }
-            console.log('user found & authenticated');
-            return done(null, user);
+            bcrypt.compare(pin, user.pin).then((response) => {
+              if (response !== true) {
+                console.log('passwords do not match');
+                return done(null, false, { message: 'passwords do not match' });
+              }
+              console.log("Trying to create Odoo Session");
+              oserver = odoo.getOdoo(user.username,user.password);
+              if( oserver === undefined){
+                console.log('Odoo server connection issue');
+                return done(null, false, { message: 'cannot connect to DMS' });
+              }
+              console.log('user found & authenticated');
+              return done(null, user);
+            });
           });
         } catch (err) {
           done(err);
@@ -87,9 +131,9 @@ function auth_pass({ server }) {
       if (info !== undefined) {
         console.error(info.message);
         if (info.message === 'bad username') {
-          res.status(401).send({ 'error': info.message });
+          res.status(401).send({'error':info.message});
         } else {
-          res.status(403).send({ 'error': info.message });
+          res.status(403).send({'error':info.message});
         }
       } else {
         const token = jwt.sign({ id: user.id }, jwtSecret.secret);
@@ -102,7 +146,29 @@ function auth_pass({ server }) {
       }
     })(req, res, next);
   });
-  
+  server.post('/register', (req, res, next) => {
+    console.log("Doing Registration");
+    passport.authenticate('register', (err, user, info) => {
+      console.log("HALOOOOO Reg");
+      if (err) {
+        console.error(`error ${err}`);
+      }
+      if (info !== undefined) {
+        console.error(info.message);
+        if (info.message === 'bad username') {
+          res.status(401).send(info.message);
+        } else {
+          res.status(403).send(info.message);
+        }
+      } else {
+        res.status(200).send({
+          auth: true,
+          message: 'user succesfully registered',
+        });
+        console.log("Successful Login");
+      }
+    })(req, res, next);
+  });
   server.post('/otp_verify', async (req, res, next) => {
     valid = OTP.validate({ token: req.body.token })
     if (!valid) {
