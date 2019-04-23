@@ -6,6 +6,7 @@ class Odoo_Server {
     constructor(host, port, database, admin_user, admin_password) {
         this.host = host;
         this.port = port;
+        this.database = database;
         this.admin_user = admin_user;
         this.admin_password = admin_password;
         this.connections = {};
@@ -14,11 +15,11 @@ class Odoo_Server {
     init() {
         console.log("Hello from server init");
         const odoo = new Odoo({
-            host: 'localhost',
-            port: 8069,
-            database: 'hyundai',
-            username: 'admin',
-            password: 'admin'
+            host: this.host,
+            port: this.port,
+            database: this.database,
+            username: this.admin_user,
+            password: this.admin_password
         });
         let self = this;
         odoo.connect(async function (err, result) {
@@ -63,7 +64,7 @@ class Odoo_Server {
         return this.connections[user];
     }
 }
-
-const server = new Odoo_Server('localhost', 8069, 'hyundai', 'admin', 'admin');
+const server = new Odoo_Server(process.env.Odoo_host,process.env.Odoo_port,process.env.Odoo_database,process.env.Odoo_user,process.env.Odoo_password);
+//const server = new Odoo_Server('localhost', 8069, 'hyundai', 'admin', 'admin');
 
 module.exports = server;
