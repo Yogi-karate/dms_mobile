@@ -29,8 +29,9 @@ function auth_pass({ server }) {
       },
       (mobile, password, done) => {
         try {
+          //console.log(req.body);
           console.log("Hello from passport login");
-          console.log("mobile and pin : " + mobile + pin);
+          console.log("mobile and password : " + mobile + password);
           User.findOne({
             mobile: mobile
           }).then((user) => {
@@ -38,15 +39,22 @@ function auth_pass({ server }) {
               return done(null, false, { message: 'bad username' });
             }
             console.log("Trying to create Odoo Session");
-            oserver = odoo.getOdoo(user.username, user.password);
-            if (oserver === undefined) {
-              console.log('Odoo server connection issue');
-              return done(null, false, { message: 'cannot connect to DMS' });
+            oserver = odoo.getOdoo(user.name, password);
+            console.log(oserver);
+            if(oserver.sid){
+              console.log("trying to logout");
+              oserver.logout();
             }
-            console.log('user found & authenticated');
-            return done(null, user);
+            oserver.connect(function (err, result) {
+              if (err) {
+                return done(null, false, { message: 'cannot connect to DMS' });
+              }
+              console.log('user found & authenticated');
+              return done(null, user);
+            });
           });
         } catch (err) {
+          console.log("Error o: ",err);
           done(err);
         }
       },
@@ -89,6 +97,7 @@ function auth_pass({ server }) {
         if (info.message === 'bad username') {
           res.status(401).send({ 'error': info.message });
         } else {
+          console.log("Message from passport : ",info.message);
           res.status(403).send({ 'error': info.message });
         }
       } else {
@@ -102,7 +111,11 @@ function auth_pass({ server }) {
       }
     })(req, res, next);
   });
-  
+  server.post('/logout', (req, res, next) => {
+    console.log("Doing logout");
+    req.logout();
+  });
+
   server.post('/otp_verify', async (req, res, next) => {
     valid = OTP.validate({ token: req.body.token })
     if (!valid) {

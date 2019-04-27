@@ -24,7 +24,6 @@ const sessionSecret = process.env.SESSION_SECRET;
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
-
 // Nextjs's server prepared
 app.prepare().then(() => {
   const server = express();

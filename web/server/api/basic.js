@@ -11,11 +11,9 @@ var odoo = new Odoo({
 // Connect to Odoo
 odoo.connect(function (err) {
   if (err) { return console.log(err); }
-
   // Get a partner
   odoo.get('sale.order', 1000, function (err, partner) {
     if (err) { return console.log(err); }
-
     console.log('Partner', partner);
   });
 });

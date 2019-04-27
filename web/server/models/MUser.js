@@ -46,7 +46,10 @@ class MUserClass {
         return { users };
     }
     static async add({ name, mobile, pin, address }) {
+        console.log(mobile);
+        console.log(name);
         if (mobile) {
+            
             const user = await this.findOne({ mobile });
             if (user) return user;
             const newUser = await this.create({

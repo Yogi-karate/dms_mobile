@@ -22,49 +22,63 @@ class Odoo_Server {
             password: this.admin_password
         });
         let self = this;
-        odoo.connect(async function (err, result) {
+        odoo.connect(function (err, result) {
             if (err) {
                 console.log("Error in connecting to Odoo");
             }
-            let val = await self.initDatabase(odoo);
-            console.log("Result:", result);
-            console.log("Result--------", val);
+            self.initDatabase(odoo);
+            console.log("Result:", odoo);
         });
         this.connections['admin'] = odoo;
     }
-    initDatabase(server) {
+    async initDatabase(server) {
         console.log("Database Check ...Hang on");
         console.log(server);
-        //let server = this.connections['admin'];
-        server.search_read("res.users", { domain: [], fields: ["login","phone","mobile"] }, function (err, users) {
-            if (err) { return console.log(err); }
-            //console.log('User', users);
-            let userList = users.records;
-            console.log("HOLAAAAAA");
-            console.log('User ...', userList[0]);
+        //create admin user in db if not exists
+        let adminUser = await User.findOne({ name:'admin' });
+        if (adminUser == null ){
+        let admin_user = await User.add({ name: 'admin', mobile: '1111111111', pin: "1234" });
+        console.log("Created Admin User",admin_user);
+        }
+        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile"] });
+        let userList = result.records;
+        console.log('User ...', result);
+        let count = 0;
+        this.users = {};
+        let self = this;
+        userList.forEach(async function (user) {
+            try {
+             //   console.log("The user in loop : ", user);
+                let mobile = user.phone;
+                let localUser = await User.findOne({ mobile: mobile });
+                if (localUser === null && mobile != null) {
+                    let new_user = await User.add({ name: user.login, mobile: mobile, pin: "1234" });
+                    self.users[mobile] = new_user;
+                  //  console.log(self.users);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         });
-
     }
     getOdoo(user, password) {
-        console.log(user);
-        console.log(password);
-        console.log(this.connections);
-        console.log(this.connections[user]);
         if (this.connections[user] === undefined) {
             console.log("Creating New Odoo Session");
-            this.connections[user] = new Odoo({
-                host: 'localhost',
-                port: 8069,
-                database: 'hyundai',
-                username: 'admin',
-                password: 'admin'
+            let odoo = new Odoo({
+                host: this.host,
+                port: this.port,
+                database: this.database,
+                username: user,
+                password: password
             });
+            this.connections[user] = odoo;
+            return odoo;
+        } else {
+            let server = this.connections[user];
+            server.password = password;
+            return server
         }
-        console.log(this.connections);
-        return this.connections[user];
     }
 }
-const server = new Odoo_Server(process.env.Odoo_host,process.env.Odoo_port,process.env.Odoo_database,process.env.Odoo_user,process.env.Odoo_password);
-//const server = new Odoo_Server('localhost', 8069, 'hyundai', 'admin', 'admin');
-
+const server = new Odoo_Server(process.env.Odoo_host, process.env.Odoo_port, process.env.Odoo_database, process.env.Odoo_user, process.env.Odoo_password);
 module.exports = server;
