@@ -105,8 +105,9 @@ router.post('/search/colors', async (req, res) => {
   try {
     let server = odoo.getOdoo(req.user.name);
     product_id = parseInt(req.body.product_id);
+    variant_value = req.body.variant;
     model = 'product.product';
-    let result = await server.search(model,{domain:[["product_tmpl_id","=",product_id]] });
+    let result = await server.search_read(model,{domain:[["product_tmpl_id","=",product_id],["variant_value","=",variant_value]],fields:["id","color_value"] });
     console.log(model + '', result);
     console.log(model + '...', result[0]);
     res.json(result);
