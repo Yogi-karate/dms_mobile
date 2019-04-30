@@ -118,7 +118,7 @@ router.post('/search/colors', async (req, res) => {
       console.log("the value_ids",value_ids);
     });
     model="product.attribute.value"
-    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","color"]], fields: ["id", "name"] });
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","color"]], fields: ["id", "display_name"] });
     res.json(result_1);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -140,7 +140,7 @@ router.post('/search/variants', async (req, res) => {
       console.log("the value_ids",value_ids);
     });
     model="product.attribute.value"
-    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","variant"]], fields: ["id", "name"] });
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","variant"]], fields: ["id", "display_name"] });
     res.json(result_1);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
