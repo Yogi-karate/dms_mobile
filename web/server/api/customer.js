@@ -103,7 +103,7 @@ router.post('/odoo/:model/:id', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.post('/search/products', async (req, res) => {
+router.get('/search/products', async (req, res) => {
   console.log(req.user);
   try {
     let server = odoo.getOdoo(req.user.name);
