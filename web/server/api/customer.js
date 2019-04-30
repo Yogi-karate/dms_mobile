@@ -103,6 +103,18 @@ router.post('/odoo/:model/:id', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.post('/search/products', async (req, res) => {
+  console.log(req.user);
+  try {
+    let server = odoo.getOdoo(req.user.name);
+    model = 'product.template';
+    let result = await server.search_read(model, { domain: [["categ_id.name", "=", "Vehicles"]],fields:["id","name"]});
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 router.post('/search/colors', async (req, res) => {
   console.log(req.user);
   try {
