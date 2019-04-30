@@ -16,13 +16,13 @@ router.use((req, res, next) => {
     if (info !== undefined) {
       console.log(req);
       console.log(info.message);
-      res.status(403).send({"error":info.message});
+      res.status(403).send({ "error": info.message });
       return;
     }
     console.log(odoo.users);
     console.log(user);
     req.user = user;
-    next(); 
+    next();
   })(req, res, next);
 });
 router.post('/odoo/:model', async (req, res) => {
@@ -34,7 +34,7 @@ router.post('/odoo/:model', async (req, res) => {
     server.create(model, req.body, function (err, order) {
       if (err) { return console.log(err); }
       console.log(model, order);
-      console.log(model+'...', order[0]);
+      console.log(model + '...', order[0]);
       res.json({ "id": order, "Message": "Success" });
     });
   } catch (err) {
@@ -89,12 +89,12 @@ router.post('/odoo/:model/:id', async (req, res) => {
     id = parseInt(req.params.id);
     model = req.params.model;
     // Get a partner
-    server.update(model, id, req.body,function (err, result) {
+    server.update(model, id, req.body, function (err, result) {
       if (err) { return console.log(err); }
       console.log(model, result);
       console.log(model, result[0]);
       let model_new = result[0];
-      res.json({"success":result});
+      res.json({ "success": result });
     });
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -105,24 +105,53 @@ router.post('/search/colors', async (req, res) => {
   try {
     let server = odoo.getOdoo(req.user.name);
     product_id = parseInt(req.body.product_id);
-    variant_value = req.body.variant;
+    variant_id = req.body.variant_id;
     model = 'product.product';
-    let result = await server.search_read(model,{domain:[["product_tmpl_id","=",product_id],["variant_value","=",variant_value]],fields:["id","color_value"] });
-    console.log(model + '', result);
-    console.log(model + '...', result[0]);
-    res.json(result);
+    let result = await server.search_read(model, { domain: [["product_tmpl_id", "=", product_id], ["attribute_value_ids", "in", variant_id]], fields: ["id", "attribute_value_ids"] });
+    let value_ids=[]
+    result['records'].forEach(product => {
+      attr_val_ids = product["attribute_value_ids"];
+      value_ids = _.union(attr_val_ids,value_ids);
+      console.log("the value_ids",value_ids);
+    });
+    model="product.attribute.value"
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","color"]], fields: ["id", "name"] });
+    res.json(result_1);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
 router.post('/search/variants', async (req, res) => {
+  console.log(req.user);
+  try {
+    let server = odoo.getOdoo(req.user.name);
+    product_id = parseInt(req.body.product_id);
+    model = 'product.product';
+    let result = await server.search_read(model, { domain: [["product_tmpl_id", "=", product_id]], fields: ["id", "attribute_value_ids"] });
+    console.log(model + '', result);
+    console.log(model + '...', result[0]);
+    let value_ids=[]
+    result['records'].forEach(product => {
+      attr_val_ids = product["attribute_value_ids"];
+      value_ids = _.union(attr_val_ids,value_ids);
+      console.log("the value_ids",value_ids);
+    });
+    model="product.attribute.value"
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","variant"]], fields: ["id", "name"] });
+    res.json(result_1);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/search/variants_old', async (req, res) => {
   console.log(req);
   try {
     let server = odoo.getOdoo(req.user.name);
     variant_ids = req.body.variant_ids;
     console.log(variant_ids);
     model = 'product.attribute.value';
-    let result = await server.search_read(model,{domain:[["id","in",variant_ids]],fields:["id","name"]});
+    let result = await server.search_read(model, { domain: [["id", "in", variant_ids]], fields: ["id", "name"] });
     console.log(model + '', result);
     console.log(model + '...', result[0]);
     res.json(result);
