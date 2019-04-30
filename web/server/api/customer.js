@@ -71,7 +71,10 @@ router.get('/odoo/:model/:id', async (req, res) => {
       if (model_new != null) {
         keys = Object.keys(model_new);
         keys.forEach(key => {
-          if (model_new[key] === false) {
+          if (Array.isArray(model_new[key]) && model_new[key].length == 0) {
+            console.log("Key of array type",key,model_new[key]);
+            model_new[key] = [];
+          } else if (model_new[key] === false) {
             model_new[key] = "";
           }
         });
