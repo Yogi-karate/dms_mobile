@@ -72,7 +72,7 @@ router.get('/odoo/:model/:id', async (req, res) => {
         keys = Object.keys(model_new);
         keys.forEach(key => {
           if (Array.isArray(model_new[key]) && model_new[key].length == 0) {
-            console.log("Key of array type",key,model_new[key]);
+            console.log("Key of array type", key, model_new[key]);
             model_new[key] = [];
           } else if (model_new[key] === false) {
             model_new[key] = "";
@@ -108,7 +108,7 @@ router.get('/search/products', async (req, res) => {
   try {
     let server = odoo.getOdoo(req.user.name);
     model = 'product.template';
-    let result = await server.search_read(model, { domain: [["categ_id.name", "=", "Vehicles"]],fields:["id","name"]});
+    let result = await server.search_read(model, { domain: [["categ_id.name", "=", "Vehicles"]], fields: ["id", "name"] });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -123,14 +123,14 @@ router.post('/search/colors', async (req, res) => {
     variant_id = req.body.variant_id;
     model = 'product.product';
     let result = await server.search_read(model, { domain: [["product_tmpl_id", "=", product_id], ["attribute_value_ids", "in", variant_id]], fields: ["id", "attribute_value_ids"] });
-    let value_ids=[]
+    let value_ids = []
     result['records'].forEach(product => {
       attr_val_ids = product["attribute_value_ids"];
-      value_ids = _.union(attr_val_ids,value_ids);
-      console.log("the value_ids",value_ids);
+      value_ids = _.union(attr_val_ids, value_ids);
+      console.log("the value_ids", value_ids);
     });
-    model="product.attribute.value"
-    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","color"]], fields: ["id", "display_name"] });
+    model = "product.attribute.value"
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids], ["attribute_id.name", "ilike", "color"]], fields: ["id", "display_name"] });
     res.json(result_1);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -145,20 +145,19 @@ router.post('/search/variants', async (req, res) => {
     let result = await server.search_read(model, { domain: [["product_tmpl_id", "=", product_id]], fields: ["id", "attribute_value_ids"] });
     console.log(model + '', result);
     console.log(model + '...', result[0]);
-    let value_ids=[]
+    let value_ids = []
     result['records'].forEach(product => {
       attr_val_ids = product["attribute_value_ids"];
-      value_ids = _.union(attr_val_ids,value_ids);
-      console.log("the value_ids",value_ids);
+      value_ids = _.union(attr_val_ids, value_ids);
+      console.log("the value_ids", value_ids);
     });
-    model="product.attribute.value"
-    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids],["attribute_id.name","ilike","variant"]], fields: ["id", "display_name"] });
+    model = "product.attribute.value"
+    let result_1 = await server.search_read(model, { domain: [["id", "in", value_ids], ["attribute_id.name", "ilike", "variant"]], fields: ["id", "display_name"] });
     res.json(result_1);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
-
 router.post('/search/variants_old', async (req, res) => {
   console.log(req);
   try {

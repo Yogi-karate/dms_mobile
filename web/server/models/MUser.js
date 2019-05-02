@@ -18,10 +18,16 @@ const muserSchema = new Schema({
         type: String,
         required: true,
     },
+    email: {
+        type: String,
+    },
     mobile: {
         type: String,
         required: true,
         unique: true,
+    },
+    partner_id: {
+        type: Number,
     },
     createdAt: {
         type: Date,
@@ -45,7 +51,7 @@ class MUserClass {
             .sort({ createdAt: -1 });
         return { users };
     }
-    static async add({ name, mobile, pin, address }) {
+    static async add({ name, email,mobile, partner_id,pin, address }) {
         console.log(mobile);
         console.log(name);
         if (mobile) {
@@ -55,7 +61,9 @@ class MUserClass {
             const newUser = await this.create({
                 createdAt: new Date(),
                 name,
+                email,
                 mobile,
+                partner_id,
                 pin,
                 address,
             });

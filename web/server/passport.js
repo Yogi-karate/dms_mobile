@@ -39,17 +39,20 @@ function auth_pass({ server }) {
               return done(null, false, { message: 'bad username' });
             }
             console.log("Trying to create Odoo Session");
-            oserver = odoo.getOdoo(user.name, password);
+            oserver = odoo.getOdoo(user.email, password);
             console.log(oserver);
             if(oserver.sid){
               console.log("trying to logout");
               oserver.logout();
             }
-            oserver.connect(function (err, result) {
+            oserver.connect(async function (err, result) {
               if (err) {
                 return done(null, false, { message: 'cannot connect to DMS' });
               }
               console.log('user found & authenticated');
+              model = 'res.partner';
+              let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
+              user.image = im_result.records[0].image;
               return done(null, user);
             });
           });
@@ -85,6 +88,20 @@ function auth_pass({ server }) {
     }),
   );
   server.use(passport.initialize());
+  server.get('/user/avatar/:id', async (req, res) => {
+    console.log(req);
+    try {
+      let server = odoo.getOdoo(req.user.name);
+      id = parseInt(req.params.id);
+      model = 'res.partner';
+      let result = await server.search_read(model, { domain: [["id", "=", id]], fields: ["id", "image"] });
+      console.log(model + '', result);
+      console.log(model + '...', result[0]);
+      res.json(result);
+    } catch (err) {
+      res.json({ error: err.message || err.toString() });
+    }
+  });
   server.post('/login', (req, res, next) => {
     console.log("Doing LOGIN");
     passport.authenticate('login', (err, user, info) => {
@@ -103,6 +120,9 @@ function auth_pass({ server }) {
       } else {
         const token = jwt.sign({ id: user.id }, jwtSecret.secret);
         res.status(200).send({
+          name:user.name,
+          email:user.email,
+          image:user.image,
           auth: true,
           token,
           message: 'user found & logged in',

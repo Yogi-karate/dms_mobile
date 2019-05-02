@@ -35,12 +35,12 @@ class Odoo_Server {
         console.log("Database Check ...Hang on");
         console.log(server);
         //create admin user in db if not exists
-        let adminUser = await User.findOne({ name:'admin' });
-        if (adminUser == null ){
-        let admin_user = await User.add({ name: 'admin', mobile: '1111111111', pin: "1234" });
-        console.log("Created Admin User",admin_user);
-        }
-        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile"] });
+        let adminUser = await User.findOne({ name: 'admin' });
+        // if (adminUser == null) {
+        //     let admin_user = await User.add({ email: 'admin', partner_id:3,name: 'admin', mobile: '1111111111', pin: "1234" });
+        //     console.log("Created Admin User", admin_user);
+        // } 
+        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
         let userList = result.records;
         console.log('User ...', result);
         let count = 0;
@@ -48,13 +48,19 @@ class Odoo_Server {
         let self = this;
         userList.forEach(async function (user) {
             try {
-             //   console.log("The user in loop : ", user);
+                //   console.log("The user in loop : ", user);
                 let mobile = user.phone;
+                console.log("The user from odoo -> ", user.login);
+                let name = user.partner_id[1];
+                let partner_id = user.partner_id[0];
+                if(user.login === "admin"){
+                    mobile='1111111111';
+                }
                 let localUser = await User.findOne({ mobile: mobile });
                 if (localUser === null && mobile != null) {
-                    let new_user = await User.add({ name: user.login, mobile: mobile, pin: "1234" });
+                    let new_user = await User.add({ name: name, partner_id:partner_id,email: user.login, mobile: mobile, pin: "1234" });
                     self.users[mobile] = new_user;
-                  //  console.log(self.users);
+                    //  console.log(self.users);
                 }
             } catch (error) {
                 console.log(error);
