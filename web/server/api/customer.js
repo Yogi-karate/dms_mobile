@@ -28,7 +28,7 @@ router.use((req, res, next) => {
 router.post('/odoo/:model', async (req, res) => {
   try {
     console.log(req.user);
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
     server.create(model, req.body, function (err, order) {
@@ -44,7 +44,7 @@ router.post('/odoo/:model', async (req, res) => {
 router.get('/odoo/:model', async (req, res) => {
   try {
     console.log("user list >>>>", odoo.users);
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
     let result = await server.search_read(model, { domain: [], fields: ["name", "id", "partner_name", "user_id", "team_id"], sort: "id desc" });
@@ -59,7 +59,7 @@ router.get('/odoo/:model/:id', async (req, res) => {
   console.log("Session : ", req.session);
   console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     id = parseInt(req.params.id);
     model = req.params.model;
     // Get a partner
@@ -88,7 +88,7 @@ router.get('/odoo/:model/:id', async (req, res) => {
 router.post('/odoo/:model/:id', async (req, res) => {
   console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     id = parseInt(req.params.id);
     model = req.params.model;
     // Get a partner
@@ -106,7 +106,7 @@ router.post('/odoo/:model/:id', async (req, res) => {
 router.get('/search/products', async (req, res) => {
   console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     model = 'product.template';
     let result = await server.search_read(model, { domain: [["categ_id.name", "=", "Vehicles"]], fields: ["id", "name"] });
     res.json(result);
@@ -118,7 +118,7 @@ router.get('/search/products', async (req, res) => {
 router.post('/search/colors', async (req, res) => {
   console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     product_id = parseInt(req.body.product_id);
     variant_id = req.body.variant_id;
     model = 'product.product';
@@ -139,7 +139,7 @@ router.post('/search/colors', async (req, res) => {
 router.post('/search/variants', async (req, res) => {
   console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     product_id = parseInt(req.body.product_id);
     model = 'product.product';
     let result = await server.search_read(model, { domain: [["product_tmpl_id", "=", product_id]], fields: ["id", "attribute_value_ids"] });
@@ -161,7 +161,7 @@ router.post('/search/variants', async (req, res) => {
 router.post('/search/variants_old', async (req, res) => {
   console.log(req);
   try {
-    let server = odoo.getOdoo(req.user.name);
+    let server = odoo.getOdoo(req.user.email);
     variant_ids = req.body.variant_ids;
     console.log(variant_ids);
     model = 'product.attribute.value';
