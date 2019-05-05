@@ -41,7 +41,7 @@ function auth_pass({ server }) {
             console.log("Trying to create Odoo Session");
             oserver = odoo.getOdoo(user.email, password);
             console.log(oserver);
-            if(oserver.sid){
+            if (oserver.sid) {
               console.log("trying to logout");
               oserver.logout();
             }
@@ -57,7 +57,7 @@ function auth_pass({ server }) {
             });
           });
         } catch (err) {
-          console.log("Error o: ",err);
+          console.log("Error o: ", err);
           done(err);
         }
       },
@@ -114,15 +114,19 @@ function auth_pass({ server }) {
         if (info.message === 'bad username') {
           res.status(401).send({ 'error': info.message });
         } else {
-          console.log("Message from passport : ",info.message);
+          console.log("Message from passport : ", info.message);
           res.status(403).send({ 'error': info.message });
         }
       } else {
         const token = jwt.sign({ id: user.id }, jwtSecret.secret);
+        if (user.image == false) {
+          console.log("No User Avatar Found !!!!");
+          user.image = "";
+        }
         res.status(200).send({
-          name:user.name,
-          email:user.email,
-          image:user.image,
+          name: user.name,
+          email: user.email,
+          image: user.image,
           auth: true,
           token,
           message: 'user found & logged in',
