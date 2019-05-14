@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/enquiry"
+            android:checked="true"
+            android:icon="@drawable/ic_enquiry"
+            android:title="Enquiry" />
+        <item
+            android:id="@+id/sub_enquiry"
+            android:icon="@drawable/ic_sub_enquiry"
+            android:title="Sub Enquiry" />
+        <item
+            android:id="@+id/sales_order"
+            android:icon="@drawable/ic_sale_order"
+            android:title="Sales Order" />
+        <item
+            android:id="@+id/follow_up"
+            android:icon="@drawable/ic_followup"
+            android:title="Follow Up" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
+    </group>
+
+
+</menu>

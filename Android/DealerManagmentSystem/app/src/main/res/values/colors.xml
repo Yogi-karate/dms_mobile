@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#C7C4E9</color>
+    <color name="colorPrimaryDark">#736CC7</color>
+    <color name="colorAccent">#736CC7</color>
+
+
+    <color name="bg">#F0F6FF</color>
+    <color name="textPrimary">#4d5a68</color>
+    <color name="textSecondary">#839bb3</color>
+    <color name="white">#FFFFFF</color>
+
+
+    <color name="purple">#C7C4E9</color>
+    <color name="purpleDark">#736CC7</color>
+    <color name="pink">#FBB6D3</color>
+    <color name="pinkDark">#F64A91</color>
+    <color name="blue">#AFD6FA</color>
+    <color name="blueDark">#399AF2</color>
+    <color name="green">#ABE5D9</color>
+    <color name="greenDark">#2FBFA0</color>
+
+    <color name="yellow">#FFCE67</color>
+    <color name="red">#FF5C75</color>
+
+    <color name="ice">#f0f3f4</color>
+    <color name="rust">#FF6926</color>
+    <color name="rustold">#D97D54</color>
+    <color name="drab">#324755</color>
+    <color name="sage">#87BCBF</color>
+
+    <color name="onyx">#1b1c20</color>
+    <color name="slate">#6e8ca0</color>
+    <color name="snow">#ffffff</color>
+
+
+    <color name="fossil">#c8d1d3</color>
+    <color name="sand">#b9b0a2</color>
+
+    <color name="rustDarker">#c55b2c</color>
+    <color name="black">#000000</color>
+
+</resources>
