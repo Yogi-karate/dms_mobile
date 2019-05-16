@@ -112,15 +112,19 @@ Odoo.prototype.delete = function (model, id, callback) {
 };
 
 // Search records
-Odoo.prototype.search = function (model, params, callback) {
-    this._request('/web/dataset/call_kw', {
+Odoo.prototype.search = async function (model, domain, count,callback) {
+    console.log(domain.domain);
+    let method_name='search';
+    if (count == true) method_name = 'search_count';
+    let result = await this.request('/web/dataset/call_kw', {
         kwargs: {
             context: this.context
         },
         model: model,
-        method: 'search',
-        args: [params]
+        method: method_name,
+        args: [domain.domain],
     }, callback);
+    return result;
 };
 
 // Search_read records
@@ -139,7 +143,21 @@ Odoo.prototype.search_read = async function (model, { domain = [], fields = [], 
     }, callback);
     return result;
 };
-
+// Added fields_get method
+Odoo.prototype.read_group = async function (model, { domain = [], fields = [], groupby = [] }, callback) {
+    let result = this.request('/web/dataset/call_kw/'+model+'/read_group', {
+        args: [],
+        kwargs: {
+            context: this.context,
+            domain: domain,
+            fields: fields,
+            groupby: groupby
+        },
+        model,
+        method: 'read_group',
+    }, callback);
+    return result
+};
 // Added fields_get method
 Odoo.prototype.fields_get = function (model, { fields = [], attributes = {} }, callback) {
     this._request('/web/dataset/call_kw', {
@@ -160,12 +178,12 @@ Odoo.prototype.logout = function (callback) {
             'Cookie': this.sid + ';'
         }
     };
-    this.request('/web/session/logout', {}, callback,options);
+    this.request('/web/session/logout', {}, callback, options);
     this.sid = null;
 };
 
 //new request function 
-Odoo.prototype.request = async function (path, params, callback,options) {
+Odoo.prototype.request = async function (path, params, callback, options) {
     params = params || {};
 
     options = options || {
@@ -178,7 +196,7 @@ Odoo.prototype.request = async function (path, params, callback,options) {
             'Cookie': this.sid + ';'
         }
     };
-    console.log("options in request",options);
+    console.log("options in request", options);
     let client = jayson.client.http(options);
     const { result, error } = await client.request('call', params);
     if (error != null) {

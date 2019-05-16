@@ -47,7 +47,7 @@ router.get('/odoo/:model', async (req, res) => {
     let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
-    let result = await server.search_read(model, { domain: [], fields: ["name", "id", "date_follow_up","date_deadline","partner_mobile","mobile","partner_name", "user_id", "team_id"], sort: "id desc" });
+    let result = await server.search_read(model, { domain: [], fields: ["name", "id", "date_follow_up","date_deadline","partner_mobile","mobile","partner_name", "user_id", "team_id","activity_state","stage_id"], sort: "id desc" });
     console.log(model + '', result);
     console.log(model + '...', result[0]);
     res.json(result);
