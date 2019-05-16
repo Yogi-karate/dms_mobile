@@ -34,7 +34,7 @@ class Lead {
                     break;
             }
             domain.push(["stage_id.name", "ilike", stage]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "activity_state", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline","enquiry_id", "mobile", "partner_name", "user_id", "team_id", "activity_state", "stage_id"] });
             console.log(model + '', result);
         } catch (err) {
             return { error: err.message || err.toString() };
