@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.enquiry.vehicledetail.VehicleDetailActivity"
+    tools:showIn="@layout/activity_vehicle_detail">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:orientation="vertical">
+
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|start"
+                        android:padding="15dp"
+                        android:text="Vehicle"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                    <Spinner
+                        android:id="@+id/sp_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_line_icon"
+                        android:hint="Product"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        />
+
+
+                    <Spinner
+                        android:id="@+id/sp_variant"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Variant"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_line_icon"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        />
+
+                    <Spinner
+                        android:id="@+id/sp_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_margin="5dp"
+                        android:hint="Variant"
+                        android:background="@drawable/border_line_icon"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        />
+
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <com.dealermanagmentsystem.utils.ui.DMSButton
+                android:id="@+id/save_vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_margin="16dp"
+                android:padding="10dp"
+                android:background="@drawable/btn_purple_rounded"
+                android:text="Save"
+                android:textSize="18sp"
+                android:drawableRight="@drawable/button_sigin_purple"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
