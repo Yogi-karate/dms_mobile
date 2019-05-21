@@ -77,12 +77,13 @@ Odoo.prototype.create = function (model, params, callback) {
 };
 
 // Get record
-Odoo.prototype.get = function (model, id, callback) {
-    this._request('/web/dataset/call', {
+Odoo.prototype.get = async function (model, id, callback) {
+    let result = await this.request('/web/dataset/call', {
         model: model,
         method: 'read',
         args: [id]
     }, callback);
+    return result;
 };
 
 // Update record
@@ -145,7 +146,7 @@ Odoo.prototype.search_read = async function (model, { domain = [], fields = [], 
 };
 // Added fields_get method
 Odoo.prototype.read_group = async function (model, { domain = [], fields = [], groupby = [] }, callback) {
-    let result = this.request('/web/dataset/call_kw/'+model+'/read_group', {
+    let result = await this.request('/web/dataset/call_kw/'+model+'/read_group', {
         args: [],
         kwargs: {
             context: this.context,
@@ -155,6 +156,19 @@ Odoo.prototype.read_group = async function (model, { domain = [], fields = [], g
         },
         model,
         method: 'read_group',
+    }, callback);
+    return result
+};
+// Added fields_get method
+Odoo.prototype.action_feedback = async function (model, { id,feedback}, callback) {
+    let result = await this.request('/web/dataset/call_kw/'+model+'/activity_feedback', {
+        args: [[id]],
+        kwargs: {
+            context: this.context,
+            feedback: feedback
+        },
+        model,
+        method: 'action_feedback',
     }, callback);
     return result
 };

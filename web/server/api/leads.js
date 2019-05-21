@@ -26,32 +26,44 @@ router.use((req, res, next) => {
     next();
   })(req, res, next);
 });
-router.get('/search_counts', async (req, res) => {
+router.get('/enquiry/:id', async (req, res) => {
   try {
-    let result = await lead.getCounts(req.user);
+    let result = await lead.getEnquiry(req.user,{id:req.params.id});
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+router.get('/dashboard', async (req, res) => {
+  try {
+    let result = await lead.getDashboardCounts(req.user);
+    console.log( "Result ->"+ '', result);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
 
-router.get('/counts', async (req, res) => {
+router.get('/search', async (req, res) => {
   try {
-    console.log("user list >>>>", odoo.users);
-    let server = odoo.getOdoo(req.user.email);
-    console.log("Server: ", server);
-    model = 'mail.activity';
-    let result = await server.read_group(model, { domain: [["res_model", "=", "crm.lead"]], fields: ["name", "id", "state"], groupby: ["state"] });
-    console.log(model + '', result);
-    console.log(model + '...', result[0]);
+    let result = await lead.searchLeadsByState(req.user, { state: req.query.state, stage: req.query.stage });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.get('/search', async (req, res) => {
+router.get('/activity/:id', async (req, res) => {
   try {
-    let result = await lead.searchLeadsByState(req.user, { state: req.query.state, stage: req.query.stage });
+    let result = await lead.getActivities(req.user, { id: req.params.id });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+router.get('/activity/complete/:id', async (req, res) => {
+  try {
+    let id = parseInt(req.params.id);
+    let result = await lead.setActivities(req.user, { id:id,feedback:"Hello World !!!" });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
