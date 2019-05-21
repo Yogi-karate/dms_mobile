@@ -60,10 +60,10 @@ router.get('/activity/:id', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.get('/activity/complete/:id', async (req, res) => {
+router.post('/activity/complete', async (req, res) => {
   try {
-    let id = parseInt(req.params.id);
-    let result = await lead.setActivities(req.user, { id:id,feedback:"Hello World !!!" });
+    let id = parseInt(req.body.id);
+    let result = await lead.setActivities(req.user, { id:id,feedback:req.body.feedback});
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

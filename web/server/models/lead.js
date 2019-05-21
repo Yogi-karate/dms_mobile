@@ -82,7 +82,7 @@ class Lead {
         } catch (err) {
             return { error: err.message || err.toString() };
         }
-        return result;
+        return base.cleanModel(result.records[0]);
     }
     async setActivities(user, { id,feedback }) {
         let result = null;
