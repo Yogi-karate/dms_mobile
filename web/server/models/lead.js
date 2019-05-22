@@ -86,6 +86,9 @@ class Lead {
             }
             let result = await server.create(model, req);
             console.log(model, result);
+            if(result == null){
+                throw new Error("Cannot create Activity");
+            }
             return { "id": result, "Message": "Success" };
         } catch (err) {
             return { error: err.message || err.toString() };
@@ -100,7 +103,7 @@ class Lead {
             let domain = [];
             domain.push(["res_model", "=", "crm.lead"]);
             domain.push(["res_id", "=", id]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id"] });
             console.log(model + '', result);
         } catch (err) {
             return { error: err.message || err.toString() };
