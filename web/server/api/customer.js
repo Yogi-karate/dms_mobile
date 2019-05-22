@@ -32,15 +32,13 @@ router.post('/odoo/:model', async (req, res) => {
     let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
-    server.create(model, req.body, function (err, order) {
-      if (err) { return console.log(err); }
-      console.log(model, order);
-      console.log(model + '...', order[0]);
-      res.json({ "id": order, "Message": "Success" });
-    });
+    let result = await server.create(model, req.body);
+    console.log(model, result);
+    console.log(model + '...', result[0]);
+    res.json({ "id": result, "Message": "Success" });
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
+  res.json({ error: err.message || err.toString() });
+}
 });
 router.get('/odoo/:model', async (req, res) => {
   try {

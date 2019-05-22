@@ -65,8 +65,8 @@ Odoo.prototype.connect = function (cb) {
 };
 
 // Create record
-Odoo.prototype.create = function (model, params, callback) {
-    this._request('/web/dataset/call_kw', {
+Odoo.prototype.create = async function (model, params, callback) {
+    let result = await this.request('/web/dataset/call_kw', {
         kwargs: {
             context: this.context
         },
@@ -74,6 +74,7 @@ Odoo.prototype.create = function (model, params, callback) {
         method: 'create',
         args: [params]
     }, callback);
+    return result;
 };
 
 // Get record
