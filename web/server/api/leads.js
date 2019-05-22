@@ -64,7 +64,7 @@ router.post('/activity/complete', async (req, res) => {
   try {
     let id = parseInt(req.body.id);
     let result = await lead.setActivities(req.user, { id:id,feedback:req.body.feedback});
-    res.json(result);
+    res.json({message:"success",id:result});
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
