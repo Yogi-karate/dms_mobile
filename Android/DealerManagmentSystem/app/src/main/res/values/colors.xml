@@ -11,6 +11,16 @@
     <color name="white">#FFFFFF</color>
 
 
+    <color name="chrome_green">#3cba54</color>
+    <color name="chrome_red">#db3236</color>
+    <color name="chrome_yellow">#f4c20d</color>
+    <color name="chrome_blue">#4885ed</color>
+
+    <color name="light_blue">#55D8FE</color>
+    <color name="light_orange">#FF8373</color>
+    <color name="light_yellow">#FFDA83</color>
+
+
     <color name="purple">#C7C4E9</color>
     <color name="purpleDark">#736CC7</color>
     <color name="pink">#FBB6D3</color>
