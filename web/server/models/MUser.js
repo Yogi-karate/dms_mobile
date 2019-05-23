@@ -72,41 +72,6 @@ class MUserClass {
             throw new Error('User cannot be created without mobile number');
         }
     };
-    static async signInOrSignUp({
-        googleId, email, googleToken, displayName, avatarUrl,
-    }) {
-        const user = await this.findOne({ googleId }).select(UserClass.publicFields().join(' '));
-
-        if (user) {
-            const modifier = {};
-
-            if (googleToken.accessToken) {
-                modifier.access_token = googleToken.accessToken;
-            }
-
-            if (googleToken.refreshToken) {
-                modifier.refresh_token = googleToken.refreshToken;
-            }
-
-            if (_.isEmpty(modifier)) {
-                return user;
-            }
-
-            await this.updateOne({ googleId }, { $set: modifier });
-
-            return user;
-        }
-
-        const newUser = await this.create({
-            createdAt: new Date(),
-            name,
-            mobile,
-            pin,
-            displayName
-        });
-
-        return _.pick(newUser, UserClass.publicFields());
-    }
 }
 muserSchema.loadClass(MUserClass);
 const MUser = mongoose.model('MUser', muserSchema);

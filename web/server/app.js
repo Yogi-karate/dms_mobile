@@ -3,12 +3,8 @@ const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 const next = require('next');
 const mongoose = require('mongoose');
-const auth = require('./google');
 const auth_pass = require('./passport');
 const api = require('./api');
-const Odoo = require('./odoo_server');
-
-//const compression = require('compression');
 
 require('dotenv').config();
 
@@ -27,7 +23,7 @@ const handle = app.getRequestHandler();
 // Nextjs's server prepared
 app.prepare().then(() => {
   const server = express();
-  
+
   server.use(express.json());
 
   // confuring MongoDB session store
@@ -46,12 +42,10 @@ app.prepare().then(() => {
       maxAge: 14 * 24 * 60 * 60 * 1000,
     },
   };
- 
+
   server.use(session(sess));
   api(server);
-  //auth({ server, ROOT_URL });
-  auth_pass({ server});
-
+  auth_pass({ server });
 
   server.get('*', (req, res) => handle(req, res));
 

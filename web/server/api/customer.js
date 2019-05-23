@@ -4,6 +4,7 @@ const logger = require('../logs');
 const router = express.Router();
 const passport = require('passport');
 const odoo = require('../odoo_server');
+const base = require('../models/base');
 
 router.use((req, res, next) => {
   console.log("customer api authenication ");
@@ -31,15 +32,13 @@ router.post('/odoo/:model', async (req, res) => {
     let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
-    server.create(model, req.body, function (err, order) {
-      if (err) { return console.log(err); }
-      console.log(model, order);
-      console.log(model + '...', order[0]);
-      res.json({ "id": order, "Message": "Success" });
-    });
+    let result = await server.create(model, req.body);
+    console.log(model, result);
+    console.log(model + '...', result[0]);
+    res.json({ "id": result, "Message": "Success" });
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
+  res.json({ error: err.message || err.toString() });
+}
 });
 router.get('/odoo/:model', async (req, res) => {
   try {
@@ -47,7 +46,7 @@ router.get('/odoo/:model', async (req, res) => {
     let server = odoo.getOdoo(req.user.email);
     console.log("Server: ", server);
     model = req.params.model;
-    let result = await server.search_read(model, { domain: [], fields: ["name", "id", "date_follow_up","date_deadline","partner_mobile","mobile","partner_name", "user_id", "team_id"], sort: "id desc" });
+    let result = await server.search_read(model, { domain: [], fields: ["name", "id", "date_follow_up", "date_deadline", "partner_mobile", "mobile", "partner_name", "user_id", "team_id", "activity_state", "stage_id"], sort: "id desc" });
     console.log(model + '', result);
     console.log(model + '...', result[0]);
     res.json(result);
@@ -56,31 +55,9 @@ router.get('/odoo/:model', async (req, res) => {
   }
 });
 router.get('/odoo/:model/:id', async (req, res) => {
-  console.log("Session : ", req.session);
-  console.log(req.user);
   try {
-    let server = odoo.getOdoo(req.user.email);
-    id = parseInt(req.params.id);
-    model = req.params.model;
-    // Get a partner
-    server.get(model, id, function (err, result) {
-      if (err) { return console.log(err); }
-      console.log(model, result);
-      console.log(model, result[0]);
-      let model_new = result[0];
-      if (model_new != null) {
-        keys = Object.keys(model_new);
-        keys.forEach(key => {
-          if (Array.isArray(model_new[key]) && model_new[key].length == 0) {
-            console.log("Key of array type", key, model_new[key]);
-            model_new[key] = [];
-          } else if (model_new[key] === false) {
-            model_new[key] = "";
-          }
-        });
-      }
-      res.json(model_new);
-    });
+    let result = await base.getModel(req.user, { model: req.params.model, id: req.params.id });
+    res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
