@@ -46,5 +46,8 @@ public class ConstantsUrl {
 
     public static String CREATE_ACTIVITY = "http://dev.api.turnright.tech/api/v1/leads/activity/create";
 
+    public static String LEAD_EDIT_ENQUIRIES = "http://dev.api.turnright.tech/api/v1/leads/enquiry/";
+
+
 
 }

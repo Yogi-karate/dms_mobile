@@ -41,6 +41,7 @@ public class Constants {
     public static String SUB_ENQUIRY = "sub_enquiry";
     public static String CREATE_ENQUIRY = "create_enquiry";
     public static String EDIT_ENQUIRY = "edit_enquiry";
+    public static String LEAD_EDIT_ENQUIRY = "lead_edit_enquiry";
     public static String EXTRA_ENQUIRY_ID = "id_enquiry";
     public static String EXTRA_STATE = "state";
     public static String EXTRA_STAGE = "stage";

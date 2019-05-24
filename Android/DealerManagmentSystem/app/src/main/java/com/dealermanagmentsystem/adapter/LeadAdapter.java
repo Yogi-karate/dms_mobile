@@ -30,6 +30,7 @@ import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.LEAD_EDIT_ENQUIRY;
 
 public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemViewHolder> {
 
@@ -61,13 +62,13 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Object enquiryId = mRecords.get(i).getEnquiryId();
-                if (enquiryId instanceof List) {
+               // final Object enquiryId = mRecords.get(i).getEnquiryId();
+               // if (enquiryId instanceof List) {
                     Intent intent = new Intent(activity, CreateEnquiryActivity.class);
-                    intent.putExtra(EXTRA_ENQUIRY, EDIT_ENQUIRY);
-                    intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(((List) enquiryId).get(0)));
+                    intent.putExtra(EXTRA_ENQUIRY, LEAD_EDIT_ENQUIRY);
+                    intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(mRecords.get(i).getId()));
                     activity.startActivityForResult(intent, 2);
-                }
+               // }
             }
         });
 

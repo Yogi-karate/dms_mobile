@@ -42,6 +42,9 @@ import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
+import static com.dealermanagmentsystem.constants.Constants.LEAD_EDIT_ENQUIRY;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.ENQUIRY;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.LEAD_EDIT_ENQUIRIES;
 
 
 public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquireView {
@@ -111,10 +114,15 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
             } else {
                 showTile("Edit Enquiry");
                 showBackButton();
-                enquiryCreatePresenter.getEnquiryDetail(activity, intent.getStringExtra(EXTRA_ENQUIRY_ID));
+                String url;
+                if (LEAD_EDIT_ENQUIRY.equalsIgnoreCase(stringExtra)) {
+                    url = LEAD_EDIT_ENQUIRIES + intent.getStringExtra(EXTRA_ENQUIRY_ID);//From leads edit enquiry
+                } else {
+                    url = ENQUIRY + "/" + intent.getStringExtra(EXTRA_ENQUIRY_ID);//From enquiry edit it
+                }
+                enquiryCreatePresenter.getEnquiryDetail(activity, url);
             }
         }
-
     }
 
     @OnClick(R.id.et_follow_up_date) //ButterKnife uses.
@@ -181,7 +189,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                     @Override
                     public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
                         if (isChecked) {
-                            if (!selectedItemsTypes.contains(types.get(indexSelected))){
+                            if (!selectedItemsTypes.contains(types.get(indexSelected))) {
                                 selectedItemsTypes.add(types.get(indexSelected));
                             }
                         } else if (selectedItemsTypes.contains(types.get(indexSelected))) {

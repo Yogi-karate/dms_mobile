@@ -188,8 +188,8 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
     }
 
     @Override
-    public void getEnquiryDetail(Activity activity, String id) {
-        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(ENQUIRY + "/" + id, activity, GET, new IConnectionListener() {
+    public void getEnquiryDetail(Activity activity, String url) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(url, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 JSONObject jsonObject;
