@@ -17,6 +17,7 @@ public class Constants {
     public static String NOTE = "note";
     public static String ACTIVITY_TYPE_ID = "activity_type_id";
     public static String SUMMARY = "summary";
+    public static String FCM_TOKEN_PARAM = "device_token";
 
     public static String KEY_TOKEN = "token";
 
@@ -28,6 +29,8 @@ public class Constants {
     public static String KEY_USERNAME = "username";
     public static String KEY_USER_EMAIL_ID = "email_id";
     public static String KEY_USER_IMAGE = "user_image";
+    public static String KEY_FCM_TOKEN = "fcm_token";
+    public static String KEY_FCM_TOKEN_SET = "token_set";
 
     public static int OK = 200;
     public static int BAD_AUTHENTICATION = 401;

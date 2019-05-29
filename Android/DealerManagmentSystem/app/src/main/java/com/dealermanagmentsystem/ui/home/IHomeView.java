@@ -9,6 +9,7 @@ public interface IHomeView {
 
     public void onSuccessLeadOverview(List<LeadOverviewResponse> leadOverviewResponse);
     public void onError(String message);
+    public void onSuccessToken();
 
 
 }

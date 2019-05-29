@@ -1,12 +1,17 @@
 package com.dealermanagmentsystem.ui.home;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,12 +29,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.dialog.DefaultAlertDialog;
 import com.dealermanagmentsystem.dialog.TwoButtonAlertDialogModel;
+import com.dealermanagmentsystem.notification.Config;
+import com.dealermanagmentsystem.notification.NotificationUtils;
 import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
@@ -50,6 +59,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +73,8 @@ import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
+import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
+import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
 import static com.dealermanagmentsystem.constants.Constants.KEY_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
@@ -110,6 +122,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     LinearLayout llBooked;
 
     String strState;
+    //private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +164,24 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
         presenter = new HomePresenter(this);
 
+       /* mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+                    sendIdToServer();
+                }
+            }
+        };*/
+        sendIdToServer();
+    }
+
+    private void sendIdToServer() {
+        if (!DMSPreference.getBoolean(KEY_FCM_TOKEN_SET)){
+            presenter.sendFcmToken(activity, DMSPreference.getString(KEY_FCM_TOKEN));
+        }
     }
 
     @Override
@@ -158,6 +189,24 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         cardView.setVisibility(View.GONE);
         presenter.getLeadsOverview(activity);
+
+    /*    // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());*/
+    }
+
+    @Override
+    public void onPause() {
+      //  LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     @Override
@@ -168,6 +217,11 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onError(String message) {
         DMSToast.showLong(activity, message);
+    }
+
+    @Override
+    public void onSuccessToken() {
+        DMSToast.showLong(activity, "Token sent successfully");
     }
 
     public void setPieChartData(List<LeadOverviewResponse> leadOverviewResponse) {

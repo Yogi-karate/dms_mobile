@@ -6,4 +6,6 @@ public interface IHomePresenter {
 
     public void getLeadsOverview(Activity activity);
 
+    public void sendFcmToken(Activity activity, String token);
+
 }

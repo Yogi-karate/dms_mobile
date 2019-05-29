@@ -11,12 +11,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dealermanagmentsystem.R;
-import com.dealermanagmentsystem.data.model.createenquiry.EnquireCreateRequest;
 import com.dealermanagmentsystem.data.model.enquirydetail.EnquiryDetailResponse;
 import com.dealermanagmentsystem.data.model.common.Record;
 import com.dealermanagmentsystem.data.model.common.Response;
@@ -25,7 +25,6 @@ import com.dealermanagmentsystem.ui.base.BaseActivity;
 import com.dealermanagmentsystem.ui.enquiry.financedetail.FinanceDetailActivity;
 import com.dealermanagmentsystem.ui.enquiry.insurancedetail.InsuranceDetailActivity;
 import com.dealermanagmentsystem.ui.enquiry.vehicledetail.VehicleDetailActivity;
-import com.dealermanagmentsystem.utils.ui.DMSTextView;
 import com.dealermanagmentsystem.utils.ui.DMSToast;
 
 import java.text.SimpleDateFormat;
@@ -75,9 +74,13 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
     TextView txtFinance;
     @BindView(R.id.txt_insurance)
     TextView txtInsurance;
+    @BindView(R.id.et_test_drive_date)
+    TextView etTestDriveDate;
+    @BindView(R.id.cb_test_drive)
+    CheckBox cbTestDrive;
 
     //private DatePickerDialog.OnDateSetListener date;
-    private Calendar myCalendar;
+    private Calendar myCalendar, myCalendarDriveDate;
     ArrayList selectedItemsTypes = new ArrayList();
     List<Record> typeRecords = new ArrayList<>();
     List<Record> productRecords = new ArrayList<>();
@@ -96,7 +99,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
 
         setStatusBarColor(getResources().getColor(R.color.bg));
         myCalendar = Calendar.getInstance();
-
+        myCalendarDriveDate = Calendar.getInstance();
 
         enquiryCreatePresenter = new EnquiryCreatePresenter(this);
         enquiryCreatePresenter.getTypes(activity);
@@ -112,7 +115,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                 showBackButton();
                 llDetailsParent.setVisibility(View.GONE);
             } else {
-                showTile("Edit Enquiry");
+                showTile("Enquiry Details");
                 showBackButton();
                 String url;
                 if (LEAD_EDIT_ENQUIRY.equalsIgnoreCase(stringExtra)) {
@@ -123,6 +126,32 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                 enquiryCreatePresenter.getEnquiryDetail(activity, url);
             }
         }
+    }
+
+    @OnClick(R.id.et_test_drive_date) //ButterKnife uses.
+    public void selectTestDriveDate() {
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendarDriveDate.set(Calendar.YEAR, year);
+                myCalendarDriveDate.set(Calendar.MONTH, monthOfYear);
+                myCalendarDriveDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                String myFormat = "yyyy-MM-dd";//In which you need put here "MM/dd/yy";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                etTestDriveDate.setText(sdf.format(myCalendarDriveDate.getTime()));
+
+            }
+        };
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(activity, date, myCalendarDriveDate
+                .get(Calendar.YEAR), myCalendarDriveDate.get(Calendar.MONTH),
+                myCalendarDriveDate.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+        datePickerDialog.show();
     }
 
     @OnClick(R.id.et_follow_up_date) //ButterKnife uses.
@@ -289,11 +318,23 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
         final String strName = etName.getText().toString();
         final String strMobileNo = etMobileNo.getText().toString();
         final String strMail = etMail.getText().toString();
+        final String strDriveDate = etTestDriveDate.getText().toString();
+        final boolean driveDate = cbTestDrive.isChecked();
 
         if (stringExtra.equalsIgnoreCase(CREATE_ENQUIRY)) {
             enquiryCreatePresenter.createEnquiry(activity, typeListId, productId, sourceId,
-                    strFollowUpDate, strName, strMobileNo, strMail);
+                    strFollowUpDate, strName, strMobileNo, strMail, strDriveDate, driveDate);
         } else {
+
+            if (!strDriveDate.equalsIgnoreCase(detailResponse.getTestDriveDate())) {
+                detailResponse.setTestDriveDate(strDriveDate);
+                enquiryDetailRequest.setTestDriveDate(strDriveDate);
+            }
+
+            if (driveDate != detailResponse.getTestDrive()){
+                detailResponse.setTestDrive(driveDate);
+                enquiryDetailRequest.setTestDrive(driveDate);
+            }
 
             if (!strFollowUpDate.equalsIgnoreCase(detailResponse.getDateFollowUp())) {
                 detailResponse.setDateFollowUp(strFollowUpDate);
@@ -364,6 +405,8 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
             }
         }
 
+        etTestDriveDate.setText(enquiryDetailResponse.getTestDriveDate());
+        cbTestDrive.setChecked(enquiryDetailResponse.getTestDrive());
         etFollowUpDate.setText(enquiryDetailResponse.getDateFollowUp());
         etName.setText(enquiryDetailResponse.getPartnerName());
         etMobileNo.setText(enquiryDetailResponse.getPartnerMobile());

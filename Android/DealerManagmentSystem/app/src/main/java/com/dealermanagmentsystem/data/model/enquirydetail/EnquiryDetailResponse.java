@@ -227,6 +227,13 @@ public class EnquiryDetailResponse {
     @Expose
     private String lastUpdate;
 
+    @SerializedName("test_drive")
+    @Expose
+    private Boolean testDrive;
+    @SerializedName("test_drive_date")
+    @Expose
+    private String testDriveDate;
+
     public Integer getId() {
         return id;
     }
@@ -811,4 +818,19 @@ public class EnquiryDetailResponse {
         this.lastUpdate = lastUpdate;
     }
 
+    public Boolean getTestDrive() {
+        return testDrive;
+    }
+
+    public void setTestDrive(Boolean testDrive) {
+        this.testDrive = testDrive;
+    }
+
+    public String getTestDriveDate() {
+        return testDriveDate;
+    }
+
+    public void setTestDriveDate(String testDriveDate) {
+        this.testDriveDate = testDriveDate;
+    }
 }

@@ -126,7 +126,8 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
 
     @Override
     public void createEnquiry(final Activity activity, List<Integer> typeListId, int productId,
-                              int sourceId, String strFollowUpDate, String strName, String strMobileNo, String strMail) {
+                              int sourceId, String strFollowUpDate, String strName,
+                              String strMobileNo, String strMail, String strDriveDate, boolean driveDate) {
 
         if (typeListId.isEmpty()) {
             view.onError("please select a type");
@@ -142,9 +143,9 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             view.onError("please enter a valid 10 digit mobile no");
         } else if (sourceId == -1) {
             view.onError("please enter a source");
-        } /*else if (Utils.isValidEmail(strMail)) {
-            view.onError("please enter a valid email");
-        }*/ else {
+        } else if (!TextUtils.isEmpty(strDriveDate) && !driveDate) {
+            view.onError("please select the checkbox for test drive");
+        } else {
             EnquireCreateRequest enquireCreateRequest = new EnquireCreateRequest();
 
             List<Object> typeIdListParent = new ArrayList<>();
@@ -162,6 +163,10 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             enquireCreateRequest.setPartnerMobile(strMobileNo);
             enquireCreateRequest.setPartnerEmail(strMail);
             enquireCreateRequest.setSourceId(sourceId);
+            enquireCreateRequest.setTestDrive(driveDate);
+            if (!TextUtils.isEmpty(strDriveDate)) {
+                enquireCreateRequest.setTestDriveDate(strDriveDate);
+            }
 
             Gson gson = new GsonBuilder().create();
             String json = gson.toJson(enquireCreateRequest);
@@ -235,9 +240,11 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             view.onError("please enter a valid 10 digit mobile no");
         } else if (sourceId == -1) {
             view.onError("please enter a source");
-        } /*else if (Utils.isValidEmail(enquiryDetailResponse.getPartnerEmail())) {
+        } else if (!TextUtils.isEmpty(detailResponse.getTestDriveDate()) && !detailResponse.getTestDrive()) {
+            view.onError("please select the checkbox for test drive");
+        }/*else if (Utils.isValidEmail(enquiryDetailResponse.getPartnerEmail())) {
             view.onError("please enter a valid email");
-        } */else {
+        } */ else {
             Gson gson = new GsonBuilder().create();
             String json = gson.toJson(enquiryDetailResponse);
 

@@ -27,6 +27,8 @@ import com.dealermanagmentsystem.ui.home.HomeActivity;
 import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.utils.ui.CustomTypefaceSpan;
 
+import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
+import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
 import static com.dealermanagmentsystem.constants.Constants.KEY_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
@@ -149,6 +151,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                         DMSPreference.setString(KEY_USERNAME, "");
                         DMSPreference.setString(KEY_USER_EMAIL_ID, "");
                         DMSPreference.setString(KEY_USER_IMAGE, "");
+                        DMSPreference.setString(KEY_FCM_TOKEN, "");
+                        DMSPreference.setBoolean(KEY_FCM_TOKEN_SET, false);
 
                         Intent intent = new Intent(activity, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
