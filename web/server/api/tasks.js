@@ -27,6 +27,15 @@ router.use((req, res, next) => {
     next();
   })(req, res, next);
 });
+router.get('/notifications', async (req, res) => {
+  try {
+    let result = await task.sendTaskNotification(req.user,{ modelName: req.params.modelName});
+    console.log("Result ->" + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 
 router.get('/list', async (req, res) => {
     try {
