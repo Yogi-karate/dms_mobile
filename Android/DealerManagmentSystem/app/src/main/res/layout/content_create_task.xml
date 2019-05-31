@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.enquiry.tasks.TaskCreateActivity"
+    tools:showIn="@layout/activity_task_create">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <Spinner
+                        android:id="@+id/sp_activity_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_line_icon"
+                        android:hint="Activity Type"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        />
+
+
+                    <Spinner
+                        android:id="@+id/sp_assign"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Assign to"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/border_line_icon"
+
+                        />
+
+                    <com.dealermanagmentsystem.utils.ui.DMSEditText
+                        android:id="@+id/et_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/border_line"
+                        android:hint="Summary"
+                        android:padding="15dp"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="16sp" />
+
+                    <com.dealermanagmentsystem.utils.ui.DMSEditText
+                        android:id="@+id/et_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/border_line"
+                        android:hint="Note"
+                        android:padding="15dp"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="16sp" />
+
+                    <com.dealermanagmentsystem.utils.ui.DMSTextView
+                        android:id="@+id/et_follow_up_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/border_line"
+                        android:hint="Follow-up Date"
+                        android:padding="15dp"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <com.dealermanagmentsystem.utils.ui.DMSButton
+                android:id="@+id/submit_task"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/btn_purple_rounded"
+                android:drawableRight="@drawable/button_sigin_purple"
+                android:padding="10dp"
+                android:text="Submit"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

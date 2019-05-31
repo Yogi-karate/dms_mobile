@@ -17,7 +17,8 @@ public interface IEnquiryCreatePresenter {
 
     public void createEnquiry(Activity activity, List<Integer> typeListId,
                               int productId, int sourceId, String strFollowUpDate,
-                                String strName, String strMobileNo, String strMail);
+                                String strName, String strMobileNo, String strMail,
+                              String strDriveDate, boolean driveDate);
 
     public void getEnquiryDetail(Activity activity, String stringExtra);
 

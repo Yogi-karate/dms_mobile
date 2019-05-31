@@ -36,6 +36,10 @@ public class Record {
     @Expose
     private String dateDeadLine;
 
+    @SerializedName("enquiry_id")
+    @Expose
+    private Object enquiryId = null;
+
     public String getPartnerMobile() {
         return partnerMobile;
     }
@@ -112,5 +116,11 @@ public class Record {
     }
 
 
+    public Object getEnquiryId() {
+        return enquiryId;
+    }
 
+    public void setEnquiryId(Object enquiryId) {
+        this.enquiryId = enquiryId;
+    }
 }

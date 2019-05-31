@@ -17,6 +17,18 @@ public class Record {
     @Expose
     private String display_name;
 
+    public Object getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Object teamId) {
+        this.teamId = teamId;
+    }
+
+    @SerializedName("team_id")
+    @Expose
+    private Object teamId = null;
+
     public String getDisplay_name() {
         return display_name;
     }
@@ -26,17 +38,7 @@ public class Record {
     }
 
 
-    public List<Object> getTeamId() {
-        return teamId;
-    }
 
-    public void setTeamId(List<Object> teamId) {
-        this.teamId = teamId;
-    }
-
-    @SerializedName("team_id")
-    @Expose
-    private List<Object> teamId = null;
 
     public Integer getId() {
         return id;

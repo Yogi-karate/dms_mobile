@@ -12,6 +12,7 @@ import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
 import com.dealermanagmentsystem.ui.home.HomeActivity;
 import com.dealermanagmentsystem.ui.login.LoginActivity;
+import com.dealermanagmentsystem.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +31,7 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.bind(this);
         showFullScreen();
 
+       // Utils.addToDeviceCalendar("16/05/2019","17/05/2019","Title","Description","lOCATION",this);
         title.startAnimation(AnimationUtils.loadAnimation(this, R.anim.left_to_right));
 
         new Handler().postDelayed(new Runnable() {

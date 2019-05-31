@@ -68,6 +68,13 @@ public class EnquireCreateRequest {
     @Expose
     private Double premiumAmount;
 
+    @SerializedName("test_drive")
+    @Expose
+    private Boolean testDrive;
+    @SerializedName("test_drive_date")
+    @Expose
+    private String testDriveDate;
+
     public String getFinanceType() {
         return financeType;
     }
@@ -228,4 +235,19 @@ public class EnquireCreateRequest {
         this.premiumAmount = premiumAmount;
     }
 
+    public Boolean getTestDrive() {
+        return testDrive;
+    }
+
+    public void setTestDrive(Boolean testDrive) {
+        this.testDrive = testDrive;
+    }
+
+    public String getTestDriveDate() {
+        return testDriveDate;
+    }
+
+    public void setTestDriveDate(String testDriveDate) {
+        this.testDriveDate = testDriveDate;
+    }
 }
