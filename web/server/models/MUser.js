@@ -21,6 +21,9 @@ const muserSchema = new Schema({
     email: {
         type: String,
     },
+    device_token: {
+        type: String,
+    },
     mobile: {
         type: String,
         required: true,
@@ -51,11 +54,11 @@ class MUserClass {
             .sort({ createdAt: -1 });
         return { users };
     }
-    static async add({ name, email,mobile, partner_id,pin, address }) {
+    static async add({ name, email, mobile, partner_id, pin, address }) {
         console.log(mobile);
         console.log(name);
         if (mobile) {
-            
+
             const user = await this.findOne({ mobile });
             if (user) return user;
             const newUser = await this.create({
@@ -67,6 +70,17 @@ class MUserClass {
                 pin,
                 address,
             });
+        } else {
+            console.log("ERROR in request - no mobile");
+            throw new Error('User cannot be created without mobile number');
+        }
+    };
+    static async updateDeviceToken(user, { device_token }) {
+        console.log(user);
+        console.log(device_token);
+        if (user) {
+            user.device_token = device_token;
+            return (await user.save());
         } else {
             console.log("ERROR in request - no mobile");
             throw new Error('User cannot be created without mobile number');

@@ -5,6 +5,8 @@ const next = require('next');
 const mongoose = require('mongoose');
 const auth_pass = require('./passport');
 const api = require('./api');
+const admin = require('firebase-admin');
+const firebaseAccount = require("../firebase_dms.json");
 
 require('dotenv').config();
 
@@ -46,6 +48,11 @@ app.prepare().then(() => {
   server.use(session(sess));
   api(server);
   auth_pass({ server });
+
+  admin.initializeApp({
+    credential: admin.credential.cert(firebaseAccount),
+    databaseURL: "https://dealer-managment-system.firebaseio.com"
+  });
 
   server.get('*', (req, res) => handle(req, res));
 

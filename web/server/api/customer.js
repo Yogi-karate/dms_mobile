@@ -5,6 +5,7 @@ const router = express.Router();
 const passport = require('passport');
 const odoo = require('../odoo_server');
 const base = require('../models/base');
+const User = require('../models/MUser');
 
 router.use((req, res, next) => {
   console.log("customer api authenication ");
@@ -150,4 +151,17 @@ router.post('/search/variants_old', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.post('/register_token', async (req, res) => {
+  console.log(req.body);
+  try {
+    let user = req.user;
+    console.log(user);
+    let result = await User.updateDeviceToken(user,req.body);
+    console.log( user.name + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;
