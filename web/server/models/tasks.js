@@ -24,7 +24,7 @@ class Task{
         } catch (err) {
             return { error: err.message || err.toString() };
         }
-        return result;
+        return base.cleanModels(result.records);
     }
     getActivityDomain(state) {
         let domain = [];
@@ -42,17 +42,17 @@ class Task{
         }
         return domain;
     };    
-    async getActivities(user, { id,model }) {
+    async getActivities(user, { id,modelName }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let activity_model = 'mail.activity';
             console.log("Id is - ", id);
             let domain = [];
-            domain.push(["res_model", "=", model]);
+            domain.push(["res_model", "=", modelName]);
             domain.push(["res_id", "=", id]);
             result = await server.search_read(activity_model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id"] });
-            console.log(model + '', result);
+            console.log(modelName + '', result);
         } catch (err) {
             return { error: err.message || err.toString() };
         }

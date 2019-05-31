@@ -39,7 +39,7 @@ router.get('/list', async (req, res) => {
   });
   router.get('/:model/:id', async (req, res) => {
     try {
-      let result = await task.getActivities(req.user,{ id:req.params.id,model: req.params.modelName});
+      let result = await task.getActivities(req.user,{ id:req.params.id, modelName: req.params.model});
       console.log("Result ->" + '', result);
       res.json(result);
     } catch (err) {

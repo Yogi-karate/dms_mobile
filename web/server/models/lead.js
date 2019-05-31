@@ -103,7 +103,7 @@ class Lead {
             let domain = [];
             domain.push(["res_model", "=", "crm.lead"]);
             domain.push(["res_id", "=", id]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id","res_model"] });
             console.log(model + '', result);
         } catch (err) {
             return { error: err.message || err.toString() };
