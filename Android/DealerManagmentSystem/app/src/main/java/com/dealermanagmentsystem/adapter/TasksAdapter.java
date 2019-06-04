@@ -1,8 +1,11 @@
 package com.dealermanagmentsystem.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dealermanagmentsystem.R;
-import com.dealermanagmentsystem.data.model.enquiry.Record;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
-import com.dealermanagmentsystem.event.LeadActionMoveEvent;
 import com.dealermanagmentsystem.event.TasksCompleteEvent;
 import com.dealermanagmentsystem.ui.base.BaseApplication;
+import com.dealermanagmentsystem.ui.enquiry.tasks.TaskCreateActivity;
 
 import java.util.List;
+
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_DATE_DEADLINE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_SUMMARY;
+import static com.dealermanagmentsystem.constants.Constants.KEY_EDIT_ACTIVITY;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemViewHolder> {
 
@@ -41,9 +49,16 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
         itemViewHolder.mSummary.setText(mRecords.get(i).getSummary());
         itemViewHolder.mDate.setText(mRecords.get(i).getDateDeadline());
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            itemViewHolder.note.setText(Html.fromHtml(mRecords.get(i).getNote(), Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            itemViewHolder.note.setText(Html.fromHtml(mRecords.get(i).getNote()));
+        }
+
+
         final Object activityTypeId = mRecords.get(i).getActivityTypeId();
         if (activityTypeId instanceof List) {
-            itemViewHolder.activityType.setText(String.valueOf(((List) activityTypeId).get(1)));
+            itemViewHolder.activityType.setText(String.valueOf(((List) activityTypeId).get(1)) + ", " + mRecords.get(i).getModel());
         } else {
             itemViewHolder.activityType.setVisibility(View.GONE);
         }
@@ -61,6 +76,18 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
                 BaseApplication.getEventBus().post(new TasksCompleteEvent(String.valueOf(mRecords.get(i).getId())));
             }
         });
+
+        itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, TaskCreateActivity.class);
+                intent.putExtra(EXTRA_ACTIVITY_ID, String.valueOf(mRecords.get(i).getId()));
+                intent.putExtra(EXTRA_ACTIVITY_SUMMARY, mRecords.get(i).getSummary());
+                intent.putExtra(EXTRA_ACTIVITY_DATE_DEADLINE, mRecords.get(i).getDateDeadline());
+                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_EDIT_ACTIVITY);
+                activity.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -71,8 +98,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
     public class AdapterItemViewHolder extends RecyclerView.ViewHolder {
 
         TextView mSummary;
-        TextView mDate, activityType, userName;
-        LinearLayout llComplete;
+        TextView mDate, activityType, userName, note;
+        LinearLayout llComplete, llParent;
 
         public AdapterItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,7 +107,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
             mDate = (TextView) itemView.findViewById(R.id.date);
             userName = (TextView) itemView.findViewById(R.id.user_name);
             activityType = (TextView) itemView.findViewById(R.id.activityType);
+            note = (TextView) itemView.findViewById(R.id.note);
             llComplete = (LinearLayout) itemView.findViewById(R.id.complete);
+            llParent = (LinearLayout) itemView.findViewById(R.id.ll_parent);
         }
     }
 }

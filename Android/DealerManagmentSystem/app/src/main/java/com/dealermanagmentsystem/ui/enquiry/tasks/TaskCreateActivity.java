@@ -29,7 +29,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_DATE_DEADLINE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_NOTE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_SUMMARY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CREATE_ACTIVITY;
 
 public class TaskCreateActivity extends BaseActivity implements ITasksCreateView {
 
@@ -49,6 +55,7 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
     int userId = -1;
     private Calendar myCalendar;
     int leadId;
+    String strFrom, strActivityId, strActivitySummary, strActivityDeadLineDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,28 +65,50 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
         activity = TaskCreateActivity.this;
         ButterKnife.bind(this);
         setStatusBarColor(getResources().getColor(R.color.bg));
-        showTile("Activity Create");
-        showBackButton();
+
+
         myCalendar = Calendar.getInstance();
 
         final Intent intent = getIntent();
         if (intent != null) {
-            leadId = Integer.valueOf(intent.getStringExtra(EXTRA_LEAD_ID));
+            strFrom = intent.getStringExtra(EXTRA_ACTIVITY_COMING_FROM);
+            if (strFrom.equalsIgnoreCase(KEY_CREATE_ACTIVITY)) {
+                leadId = Integer.valueOf(intent.getStringExtra(EXTRA_LEAD_ID));
+                showTile("Create Activity ");
+            } else {
+                strActivityId = intent.getStringExtra(EXTRA_ACTIVITY_ID);
+                strActivitySummary = intent.getStringExtra(EXTRA_ACTIVITY_SUMMARY);
+                strActivityDeadLineDate = intent.getStringExtra(EXTRA_ACTIVITY_DATE_DEADLINE);
+                showTile("Edit Activity");
+            }
         }
 
+        showBackButton();
         presenter = new TasksCreatePresenter(this);
-        presenter.getActivityType(activity);
-        presenter.getUsers(activity);
 
+        if (strFrom.equalsIgnoreCase(KEY_CREATE_ACTIVITY)) {
+            presenter.getActivityType(activity);
+            presenter.getUsers(activity);
+        } else {
+            spActivityType.setVisibility(View.GONE);
+            spUser.setVisibility(View.GONE);
+            etSummary.setText(strActivitySummary);
+            etNote.setVisibility(View.GONE);
+            txtFollowUpDate.setText(strActivityDeadLineDate);
+        }
     }
 
     @OnClick(R.id.submit_task) //ButterKnife uses.
     public void createActivity() {
         final String strFollowUpDate = txtFollowUpDate.getText().toString();
         final String strSummary = etSummary.getText().toString();
-        final String strNote = etNote.getText().toString();
-        presenter.createTask(activity, strSummary, strNote, userId, activityTypeId, strFollowUpDate, leadId);
+        if (strFrom.equalsIgnoreCase(KEY_CREATE_ACTIVITY)) {
+            final String strNote = etNote.getText().toString();
+            presenter.createTask(activity, strSummary, strNote, userId, activityTypeId, strFollowUpDate, leadId);
 
+        } else {
+            presenter.editTask(activity, strSummary, strFollowUpDate, strActivityId);
+        }
     }
 
     @OnClick(R.id.et_follow_up_date) //ButterKnife uses.

@@ -27,6 +27,7 @@ import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
 import java.util.List;
 
 import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
@@ -62,13 +63,10 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // final Object enquiryId = mRecords.get(i).getEnquiryId();
-               // if (enquiryId instanceof List) {
                     Intent intent = new Intent(activity, CreateEnquiryActivity.class);
                     intent.putExtra(EXTRA_ENQUIRY, LEAD_EDIT_ENQUIRY);
                     intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(mRecords.get(i).getId()));
                     activity.startActivityForResult(intent, 2);
-               // }
             }
         });
 
@@ -77,6 +75,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
             public void onClick(View view) {
                 Intent intent = new Intent(activity, TasksActivity.class);
                 intent.putExtra(EXTRA_LEAD_ID, String.valueOf(mRecords.get(i).getId()));
+                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Leads");
                 activity.startActivity(intent);
             }
         });

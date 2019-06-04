@@ -18,7 +18,6 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.Adap
     private Activity activity;
     List<Record> mRecords;
 
-
     public SaleOrderAdapter(Activity activity, List<Record> records) {
         this.activity = activity;
         this.mRecords = records;
@@ -40,12 +39,9 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.Adap
         } else {
             itemViewHolder.mUserName.setVisibility(View.GONE);
         }
-        final Object teamId = mRecords.get(i).getTeamId();
-        if (teamId instanceof List) {
-            itemViewHolder.mTeamName.setText(String.valueOf(((List) teamId).get(1)));
-        } else {
-            itemViewHolder.mTeamName.setVisibility(View.GONE);
-        }
+
+        itemViewHolder.mDateOrder.setText(mRecords.get(i).getDateOrder());
+        itemViewHolder.mAmount.setText("\u20B9 " + mRecords.get(i).getAmountTotal());
 
 
     }
@@ -59,13 +55,15 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.Adap
 
         TextView mName;
         TextView mUserName;
-        TextView mTeamName;
+        TextView mDateOrder;
+        TextView mAmount;
 
         public AdapterItemViewHolder(@NonNull View itemView) {
             super(itemView);
             mName = (TextView) itemView.findViewById(R.id.name);
             mUserName = (TextView) itemView.findViewById(R.id.user_name);
-            mTeamName = (TextView) itemView.findViewById(R.id.team_name);
+            mDateOrder = (TextView) itemView.findViewById(R.id.date_order);
+            mAmount = (TextView) itemView.findViewById(R.id.amount);
         }
     }
 }

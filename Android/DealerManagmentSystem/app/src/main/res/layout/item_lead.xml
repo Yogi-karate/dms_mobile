@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextView
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -69,7 +69,7 @@
                 android:visibility="gone"
                 android:src="@drawable/ic_partner"
                 android:tint="@color/drab" />
-            <com.dealermanagmentsystem.utils.ui.DMSTextView
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -110,7 +110,7 @@
                 android:src="@drawable/ic_date_follow"
                 android:tint="@color/drab" />
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextView
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -151,7 +151,7 @@
                 android:visibility="gone"
                 android:src="@drawable/ic_mobile"
                 android:tint="@color/drab" />
-            <com.dealermanagmentsystem.utils.ui.DMSTextView
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"

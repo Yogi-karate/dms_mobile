@@ -31,6 +31,12 @@ public class Constants {
     public static String KEY_USER_IMAGE = "user_image";
     public static String KEY_FCM_TOKEN = "fcm_token";
     public static String KEY_FCM_TOKEN_SET = "token_set";
+    public static String QUOTATION = "Quotation";
+    public static String BOOKED = "Booked";
+    public static String CANCEL = "Cancel";
+
+    public static String KEY_EDIT_ACTIVITY = "edit_activity";
+    public static String KEY_CREATE_ACTIVITY = "create_activity";
 
     public static int OK = 200;
     public static int BAD_AUTHENTICATION = 401;
@@ -38,7 +44,16 @@ public class Constants {
     public static int NO_INTERNET = 13;
     public static int TIMEOUT = 15000;
 
+    public static String EXTRA_SALE_TYPE = "sale_type";
+    public static String EXTRA_SALE_TYPE_ID = "sale_type_id";
     public static String EXTRA_LEAD_ID = "lead_id";
+    public static String EXTRA_ACTIVITY_LISTS = "activity_lists";
+    public static String EXTRA_ACTIVITY_ID = "activity_id";
+    public static String EXTRA_ACTIVITY_SUMMARY = "activity_summary";
+    public static String EXTRA_ACTIVITY_NOTE = "activity_note";
+    public static String EXTRA_ACTIVITY_DATE_DEADLINE = "activity_date_deadline";
+    public static String EXTRA_ACTIVITY_TYPE = "activity_type";
+    public static String EXTRA_ACTIVITY_COMING_FROM = "activity_coming_from";
     public static String EXTRA_ENQUIRY = "extra_enquiry";
     public static String ENQUIRY = "enquiry";
     public static String SUB_ENQUIRY = "sub_enquiry";
