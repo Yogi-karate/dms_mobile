@@ -40,12 +40,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage == null)
             return;
 
-        // Check if message contains a notification payload.
-       /* if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            handleNotification(remoteMessage.getNotification().getBody());
-        }
-*/
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
@@ -54,21 +48,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             handleDataMessage(data);
         }
     }
-
-  /*  private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-            // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
-            // play notification sound
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        } else {
-            // If the app is in background, firebase itself handles the notification
-        }
-    }*/
 
     private void handleDataMessage(Map<String, String> json) {
         Log.e(TAG, "push json: " + json.toString());
@@ -84,6 +63,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String CHANNEL_ID = "channel_01";// The id of the channel.
 
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.putExtra("key","1234");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),

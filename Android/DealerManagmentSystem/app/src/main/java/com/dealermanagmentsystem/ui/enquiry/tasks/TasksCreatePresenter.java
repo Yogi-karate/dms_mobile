@@ -25,6 +25,7 @@ import static com.dealermanagmentsystem.constants.Constants.SUMMARY;
 import static com.dealermanagmentsystem.constants.Constants.USER_ID;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.ACTIVITY_TYPE;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.CREATE_ACTIVITY;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.EDIT_ACTIVITY;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.USERS;
 
 public class TasksCreatePresenter implements ITasksCreatePresenter {
@@ -65,6 +66,55 @@ public class TasksCreatePresenter implements ITasksCreatePresenter {
             }
 
             AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(CREATE_ACTIVITY, activity, json, POST, new IConnectionListener() {
+                @Override
+                public void onSuccess(Result result) {
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(result.getResponse());
+                        Gson gson = new Gson();
+                        CommonResponse response = gson.fromJson(jsonObject.toString(), CommonResponse.class);
+                        view.onSuccessCreateTasks(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFail(Result result) {
+                    if (result.getStatusCode() == BAD_AUTHENTICATION) {
+                        view.onError("Wrong username or password");
+                    } else {
+                        view.onError("Something went wrong, Please try after sometime");
+                    }
+                }
+
+                @Override
+                public void onNetworkFail(String message) {
+                    view.onError(message);
+                }
+            });
+            asyncTaskConnection.execute();
+        }
+    }
+
+    @Override
+    public void editTask(Activity activity, String strSummary, String strFollowUpDate, String activityId) {
+        if (TextUtils.isEmpty(strSummary)) {
+            view.onError("please enter a summary");
+        } else if (TextUtils.isEmpty(strFollowUpDate)) {
+            view.onError("please select a follow up date");
+        } else {
+            String json = "";
+            JSONObject postDataParams = new JSONObject();
+            try {
+                postDataParams.put(DATE_DEADLINE, strFollowUpDate);
+                postDataParams.put(SUMMARY, strSummary);
+                json = postDataParams.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(EDIT_ACTIVITY +  activityId, activity, json, POST, new IConnectionListener() {
                 @Override
                 public void onSuccess(Result result) {
                     JSONObject jsonObject;

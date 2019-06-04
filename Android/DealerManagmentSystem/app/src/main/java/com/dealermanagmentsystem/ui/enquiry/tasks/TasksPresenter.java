@@ -23,10 +23,9 @@ import static com.dealermanagmentsystem.constants.Constants.FEEDBACK;
 import static com.dealermanagmentsystem.constants.Constants.GET;
 import static com.dealermanagmentsystem.constants.Constants.ID;
 import static com.dealermanagmentsystem.constants.Constants.POST;
-import static com.dealermanagmentsystem.constants.Constants.STAGE_ID;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.ACTIVITY_COMPLETE_FEEDBACK;
-import static com.dealermanagmentsystem.constants.ConstantsUrl.MARK_WON_LOST;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS_OVERVIEW;
 
 public class TasksPresenter implements ITasksPresenter {
 
@@ -39,6 +38,32 @@ public class TasksPresenter implements ITasksPresenter {
     @Override
     public void getTasks(Activity activity, String strLeadId) {
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS + strLeadId, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                Gson gson = new Gson();
+                String jsonOutput = result.getResponse();
+                Type listType = new TypeToken<List<TasksResponse>>() {
+                }.getType();
+                List<TasksResponse> tasks = gson.fromJson(jsonOutput, listType);
+                view.onSuccessTasks(tasks);
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getTasksOverview(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS_OVERVIEW , activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 Gson gson = new Gson();

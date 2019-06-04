@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -31,17 +32,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_LISTS;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CREATE_ACTIVITY;
 
 public class TasksActivity extends BaseActivity implements ITasksView {
 
     @BindView(R.id.recycler_View)
     RecyclerView recyclerView;
     Activity activity;
-    String strLeadId;
+    String strLeadId, strFrom;
     TasksAdapter tasksAdapter;
     TasksPresenter presenter;
+    @BindView(R.id.fab_create_task)
+    FloatingActionButton fabCreateTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +60,19 @@ public class TasksActivity extends BaseActivity implements ITasksView {
         showTile("Activity");
         showBackButton();
 
-        final Intent intent = getIntent();
-        if (intent != null) {
-            strLeadId = intent.getStringExtra(EXTRA_LEAD_ID);
-        }
-
         GridLayoutManager gridLayoutManagerCategories = new GridLayoutManager(this, 1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManagerCategories);
+
+        final Intent intent = getIntent();
+        if (intent != null) {
+            strFrom = intent.getStringExtra(EXTRA_ACTIVITY_COMING_FROM);
+            if (strFrom.equalsIgnoreCase("Leads")) {
+                strLeadId = intent.getStringExtra(EXTRA_LEAD_ID);
+            } else {
+                fabCreateTasks.setVisibility(View.GONE);
+            }
+        }
 
         presenter = new TasksPresenter(this);
 
@@ -70,7 +81,11 @@ public class TasksActivity extends BaseActivity implements ITasksView {
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.getTasks(activity, strLeadId);
+        if (strFrom.equalsIgnoreCase("Leads")) {
+            presenter.getTasks(activity, strLeadId);
+        } else {
+            presenter.getTasksOverview(activity);
+        }
     }
 
     @Override
@@ -129,9 +144,13 @@ public class TasksActivity extends BaseActivity implements ITasksView {
 
     @Override
     public void onSuccessFeedBack(CommonResponse commonResponse) {
-        if (commonResponse.getMessage().equalsIgnoreCase(Constants.SUCCESS)){
+        if (commonResponse.getMessage().equalsIgnoreCase(Constants.SUCCESS)) {
             DMSToast.showLong(activity, "Submitted successfully");
-            presenter.getTasks(activity, strLeadId);
+            if (strFrom.equalsIgnoreCase("Leads")) {
+                presenter.getTasks(activity, strLeadId);
+            } else {
+                presenter.getTasksOverview(activity);
+            }
         }
     }
 
@@ -144,6 +163,7 @@ public class TasksActivity extends BaseActivity implements ITasksView {
     public void openCreateTasks() {
         Intent intent = new Intent(this, TaskCreateActivity.class);
         intent.putExtra(EXTRA_LEAD_ID, strLeadId);
+        intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_CREATE_ACTIVITY);
         startActivity(intent);
     }
 }

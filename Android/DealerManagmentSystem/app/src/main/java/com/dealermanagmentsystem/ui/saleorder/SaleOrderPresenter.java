@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.dealermanagmentsystem.constants.Constants.GET;
-import static com.dealermanagmentsystem.constants.ConstantsUrl.SALE_ORDER;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.SALE_ORDER_SEARCH;
 
 public class SaleOrderPresenter implements ISaleOrderPresenter {
 
@@ -23,8 +23,8 @@ public class SaleOrderPresenter implements ISaleOrderPresenter {
     }
 
     @Override
-    public void getSaleOrder(Activity activity) {
-        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(SALE_ORDER, activity, GET, new IConnectionListener() {
+    public void getSaleOrder(Activity activity, String strSaleType) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(SALE_ORDER_SEARCH + strSaleType, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 JSONObject jsonObject;
@@ -42,6 +42,7 @@ public class SaleOrderPresenter implements ISaleOrderPresenter {
             public void onFail(Result result) {
                 view.onError("Something went wrong, Please try after sometime");
             }
+
             @Override
             public void onNetworkFail(String message) {
                 view.onError(message);

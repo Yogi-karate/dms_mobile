@@ -151,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         DMSPreference.setString(KEY_USERNAME, "");
                         DMSPreference.setString(KEY_USER_EMAIL_ID, "");
                         DMSPreference.setString(KEY_USER_IMAGE, "");
-                        DMSPreference.setString(KEY_FCM_TOKEN, "");
+                      //  DMSPreference.setString(KEY_FCM_TOKEN, "");
                         DMSPreference.setBoolean(KEY_FCM_TOKEN_SET, false);
 
                         Intent intent = new Intent(activity, LoginActivity.class);

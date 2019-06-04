@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,6 +19,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +36,11 @@ import android.widget.Toast;
 
 
 import com.dealermanagmentsystem.R;
+import com.dealermanagmentsystem.adapter.TasksAdapter;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
+import com.dealermanagmentsystem.data.model.saleorder.saleoverview.Result;
+import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
+import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.dialog.DefaultAlertDialog;
 import com.dealermanagmentsystem.dialog.TwoButtonAlertDialogModel;
 import com.dealermanagmentsystem.notification.Config;
@@ -43,6 +50,7 @@ import com.dealermanagmentsystem.ui.base.BaseActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirysubenquirylist.EnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
+import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
 import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.ui.saleorder.SaleOrderActivity;
 import com.dealermanagmentsystem.utils.ImageLoad;
@@ -68,9 +76,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dealermanagmentsystem.constants.Constants.BOOKED;
+import static com.dealermanagmentsystem.constants.Constants.CANCEL;
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_LISTS;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
@@ -79,6 +94,7 @@ import static com.dealermanagmentsystem.constants.Constants.KEY_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
+import static com.dealermanagmentsystem.constants.Constants.QUOTATION;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_BOOKED;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_COLD;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_HOT;
@@ -96,6 +112,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton fabCreateEnquiry;
     @BindView(R.id.chart)
     PieChart chart;
+    @BindView(R.id.chart_sale_order)
+    PieChart salesChart;
     @BindView(R.id.card_view_title)
     CardView cardView;
     @BindView(R.id.img_title)
@@ -120,9 +138,16 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     LinearLayout llHot;
     @BindView(R.id.ll_booked)
     LinearLayout llBooked;
-
     String strState;
-    //private BroadcastReceiver mRegistrationBroadcastReceiver;
+    @BindView(R.id.recycler_View_tasks)
+    RecyclerView recyclerViewTasks;
+    TasksAdapter tasksAdapter;
+    @BindView(R.id.tasks_title)
+    TextView txtTasksTitle;
+    @BindView(R.id.tasks_more)
+    TextView txtTasksMore;
+    @BindView(R.id.cardView_tasks)
+    CardView cardViewTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,22 +189,17 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
         presenter = new HomePresenter(this);
 
-       /* mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-                    sendIdToServer();
-                }
-            }
-        };*/
+        //fcm
+        final Intent intent = getIntent();
+        if (intent != null) {
+            DMSToast.showLong(activity, intent.getStringExtra("key"));
+        }
+
         sendIdToServer();
     }
 
     private void sendIdToServer() {
-        if (!DMSPreference.getBoolean(KEY_FCM_TOKEN_SET)){
+        if (!DMSPreference.getBoolean(KEY_FCM_TOKEN_SET)) {
             presenter.sendFcmToken(activity, DMSPreference.getString(KEY_FCM_TOKEN));
         }
     }
@@ -189,29 +209,48 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         cardView.setVisibility(View.GONE);
         presenter.getLeadsOverview(activity);
-
-    /*    // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.REGISTRATION_COMPLETE));
-
-        // register new push message receiver
-        // by doing this, the activity will be notified each time a new message arrives
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.PUSH_NOTIFICATION));
-
-        // clear the notification area when the app is opened
-        NotificationUtils.clearNotifications(getApplicationContext());*/
-    }
-
-    @Override
-    public void onPause() {
-      //  LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
+        presenter.getSalesOverview(activity);
+        presenter.getTasksOverview(activity);
     }
 
     @Override
     public void onSuccessLeadOverview(List<LeadOverviewResponse> leadOverviewResponse) {
-        setPieChartData(leadOverviewResponse);
+        setPieChartLeadData(leadOverviewResponse);
+    }
+
+    @Override
+    public void onSuccessSalesOverview(List<SaleOverviewResponse> saleOverviewResponses) {
+        setPieChartSalesData(saleOverviewResponses);
+    }
+
+    @Override
+    public void onSuccessTasks(final List<TasksResponse> tasks) {
+
+        if (tasks.size() == 0) {
+            cardViewTasks.setVisibility(View.GONE);
+        } else {
+            txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+            recyclerViewTasks.setHasFixedSize(true);
+            recyclerViewTasks.setLayoutManager(gridLayoutManager);
+            if (tasks != null) {
+                tasksAdapter = new TasksAdapter(this, tasks);
+                recyclerViewTasks.setAdapter(tasksAdapter);
+            }
+
+            txtTasksMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, TasksActivity.class);
+                    // intent.putParcelableArrayListExtra(EXTRA_ACTIVITY_LISTS, (ArrayList<? extends Parcelable>) tasks);
+                    intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Home");
+                    activity.startActivity(intent);
+                }
+            });
+        }
+
+
     }
 
     @Override
@@ -224,7 +263,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         DMSToast.showLong(activity, "Token sent successfully");
     }
 
-    public void setPieChartData(List<LeadOverviewResponse> leadOverviewResponse) {
+    public void setPieChartLeadData(List<LeadOverviewResponse> leadOverviewResponse) {
 
         final Integer overdueCold = leadOverviewResponse.get(0).getResult().get(0).getStageIdCount();
         final Integer overdueWarm = leadOverviewResponse.get(0).getResult().get(1).getStageIdCount();
@@ -393,6 +432,128 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
+        final List<Result> result = leadOverviewResponse.get(0).getResult();
+
+        Integer quotation = 0;
+        Integer booked = 0;
+        Integer cancel = 0;
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getState().equalsIgnoreCase("draft")) {
+                quotation = result.get(i).getStateCount();
+            }
+            if (result.get(i).getState().equalsIgnoreCase("sale")) {
+                booked = result.get(i).getStateCount();
+            }
+            if (result.get(i).getState().equalsIgnoreCase("cancel")) {
+                cancel = result.get(i).getStateCount();
+            }
+        }
+
+
+        int total = quotation + booked + cancel;
+
+        salesChart.setUsePercentValues(false);
+        salesChart.getDescription().setEnabled(false);
+        salesChart.setExtraOffsets(5, 10, 5, 5);
+        salesChart.setDragDecelerationFrictionCoef(0.95f);
+        salesChart.setCenterTextTypeface(DMSTypeFace.getTypeface(activity));
+        salesChart.setCenterTextSize(16f);//center size
+        salesChart.setCenterText(String.valueOf(total));
+        salesChart.setDrawHoleEnabled(true);
+        salesChart.setHoleColor(getResources().getColor(R.color.white));
+        salesChart.setTransparentCircleColor(Color.WHITE);
+        salesChart.setTransparentCircleAlpha(110);
+        salesChart.setHoleRadius(50f);
+        salesChart.setTransparentCircleRadius(51f);
+        salesChart.setDrawCenterText(true);
+        salesChart.setRotationAngle(0);
+        salesChart.setRotationEnabled(true);
+        salesChart.setHighlightPerTapEnabled(true);
+
+        salesChart.animateY(1400, Easing.EaseInOutQuad);
+
+        Legend l = salesChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+        l.setTypeface(DMSTypeFace.getTypeface(activity));
+
+        salesChart.setEntryLabelColor(Color.WHITE);
+        salesChart.setEntryLabelTypeface(DMSTypeFace.getTypeface(activity));
+        salesChart.setEntryLabelTextSize(0f);//title size
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        entries.add(new PieEntry(quotation,
+                String.valueOf(quotation) + " Quotation",
+                getResources().getDrawable(R.drawable.ic_overdue)));
+        colors.add(getResources().getColor(R.color.light_orange));
+
+
+        entries.add(new PieEntry(booked,
+                String.valueOf(booked) + " Booked",
+                getResources().getDrawable(R.drawable.ic_today)));
+        colors.add(getResources().getColor(R.color.light_yellow));
+
+        entries.add(new PieEntry(cancel,
+                String.valueOf(cancel) + " Cancel",
+                getResources().getDrawable(R.drawable.ic_enquiry)));
+        colors.add(getResources().getColor(R.color.light_blue));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        // add a lot of colors
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(chart));
+        data.setValueTextSize(0f);//value size
+        data.setValueTextColor(Color.WHITE);
+        data.setValueTypeface(DMSTypeFace.getTypeface(activity));
+        salesChart.setData(data);
+
+        // undo all highlights
+        salesChart.highlightValues(null);
+        salesChart.invalidate();
+
+        salesChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null)
+                    return;
+                Intent intent = new Intent(activity, SaleOrderActivity.class);
+                if (h.getX() == 0) {
+                    intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
+                    intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
+                    startActivity(intent);
+                } else if (h.getX() == 1) {
+                    intent.putExtra(EXTRA_SALE_TYPE, BOOKED);
+                    intent.putExtra(EXTRA_SALE_TYPE_ID, "sale");
+                    startActivity(intent);
+                } else {
+                    intent.putExtra(EXTRA_SALE_TYPE, CANCEL);
+                    intent.putExtra(EXTRA_SALE_TYPE_ID, "cancel");
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+    }
+
     @OnClick(R.id.ll_cold) //ButterKnife uses.
     public void launchCold() {
         Intent intent = new Intent(this, LeadActivity.class);
@@ -441,6 +602,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(intent);
         } else if (id == R.id.sales_order) {
             Intent intent = new Intent(this, SaleOrderActivity.class);
+            intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
+            intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
             startActivity(intent);
         } else if (id == R.id.follow_up) {
             DMSToast.showLong(activity, "Coming Soon..");

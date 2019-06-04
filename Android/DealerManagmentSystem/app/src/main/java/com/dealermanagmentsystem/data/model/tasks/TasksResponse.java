@@ -1,7 +1,6 @@
 
 package com.dealermanagmentsystem.data.model.tasks;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,6 +9,9 @@ public class TasksResponse {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("res_model")
+    @Expose
+    private String model;
     @SerializedName("activity_type_id")
     @Expose
     private Object activityTypeId = null;
@@ -22,7 +24,6 @@ public class TasksResponse {
     @SerializedName("note")
     @Expose
     private String note;
-
     @SerializedName("user_id")
     @Expose
     private Object userId;
@@ -74,4 +75,13 @@ public class TasksResponse {
     public void setUserId(Object userId) {
         this.userId = userId;
     }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
 }

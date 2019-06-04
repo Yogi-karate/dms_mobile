@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.login.LoginResponse;
+import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
+import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
 import com.dealermanagmentsystem.network.IConnectionListener;
 import com.dealermanagmentsystem.network.Result;
@@ -28,7 +30,10 @@ import static com.dealermanagmentsystem.constants.Constants.PASSWORD;
 import static com.dealermanagmentsystem.constants.Constants.POST;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LEAD_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LOGIN;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.SALES_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SEND_FCM_TOKEN;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS_OVERVIEW;
 
 public class HomePresenter implements IHomePresenter {
 
@@ -43,13 +48,6 @@ public class HomePresenter implements IHomePresenter {
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(LEAD_OVERVIEW, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
-              /*  JSONArray jsonObject = null;
-                try {
-                    jsonObject = new JSONArray(result.getResponse());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-             */
                 try {
                     Gson gson = new Gson();
                     String jsonOutput = result.getResponse();
@@ -61,6 +59,63 @@ public class HomePresenter implements IHomePresenter {
                     view.onError("Something went wrong, Please try after sometime");
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getSalesOverview(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(SALES_OVERVIEW, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<SaleOverviewResponse>>() {
+                    }.getType();
+                    List<SaleOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessSalesOverview(posts);
+                }catch (Exception e){
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getTasksOverview(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS_OVERVIEW , activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                Gson gson = new Gson();
+                String jsonOutput = result.getResponse();
+                Type listType = new TypeToken<List<TasksResponse>>() {
+                }.getType();
+                List<TasksResponse> tasks = gson.fromJson(jsonOutput, listType);
+                view.onSuccessTasks(tasks);
             }
 
             @Override

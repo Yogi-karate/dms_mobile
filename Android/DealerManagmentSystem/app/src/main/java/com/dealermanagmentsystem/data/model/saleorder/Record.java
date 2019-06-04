@@ -14,6 +14,19 @@ public class Record {
     @Expose
     private String name;
 
+    @SerializedName("amount_total")
+    @Expose
+    private String amountTotal;
+    @SerializedName("state")
+    @Expose
+    private String state;
+    @SerializedName("invoice_status")
+    @Expose
+    private String invoiceStatus;
+    @SerializedName("date_order")
+    @Expose
+    private String dateOrder;
+
     public Object getUserId() {
         return userId;
     }
@@ -54,4 +67,35 @@ public class Record {
     }
 
 
+    public String getAmountTotal() {
+        return amountTotal;
+    }
+
+    public void setAmountTotal(String amountTotal) {
+        this.amountTotal = amountTotal;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
+    }
+
+    public String getDateOrder() {
+        return dateOrder;
+    }
+
+    public void setDateOrder(String dateOrder) {
+        this.dateOrder = dateOrder;
+    }
 }

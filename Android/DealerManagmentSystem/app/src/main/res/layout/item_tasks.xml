@@ -19,19 +19,33 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:gravity="center|start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Type"
+                android:textColor="@color/textSecondary"
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/activityType"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
                 android:gravity="center|start"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/textPrimary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -39,12 +53,25 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Name"
+                android:textColor="@color/textSecondary"
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/user_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
@@ -58,15 +85,28 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Summary"
+                android:textColor="@color/textSecondary"
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/summary"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
+                android:layout_weight="0.6"
                 android:paddingBottom="5dp"
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
@@ -77,14 +117,59 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Note"
+                android:textColor="@color/textSecondary"
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
+                android:id="@+id/note"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:layout_weight="0.6"
+                android:paddingBottom="5dp"
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Dead Line Date"
+                android:textColor="@color/textSecondary"
+                android:textSize="16sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:layout_weight="0.6"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/textPrimary"
