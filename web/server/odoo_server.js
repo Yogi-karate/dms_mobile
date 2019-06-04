@@ -48,15 +48,16 @@ class Odoo_Server {
                     mobile = '1111111111';
                 }
                 let localUser = await User.findOne({ mobile: mobile });
-                if (localUser === null && mobile != null) {
+                if (localUser === null && mobile != null && mobile !=false) {
                     let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234" });
                     self.users[mobile] = new_user;
                 }
-                console.log("Successfully Initiated the User Database");
+               
             } catch (error) {
                 console.log(error);
             }
         });
+        console.log("Successfully Initiated the User Database");
     }
     getOdoo(user, password) {
         if (this.connections[user] === undefined) {

@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const sms = require('./ext/sms');
 const OTP = require('./ext/otp');
 const odoo = require('./odoo_server');
+const firebase = require('./ext/firebase');
 
 const BCRYPT_SALT_ROUNDS = 12;
 require('dotenv').config();
@@ -123,6 +124,11 @@ function auth_pass({ server }) {
           console.log("No User Avatar Found !!!!");
           user.image = "";
         }
+        firebase(user,{
+          title: 'Welcome to DMS',
+          message: 'Thanks for Logging In !!!!',
+          timestamp: '2019-05-27 8:15:01'
+      });
         res.status(200).send({
           name: user.name,
           email: user.email,
