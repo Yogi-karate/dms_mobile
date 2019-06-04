@@ -4,6 +4,7 @@ const utilsApi = require('./utils');
 const leadsApi = require('./leads');
 const salesApi = require('./sales');
 const tasksApi = require('./tasks');
+const dashboardApi = require('./dashboard');
 
 //const adminApi = require('./admin');
 
@@ -14,6 +15,7 @@ function api(server) {
   server.use('/api/v1/leads', leadsApi);
   server.use('/api/v1/sales', salesApi);
   server.use('/api/v1/tasks', tasksApi);
+  server.use('/api/v1/dashboard', dashboardApi);
 
 }
 

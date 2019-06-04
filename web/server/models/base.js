@@ -13,6 +13,13 @@ class Base {
             return { error: err.message || err.toString() };
         }
     }
+    async searchModels(user, { model, domain = [], fields = [] }) {
+        let server = odoo.getOdoo(user.email);
+        console.log("Hello from base",fields,domain);
+        let result = await server.search(model, domain, true );
+        console.log("RESULT", result)
+        return result;
+    }
     cleanModels(models) {
         models.forEach(model => {
             if (model != null) {
