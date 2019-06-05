@@ -4,11 +4,12 @@ const logger = require('../logs');
 const router = express.Router();
 const passport = require('passport');
 const odoo = require('../odoo_server');
-const lead = require('../models/lead');
+const base = require('../models/base');
+const User = require('../models/MUser');
 const task = require('../models/tasks');
 
 router.use((req, res, next) => {
-  console.log("leads api authenication ");
+  console.log("customer api authenication ");
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
       console.error(err);
@@ -21,6 +22,10 @@ router.use((req, res, next) => {
       res.status(403).send({ "error": info.message });
       return;
     }
+    if (user.email !== "admin") {
+        res.status(403).send({ "error": "Admin Only !!!" });
+        return;
+      }
     console.log(odoo.users);
     console.log(user);
     req.user = user;
@@ -28,28 +33,15 @@ router.use((req, res, next) => {
   })(req, res, next);
 });
 router.get('/notifications', async (req, res) => {
-  try {
-    let result = await task.sendTaskNotification(req.user);
-    console.log("Result ->" + '', result);
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-
-router.get('/list', async (req, res) => {
     try {
-      let result = await task.getUserTasks(req.user,{ modelName: req.params.modelName});
-      console.log("Result ->" + '', result);
-      res.json(result);
-    } catch (err) {
-      res.json({ error: err.message || err.toString() });
-    }
-  });
-  router.get('/:model/:id', async (req, res) => {
-    try {
-      let result = await task.getActivities(req.user,{ id:req.params.id, modelName: req.params.model});
-      console.log("Result ->" + '', result);
+      let result = {};  
+      let users = await User.list();
+     // console.log("users ",users);
+      users.users.forEach(async function (user) {
+        result[user.email] = await task.sendTaskNotification(req.user,user);
+        console.log("Result ->" + '', result[user.email]);
+      });
+    //  console.log("Result ->" + '', result);
       res.json(result);
     } catch (err) {
       res.json({ error: err.message || err.toString() });
