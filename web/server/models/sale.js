@@ -37,6 +37,23 @@ class Sale {
         }
         return result;
     }
+
+    async searchInventoryByState(user, { state }) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'stock.picking';
+            console.log("State:", state);
+            let domain = [];
+            domain.push(["state", "ilike", state]);
+            domain.push(["picking_type_id.code", "=", 'outgoing']);
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
+            console.log(model + '', result);
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+        return result;
+    }
 }
 
 module.exports = new Sale();

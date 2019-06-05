@@ -45,5 +45,14 @@ router.get('/search', async (req, res) => {
     }
 });
 
+router.get('/inventory/search', async (req, res) => {
+    try {
+        let result = await sale.searchInventoryByState(req.user, { state: req.query.state });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
 
 module.exports = router;
