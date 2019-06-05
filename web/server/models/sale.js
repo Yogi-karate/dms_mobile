@@ -32,10 +32,10 @@ class Sale {
             }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "date_order", "invoice_status", "amount_total"] });
             console.log(model + '', result);
+            return result;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
-        return result;
     }
 
     async searchInventoryByState(user, { state }) {
@@ -49,10 +49,10 @@ class Sale {
             domain.push(["picking_type_id.code", "=", 'outgoing']);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
             console.log(model + '', result);
+            return result;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
-        return result;
     }
 }
 
