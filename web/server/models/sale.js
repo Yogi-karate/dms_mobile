@@ -17,20 +17,42 @@ class Sale {
         }
     }
 
-    async searchOrderByState(user, { state }) {
+    async searchOrderByState(user, { state, invoice_status }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'sale.order';
             console.log("State:", state);
             let domain = [];
-            domain.push(["state", "ilike", state]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "date_order", "invoice_status","amount_total"] });
+            if (state != null) {
+                domain.push(["state", "ilike", state]);
+            }
+            if (invoice_status != null) {
+                domain.push(["invoice_status", "ilike", invoice_status]);
+            }
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "date_order", "invoice_status", "amount_total"] });
             console.log(model + '', result);
+            return result;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
-        return result;
+    }
+
+    async searchInventoryByState(user, { state }) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'stock.picking';
+            console.log("State:", state);
+            let domain = [];
+            domain.push(["state", "ilike", state]);
+            domain.push(["picking_type_id.code", "=", 'outgoing']);
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
+            console.log(model + '', result);
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
     }
 }
 
