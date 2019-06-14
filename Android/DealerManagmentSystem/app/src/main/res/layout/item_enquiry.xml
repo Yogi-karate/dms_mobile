@@ -19,26 +19,55 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_product"
-                android:tint="@color/purpleDark" />
+            <!-- <ImageView
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 android:padding="3dp"
+                 android:src="@drawable/ic_product"
+                 android:tint="@color/purpleDark" />
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
+             <com.dealermanagmentsystem.utils.ui.DMSTextView
+                 android:id="@+id/name"
+                 android:layout_width="wrap_content"
+                 android:layout_height="40dp"
+                 android:layout_marginStart="5dp"
+                 android:gravity="center|start"
+                 android:paddingStart="10dp"
+                 android:paddingTop="5dp"
+                 android:paddingEnd="10dp"
+                 android:paddingBottom="5dp"
+                 android:text="Nikhil Vivaan"
+                 android:textColor="@color/textPrimary"
+                 android:textSize="18sp" />
+ -->
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
                 android:gravity="center|start"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Nikhil Vivaan"
-                android:textColor="@color/textPrimary"
+                android:text="Product"
+                android:textColor="@color/textSecondary"
                 android:textSize="18sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="nikhil@gmail.com"
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -46,24 +75,32 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_partner"
-                android:tint="@color/purpleDark" />
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:gravity="center|start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Enquiry Id"
+                android:textColor="@color/textSecondary"
+                android:textSize="18sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
-                android:id="@+id/partner_name"
-                android:layout_width="match_parent"
+                android:id="@+id/enquiry_id"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="nikhil@gmail.com"
-                android:textColor="@color/textSecondary"
+                android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -72,7 +109,62 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <!-- <ImageView
+                 android:layout_width="40dp"
+                 android:layout_height="30dp"
+                 android:padding="3dp"
+                 android:src="@drawable/ic_partner"
+                 android:tint="@color/purpleDark" />
+
+             <com.dealermanagmentsystem.utils.ui.DMSTextView
+                 android:id="@+id/partner_name"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="5dp"
+                 android:paddingStart="10dp"
+                 android:paddingTop="5dp"
+                 android:paddingEnd="10dp"
+                 android:paddingBottom="5dp"
+                 android:text="nikhil@gmail.com"
+                 android:textColor="@color/textSecondary"
+                 android:textSize="16sp" />-->
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:gravity="center|start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Name"
+                android:textColor="@color/textSecondary"
+                android:textSize="18sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/partner_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="nikhil@gmail.com"
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!--<ImageView
                 android:layout_width="40dp"
                 android:layout_height="30dp"
                 android:padding="3dp"
@@ -90,6 +182,33 @@
                 android:paddingBottom="5dp"
                 android:text="9739797397"
                 android:textColor="@color/textSecondary"
+                android:textSize="16sp" />-->
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:gravity="center|start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Date Deadline"
+                android:textColor="@color/textSecondary"
+                android:textSize="18sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="nikhil@gmail.com"
+                android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -99,7 +218,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="40dp"
                 android:layout_height="30dp"
                 android:padding="3dp"
@@ -117,6 +236,33 @@
                 android:paddingBottom="5dp"
                 android:text="9739797397"
                 android:textColor="@color/textSecondary"
+                android:textSize="16sp" />-->
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:gravity="center|start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="Mobile No"
+                android:textColor="@color/textSecondary"
+                android:textSize="18sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                android:id="@+id/team_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.6"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="9739797397"
+                android:textColor="@color/drab"
                 android:textSize="16sp" />
         </LinearLayout>
 

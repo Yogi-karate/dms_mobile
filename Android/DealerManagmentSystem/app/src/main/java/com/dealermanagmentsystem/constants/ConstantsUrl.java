@@ -42,6 +42,10 @@ public class ConstantsUrl {
 
     public static String SALES_OVERVIEW = ROOT_URL + "api/v1/sales/dashboard";
 
+    public static String DELIVERY_COUNT = ROOT_URL + "api/v1/dashboard/inventory";
+
+    public static String INVOICE_COUNT = ROOT_URL + "api/v1/dashboard/invoice";
+
     public static String TASKS_OVERVIEW = ROOT_URL + "api/v1/tasks/list";
 
     public static String TASKS = ROOT_URL + "api/v1/leads/activity/";
@@ -60,6 +64,8 @@ public class ConstantsUrl {
 
     public static String SEND_FCM_TOKEN = ROOT_URL + "api/v1/customer/register_token";
 
-    public static String SALE_ORDER_SEARCH = ROOT_URL + "api/v1/sales/search?state=";
+    public static String SALE_ORDER_SEARCH = ROOT_URL + "api/v1/sales/search?";
+
+    public static String DELIVERY = ROOT_URL + "api/v1/sales/inventory/search?state=confirmed";
 
 }

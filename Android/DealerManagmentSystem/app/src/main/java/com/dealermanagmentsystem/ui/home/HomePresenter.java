@@ -3,6 +3,7 @@ package com.dealermanagmentsystem.ui.home;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.login.LoginResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
@@ -23,11 +24,16 @@ import java.util.List;
 
 import static com.dealermanagmentsystem.constants.Constants.BAD_AUTHENTICATION;
 import static com.dealermanagmentsystem.constants.Constants.FCM_TOKEN_PARAM;
+import static com.dealermanagmentsystem.constants.Constants.FEEDBACK;
 import static com.dealermanagmentsystem.constants.Constants.GET;
+import static com.dealermanagmentsystem.constants.Constants.ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
 import static com.dealermanagmentsystem.constants.Constants.MOBILE;
 import static com.dealermanagmentsystem.constants.Constants.PASSWORD;
 import static com.dealermanagmentsystem.constants.Constants.POST;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.ACTIVITY_COMPLETE_FEEDBACK;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.DELIVERY_COUNT;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.INVOICE_COUNT;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LEAD_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LOGIN;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SALES_OVERVIEW;
@@ -55,7 +61,7 @@ public class HomePresenter implements IHomePresenter {
                     }.getType();
                     List<LeadOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
                     view.onSuccessLeadOverview(posts);
-                }catch (Exception e){
+                } catch (Exception e) {
                     view.onError("Something went wrong, Please try after sometime");
                     e.printStackTrace();
                 }
@@ -86,7 +92,7 @@ public class HomePresenter implements IHomePresenter {
                     }.getType();
                     List<SaleOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
                     view.onSuccessSalesOverview(posts);
-                }catch (Exception e){
+                } catch (Exception e) {
                     view.onError("Something went wrong, Please try after sometime");
                     e.printStackTrace();
                 }
@@ -107,7 +113,7 @@ public class HomePresenter implements IHomePresenter {
 
     @Override
     public void getTasksOverview(Activity activity) {
-        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS_OVERVIEW , activity, GET, new IConnectionListener() {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS_OVERVIEW, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 Gson gson = new Gson();
@@ -116,6 +122,105 @@ public class HomePresenter implements IHomePresenter {
                 }.getType();
                 List<TasksResponse> tasks = gson.fromJson(jsonOutput, listType);
                 view.onSuccessTasks(tasks);
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void setFeedback(Activity activity, String taskId, String strFeedback) {
+        String json = "";
+        JSONObject postDataParams = new JSONObject();
+        try {
+            postDataParams.put(ID, taskId);
+            postDataParams.put(FEEDBACK, strFeedback);
+            json = postDataParams.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(ACTIVITY_COMPLETE_FEEDBACK, activity, json, POST, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    Gson gson = new Gson();
+                    CommonResponse commonResponse = gson.fromJson(jsonObject.toString(), CommonResponse.class);
+                    view.onSuccessFeedBack(commonResponse);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                if (result.getStatusCode() == BAD_AUTHENTICATION) {
+                    view.onError("Wrong username or password");
+                } else {
+                    view.onError("Something went wrong, Please try after sometime");
+                }
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getDeliveryCount(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(DELIVERY_COUNT, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    final Object length = jsonObject.get("length");
+                    view.onSuccessDeliveryCount(String.valueOf(length));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getInvoiceCount(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(INVOICE_COUNT, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    final Object length = jsonObject.get("length");
+                    view.onSuccessInvoiceCount(String.valueOf(length));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

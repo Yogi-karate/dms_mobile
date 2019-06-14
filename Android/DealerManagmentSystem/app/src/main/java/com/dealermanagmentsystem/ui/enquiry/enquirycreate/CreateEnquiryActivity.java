@@ -2,19 +2,27 @@ package com.dealermanagmentsystem.ui.enquiry.enquirycreate;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.data.model.enquirydetail.EnquiryDetailResponse;
@@ -38,7 +46,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
-import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
 import static com.dealermanagmentsystem.constants.Constants.LEAD_EDIT_ENQUIRY;
@@ -331,7 +338,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                 enquiryDetailRequest.setTestDriveDate(strDriveDate);
             }
 
-            if (driveDate != detailResponse.getTestDrive()){
+            if (driveDate != detailResponse.getTestDrive()) {
                 detailResponse.setTestDrive(driveDate);
                 enquiryDetailRequest.setTestDrive(driveDate);
             }
@@ -417,11 +424,36 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
     }
 
     @Override
-    public void onSuccessCreateEnquiry() {
-        Intent intent = new Intent();
-        setResult(2, intent);
-        finish();
-        DMSToast.showLong(activity, "Enquiry created successfully");
+    public void onSuccessCreateEnquiry(String id) {
+        successDialog(id);
+    }
+
+    public void successDialog(String id) {
+        final View view = getLayoutInflater().inflate(R.layout.dialog_enquiry_sucess, null);
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(view);
+        dialog.setCanceledOnTouchOutside(false);
+
+        final Button ok = view.findViewById(R.id.ok);
+        final TextView name = view.findViewById(R.id.name);
+        name.setText("Enquiry id is " + id);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                setResult(2, intent);
+                finish();
+            }
+        });
+
+        Rect displayRectangle = new Rect();
+        Window window = activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        view.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+        dialog.setContentView(view);
+
+        dialog.show();
     }
 
     @Override

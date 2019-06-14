@@ -10,6 +10,12 @@ public interface IHomePresenter {
 
     public void getTasksOverview(Activity activity);
 
+    public void setFeedback(Activity activity, String taskId, String strFeedback);
+
+    public void getDeliveryCount(Activity activity);
+
+    public void getInvoiceCount(Activity activity);
+
     public void sendFcmToken(Activity activity, String token);
 
 }

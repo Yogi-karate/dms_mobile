@@ -48,7 +48,12 @@ public class SaleOrderActivity extends BaseActivity implements ISaleOrderView {
             strSaleTypeID = intent.getStringExtra(EXTRA_SALE_TYPE_ID);
         }
 
-        showTile("Sale Order" + "/" + strSaleType);
+        if ("to invoice".equalsIgnoreCase(strSaleType)) {
+            showTile("To be Invoiced" + "/" + strSaleType);
+        }else{
+            showTile("Sale Order" + "/" + strSaleType);
+        }
+
         setStatusBarColor(getResources().getColor(R.color.bg));
         showBackButton();
 
