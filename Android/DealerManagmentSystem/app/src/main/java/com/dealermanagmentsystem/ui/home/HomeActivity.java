@@ -1,6 +1,7 @@
 package com.dealermanagmentsystem.ui.home;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,10 +9,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +23,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -27,31 +31,32 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.TasksAdapter;
+import com.dealermanagmentsystem.constants.Constants;
+import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.Result;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
-import com.dealermanagmentsystem.dialog.DefaultAlertDialog;
-import com.dealermanagmentsystem.dialog.TwoButtonAlertDialogModel;
-import com.dealermanagmentsystem.notification.Config;
-import com.dealermanagmentsystem.notification.NotificationUtils;
+import com.dealermanagmentsystem.event.TasksCompleteEvent;
 import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
+import com.dealermanagmentsystem.ui.delivery.DeliveryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirysubenquirylist.EnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
-import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.ui.saleorder.SaleOrderActivity;
 import com.dealermanagmentsystem.utils.ImageLoad;
 import com.dealermanagmentsystem.utils.ui.DMSToast;
@@ -67,7 +72,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,22 +80,22 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static com.dealermanagmentsystem.constants.Constants.BOOKED;
 import static com.dealermanagmentsystem.constants.Constants.CANCEL;
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_LISTS;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
-import static com.dealermanagmentsystem.constants.Constants.KEY_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
@@ -103,6 +108,7 @@ import static com.dealermanagmentsystem.constants.Constants.STATE_OVERDUE;
 import static com.dealermanagmentsystem.constants.Constants.STATE_PLANNED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_TODAY;
 import static com.dealermanagmentsystem.constants.Constants.SUB_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.TO_INVOICE;
 
 public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, IHomeView {
     Activity activity;
@@ -148,6 +154,16 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TextView txtTasksMore;
     @BindView(R.id.cardView_tasks)
     CardView cardViewTasks;
+    @BindView(R.id.txt_delivery_count)
+    TextView txtDeliveryCount;
+    @BindView(R.id.txt_invoice_count)
+    TextView txtInvoiceCount;
+    @BindView(R.id.cv_delivery_count)
+    CardView cvDeliveryCount;
+    @BindView(R.id.cv_invoice_count)
+    CardView cvInvoiceCount;
+
+    private static final String SHOWCASE_ID = "showcase";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,13 +205,55 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
         presenter = new HomePresenter(this);
 
-        //fcm
+      /*  //fcm
         final Intent intent = getIntent();
         if (intent != null) {
             DMSToast.showLong(activity, intent.getStringExtra("key"));
-        }
-
+        }*/
+        //   presentShowcaseSequence();
         sendIdToServer();
+
+
+    }
+
+    private void presentShowcaseSequence() {
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setOnItemShownListener(new MaterialShowcaseSequence.OnSequenceItemShownListener() {
+            @Override
+            public void onShow(MaterialShowcaseView itemView, int position) {
+                Toast.makeText(itemView.getContext(), "Item #" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(chart, "This chart represents enquiries", "Got it");
+
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(salesChart)
+                        .setDismissText("Got it")
+                        .setContentText("This chart represents sales")
+                        .withRectangleShape(true)
+                        .build()
+        );
+
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(fabCreateEnquiry)
+                        .setDismissText("Got it")
+                        .setContentText("Here you can create enquiry")
+                        .withRectangleShape()
+                        .build()
+        );
+
+        sequence.start();
+        // MaterialShowcaseView.resetSingleUse(this, SHOWCASE_ID);
     }
 
     private void sendIdToServer() {
@@ -211,6 +269,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         presenter.getLeadsOverview(activity);
         presenter.getSalesOverview(activity);
         presenter.getTasksOverview(activity);
+        presenter.getDeliveryCount(activity);
+        presenter.getInvoiceCount(activity);
     }
 
     @Override
@@ -231,7 +291,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+            LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclerViewTasks.setHasFixedSize(true);
             recyclerViewTasks.setLayoutManager(gridLayoutManager);
             if (tasks != null) {
@@ -243,14 +303,91 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(activity, TasksActivity.class);
-                    // intent.putParcelableArrayListExtra(EXTRA_ACTIVITY_LISTS, (ArrayList<? extends Parcelable>) tasks);
                     intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Home");
                     activity.startActivity(intent);
                 }
             });
         }
+    }
 
+    @SuppressWarnings("unused") //Otto uses.
+    @Subscribe
+    public void onComplete(TasksCompleteEvent event) {
+        String taskId = event.getCastedObject();
+        showDialogFeedback(taskId);
+    }
 
+    private void showDialogFeedback(final String taskId) {
+        final View view = getLayoutInflater().inflate(R.layout.dialog_task_feedback, null);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(view);
+        dialog.setCanceledOnTouchOutside(false);
+
+        final EditText feedback = view.findViewById(R.id.feedback);
+        final Button ok = view.findViewById(R.id.ok);
+        final Button close = view.findViewById(R.id.close);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String strFeedback = feedback.getText().toString();
+                if (TextUtils.isEmpty(strFeedback)) {
+                    DMSToast.showLong(activity, "Please enter feedback");
+                } else {
+                    presenter.setFeedback(activity, taskId, strFeedback);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Rect displayRectangle = new Rect();
+        Window window = activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        view.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    @Override
+    public void onSuccessFeedBack(CommonResponse commonResponse) {
+        if (commonResponse.getMessage().equalsIgnoreCase(Constants.SUCCESS)) {
+            DMSToast.showLong(activity, "Submitted successfully");
+            presenter.getTasksOverview(activity);
+        }
+    }
+
+    @Override
+    public void onSuccessDeliveryCount(String count) {
+        txtDeliveryCount.setText(count);
+        cvDeliveryCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, DeliveryActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onSuccessInvoiceCount(String count) {
+        txtInvoiceCount.setText(count);
+        cvInvoiceCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, SaleOrderActivity.class);
+                intent.putExtra(EXTRA_SALE_TYPE, TO_INVOICE);
+                intent.putExtra(EXTRA_SALE_TYPE_ID, "to invoice");
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

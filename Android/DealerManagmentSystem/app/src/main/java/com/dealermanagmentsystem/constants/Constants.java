@@ -34,6 +34,7 @@ public class Constants {
     public static String QUOTATION = "Quotation";
     public static String BOOKED = "Booked";
     public static String CANCEL = "Cancel";
+    public static String TO_INVOICE = "To Invoice";
 
     public static String KEY_EDIT_ACTIVITY = "edit_activity";
     public static String KEY_CREATE_ACTIVITY = "create_activity";

@@ -105,7 +105,6 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
         if (strFrom.equalsIgnoreCase(KEY_CREATE_ACTIVITY)) {
             final String strNote = etNote.getText().toString();
             presenter.createTask(activity, strSummary, strNote, userId, activityTypeId, strFollowUpDate, leadId);
-
         } else {
             presenter.editTask(activity, strSummary, strFollowUpDate, strActivityId);
         }
@@ -140,7 +139,12 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
     @Override
     public void onSuccessCreateTasks(CommonResponse response) {
         if (TextUtils.isEmpty(response.getError())) {
-            DMSToast.showLong(activity, "Activity created successfully");
+            if (strFrom.equalsIgnoreCase(KEY_CREATE_ACTIVITY)) {
+                DMSToast.showLong(activity, "Activity created successfully");
+            } else {
+                DMSToast.showLong(activity, "Activity edited successfully");
+            }
+
             finish();
         } else {
             DMSToast.showLong(activity, "Failed to create activity");
