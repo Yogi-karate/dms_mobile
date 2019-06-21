@@ -6,14 +6,19 @@ const notification = async () => {
     try {
         let user = await sendRequest(`/login`, {
             method: 'POST',
-            data:{
-                mobile:"1111111111",
-                password:"Sdms@1234"
-            }
+            body:JSON.stringify({
+                "mobile":"1111111111",
+                "password":"Sdms@1234"
+            })
         });
+        let token = user.token;
         console.log("Login Details",user);
-        let res = await sendRequest(`${BASE_PATH}/list`, {
+        let res = await sendRequest(`${BASE_PATH}/notifications`, {
             method: 'GET',
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization':"JWT "+user.token
+            }
         });
         console.log("The response is ",res);
     } catch (err) {

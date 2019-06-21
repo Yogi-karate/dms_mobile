@@ -2,6 +2,7 @@ const fetch = require('isomorphic-unfetch');
 const getRootUrl = require('./getRootUrl');
 
 module.exports =  async function sendRequest(path, opts = {}) {
+  console.log("the options",opts);
   const headers = Object.assign({}, opts.headers || {}, {
     'Content-type': 'application/json; charset=UTF-8',
   });
