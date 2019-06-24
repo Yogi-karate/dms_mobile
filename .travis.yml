@@ -1,0 +1,13 @@
+services:
+  - docker
+
+script:
+  - docker build ./web -t tramm/dms_mobile
+  - docker run -d -p 127.0.0.1:80:4567 tramm/dms_mobile
+  - docker ps -a
+   
+after_success:
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push tramm/dms_mobile
+ 
+notifications:
+  slack: saboogroupworkspace:tco87KFtlVfRyVKhQoaEfKQn
