@@ -2,9 +2,9 @@ package com.dealermanagmentsystem.constants;
 
 public class ConstantsUrl {
 
-    //private static String ROOT_URL = "http://api.turnright.tech/";
+    private static String ROOT_URL = "http://prod-api.turnright.tech/";
 
-    private static String ROOT_URL = "http://dev.api.turnright.tech/";
+    //private static String ROOT_URL = "http://dev.api.turnright.tech/";
 
     //private static String ROOT_URL = "http://10.10.10.215:8001/";
 

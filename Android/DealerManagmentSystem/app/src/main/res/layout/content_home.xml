@@ -228,44 +228,92 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                         android:id="@+id/tasks_title"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
+                        android:gravity="center"
                         android:padding="10dp"
+                        android:text="Today's Tasks"
                         android:textColor="@color/textPrimary"
                         android:textSize="16sp" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/bg" />
+
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:id="@+id/tasks_more"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="More"
+                        android:text="10"
                         android:textColor="@color/rust"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/bg" />
+                <!-- <View
+                     android:layout_width="match_parent"
+                     android:layout_height="1dp"
+                     android:background="@color/bg" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_View_tasks"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
+                 <android.support.v7.widget.RecyclerView
+                     android:id="@+id/recycler_View_tasks"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent" />
+ -->
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
+      <!--  <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardCornerRadius="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="test.io.feeeei.circleseekbar.UnionActivity">
+
+                <io.feeeei.circleseekbar.CircleSeekBar
+                    android:id="@+id/seek_minute"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_centerInParent="true"
+                    app:wheel_max_process="59"
+                    app:wheel_unreached_width="32dp" />
+
+                &lt;!&ndash;     300-32-32 = 236   &ndash;&gt;
+                <io.feeeei.circleseekbar.CircleSeekBar
+                    android:id="@+id/seek_hour"
+                    android:layout_width="236dp"
+                    android:layout_height="236dp"
+                    android:layout_centerInParent="true"
+                    app:wheel_max_process="11"
+                    app:wheel_pointer_color="@color/colorPrimaryDark"
+                    app:wheel_pointer_radius="8dp"
+                    app:wheel_reached_color="@color/colorAccent"
+                    app:wheel_reached_width="32dp"
+                    app:wheel_unreached_color="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/textview"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>-->
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -273,6 +321,7 @@
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
+            android:visibility="gone"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
@@ -301,11 +350,12 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-        <LinearLayout
 
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cv_delivery_count"
@@ -319,8 +369,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:id="@+id/txt_delivery_count"
@@ -329,6 +379,7 @@
                         android:text="102"
                         android:textColor="@color/textPrimary"
                         android:textSize="24sp" />
+
                     <com.dealermanagmentsystem.utils.ui.DMSTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -351,8 +402,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:id="@+id/txt_invoice_count"
@@ -361,6 +412,7 @@
                         android:text="153"
                         android:textColor="@color/textPrimary"
                         android:textSize="24sp" />
+
                     <com.dealermanagmentsystem.utils.ui.DMSTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

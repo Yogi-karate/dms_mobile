@@ -63,7 +63,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
             itemViewHolder.mTeamName.setText(mRecords.get(i).getPartnerMobile());
             itemViewHolder.mEnquiryId.setText(String.valueOf(mRecords.get(i).getId()));
         } else {
-            itemViewHolder.mEnquiryId.setVisibility(View.GONE);
+            itemViewHolder.llEnquiryId.setVisibility(View.GONE);
             itemViewHolder.mName.setText(name);
             itemViewHolder.mUserName.setText(mRecords.get(i).getDateDeadLine());
             itemViewHolder.mTeamName.setText(mRecords.get(i).getMobile());
@@ -148,6 +148,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
         TextView mEnquiryId;
         LinearLayout llParent;
         LinearLayout llCall;
+        LinearLayout llEnquiryId;
 
         public AdapterItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -158,6 +159,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
             mEnquiryId = (TextView) itemView.findViewById(R.id.enquiry_id);
             llParent = (LinearLayout) itemView.findViewById(R.id.ll_parent);
             llCall = (LinearLayout) itemView.findViewById(R.id.ll_call);
+            llEnquiryId = (LinearLayout) itemView.findViewById(R.id.ll_enquiry_id);
         }
     }
 }

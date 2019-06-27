@@ -80,6 +80,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.feeeei.circleseekbar.CircleSeekBar;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
@@ -118,8 +119,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton fabCreateEnquiry;
     @BindView(R.id.chart)
     PieChart chart;
-    @BindView(R.id.chart_sale_order)
-    PieChart salesChart;
+   /* @BindView(R.id.chart_sale_order)
+    PieChart salesChart;*/
     @BindView(R.id.card_view_title)
     CardView cardView;
     @BindView(R.id.img_title)
@@ -145,8 +146,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.ll_booked)
     LinearLayout llBooked;
     String strState;
-    @BindView(R.id.recycler_View_tasks)
-    RecyclerView recyclerViewTasks;
+   /* @BindView(R.id.recycler_View_tasks)
+    RecyclerView recyclerViewTasks;*/
     TasksAdapter tasksAdapter;
     @BindView(R.id.tasks_title)
     TextView txtTasksTitle;
@@ -154,16 +155,22 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TextView txtTasksMore;
     @BindView(R.id.cardView_tasks)
     CardView cardViewTasks;
-    @BindView(R.id.txt_delivery_count)
+   /* @BindView(R.id.txt_delivery_count)
     TextView txtDeliveryCount;
     @BindView(R.id.txt_invoice_count)
     TextView txtInvoiceCount;
     @BindView(R.id.cv_delivery_count)
     CardView cvDeliveryCount;
     @BindView(R.id.cv_invoice_count)
-    CardView cvInvoiceCount;
+    CardView cvInvoiceCount;*/
 
     private static final String SHOWCASE_ID = "showcase";
+
+   /* private CircleSeekBar mHourSeekbar;
+
+    private CircleSeekBar mMinuteSeekbar;
+
+    private TextView mTextView;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,9 +221,29 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         sendIdToServer();
 
 
+     /*   mHourSeekbar = (CircleSeekBar) findViewById(R.id.seek_hour);
+        mMinuteSeekbar = (CircleSeekBar) findViewById(R.id.seek_minute);
+        mTextView = (TextView) findViewById(R.id.textview);
+
+        mHourSeekbar.setOnSeekBarChangeListener(new CircleSeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onChanged(CircleSeekBar seekbar, int curValue) {
+            }
+        });
+
+        mMinuteSeekbar.setOnSeekBarChangeListener(new CircleSeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onChanged(CircleSeekBar seekbar, int curValue) {
+            }
+        });
+
+        mHourSeekbar.setCurProcess(5);
+
+        mMinuteSeekbar.setCurProcess(30);*/
+
     }
 
-    private void presentShowcaseSequence() {
+   /* private void presentShowcaseSequence() {
 
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
@@ -254,7 +281,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
         sequence.start();
         // MaterialShowcaseView.resetSingleUse(this, SHOWCASE_ID);
-    }
+    }*/
 
     private void sendIdToServer() {
         if (!DMSPreference.getBoolean(KEY_FCM_TOKEN_SET)) {
@@ -267,10 +294,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         cardView.setVisibility(View.GONE);
         presenter.getLeadsOverview(activity);
-        presenter.getSalesOverview(activity);
+      //  presenter.getSalesOverview(activity);
         presenter.getTasksOverview(activity);
-        presenter.getDeliveryCount(activity);
-        presenter.getInvoiceCount(activity);
+       // presenter.getDeliveryCount(activity);
+      //  presenter.getInvoiceCount(activity);
     }
 
     @Override
@@ -280,7 +307,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessSalesOverview(List<SaleOverviewResponse> saleOverviewResponses) {
-        setPieChartSalesData(saleOverviewResponses);
+      //  setPieChartSalesData(saleOverviewResponses);
     }
 
     @Override
@@ -289,16 +316,18 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         if (tasks.size() == 0) {
             cardViewTasks.setVisibility(View.GONE);
         } else {
-            txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
+            cardViewTasks.setVisibility(View.VISIBLE);
+            //txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
 
-            LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+   /*         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclerViewTasks.setHasFixedSize(true);
             recyclerViewTasks.setLayoutManager(gridLayoutManager);
             if (tasks != null) {
                 tasksAdapter = new TasksAdapter(this, tasks);
                 recyclerViewTasks.setAdapter(tasksAdapter);
-            }
+            }*/
 
+            txtTasksMore.setText(String.valueOf(tasks.size()));
             txtTasksMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -366,19 +395,19 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessDeliveryCount(String count) {
-        txtDeliveryCount.setText(count);
+       /* txtDeliveryCount.setText(count);
         cvDeliveryCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, DeliveryActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
     public void onSuccessInvoiceCount(String count) {
-        txtInvoiceCount.setText(count);
+      /*  txtInvoiceCount.setText(count);
         cvInvoiceCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -387,7 +416,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intent.putExtra(EXTRA_SALE_TYPE_ID, "to invoice");
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -397,7 +426,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessToken() {
-        DMSToast.showLong(activity, "Token sent successfully");
+      //  DMSToast.showLong(activity, "Token sent successfully");
     }
 
     public void setPieChartLeadData(List<LeadOverviewResponse> leadOverviewResponse) {
@@ -569,7 +598,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
+  /*  public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
         final List<Result> result = leadOverviewResponse.get(0).getResult();
 
         Integer quotation = 0;
@@ -689,7 +718,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
 
-    }
+    }*/
 
     @OnClick(R.id.ll_cold) //ButterKnife uses.
     public void launchCold() {
@@ -742,9 +771,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
             intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
             startActivity(intent);
-        } else if (id == R.id.follow_up) {
+        } /*else if (id == R.id.follow_up) {
             DMSToast.showLong(activity, "Coming Soon..");
-        } else if (id == R.id.logout) {
+        } */else if (id == R.id.logout) {
             logOutDialog(activity);
         }
 

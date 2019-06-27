@@ -17,8 +17,10 @@
         android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:allowBackup="false"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:icon">
+        tools:replace="android:icon,android:allowBackup"
+        >
         <activity
             android:name=".ui.delivery.DeliveryActivity"
             android:screenOrientation="portrait"

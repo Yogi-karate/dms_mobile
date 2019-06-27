@@ -73,6 +73,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/ll_enquiry_id"
             android:orientation="horizontal">
 
             <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
@@ -193,7 +194,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Date Deadline"
+                android:text="Follow up date"
                 android:textColor="@color/textSecondary"
                 android:textSize="18sp" />
 
