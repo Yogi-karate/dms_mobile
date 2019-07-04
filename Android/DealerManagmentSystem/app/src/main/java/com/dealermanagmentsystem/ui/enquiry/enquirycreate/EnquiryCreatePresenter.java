@@ -143,7 +143,9 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             view.onError("please enter a valid 10 digit mobile no");
         } else if (sourceId == -1) {
             view.onError("please enter a source");
-        } else if (!TextUtils.isEmpty(strDriveDate) && !driveDate) {
+        } else if (TextUtils.isEmpty(strDriveDate) && driveDate) {
+            view.onError("please select the date for test drive");
+        }else if (!TextUtils.isEmpty(strDriveDate) && !driveDate) {
             view.onError("please select the checkbox for test drive");
         } else {
             EnquireCreateRequest enquireCreateRequest = new EnquireCreateRequest();
@@ -174,7 +176,15 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(ENQUIRY, activity, json, POST, new IConnectionListener() {
                 @Override
                 public void onSuccess(Result result) {
-                    view.onSuccessCreateEnquiry();
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(result.getResponse());
+                        final int id = jsonObject.getInt("id");
+                        view.onSuccessCreateEnquiry(String.valueOf(id));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -240,9 +250,9 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
             view.onError("please enter a valid 10 digit mobile no");
         } else if (sourceId == -1) {
             view.onError("please enter a source");
-        } else if (!TextUtils.isEmpty(detailResponse.getTestDriveDate()) && !detailResponse.getTestDrive()) {
+        }/* else if (!TextUtils.isEmpty(detailResponse.getTestDriveDate()) && !detailResponse.getTestDrive()) {
             view.onError("please select the checkbox for test drive");
-        }/*else if (Utils.isValidEmail(enquiryDetailResponse.getPartnerEmail())) {
+        }*//*else if (Utils.isValidEmail(enquiryDetailResponse.getPartnerEmail())) {
             view.onError("please enter a valid email");
         } */ else {
             Gson gson = new GsonBuilder().create();

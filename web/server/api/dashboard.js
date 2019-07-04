@@ -31,9 +31,13 @@ router.get('/inventory', async (req, res) => {
   try {
     model = 'stock.picking';
     console.log("Hello from inventory dashboard api");
-    let result = await base.searchModels(model, { domain: [], fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
+    //fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"]
+    let domain = [];
+    domain.push(["state", "=", 'confirmed']);
+    domain.push(["picking_type_id.code", "=", 'outgoing']);
+    let result = await base.searchModels(req.user, {model, domain: domain});
     console.log(model + '', result);
-    res.json(result);
+    res.json({ "length": result});
   } catch (err) {
     console.log(err);
     res.json({ error: err.message || err.toString() });
@@ -44,12 +48,12 @@ router.get('/invoice', async (req, res) => {
   try {
     let model = 'sale.order';
     let domain = [];
-    domain.push(["invoice_state", "ilike", 'to invoice']);
-    result = await base.searchModels(model, { domain: domain });
-    console.log(model + '', result);
+    domain.push(["invoice_status", "ilike", 'to invoice']);
+    result = await base.searchModels(req.user, {model, domain: domain });
+    console.log("The searchModels return result ", model + '', result);
+    res.json({ "length": result});
   } catch (err) {
-    return { error: err.message || err.toString() };
+    res.json({ error: err.message || err.toString() });
   }
-  return result;
 });
 module.exports = router;

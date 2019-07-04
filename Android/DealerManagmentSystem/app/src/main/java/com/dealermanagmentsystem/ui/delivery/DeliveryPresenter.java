@@ -1,44 +1,43 @@
-package com.dealermanagmentsystem.ui.saleorder;
+package com.dealermanagmentsystem.ui.delivery;
 
 import android.app.Activity;
 
+import com.dealermanagmentsystem.data.model.delivery.DeliveryResponse;
 import com.dealermanagmentsystem.data.model.saleorder.SaleOrderResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
 import com.dealermanagmentsystem.network.IConnectionListener;
 import com.dealermanagmentsystem.network.Result;
+import com.dealermanagmentsystem.ui.saleorder.ISaleOrderPresenter;
+import com.dealermanagmentsystem.ui.saleorder.ISaleOrderView;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.dealermanagmentsystem.constants.Constants.GET;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.DELIVERY;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SALE_ORDER_SEARCH;
 
-public class SaleOrderPresenter implements ISaleOrderPresenter {
+public class DeliveryPresenter implements IDeliveryPresenter {
 
-    ISaleOrderView view;
+    IDeliveryView view;
 
-    public SaleOrderPresenter(ISaleOrderView iSaleOrderView) {
-        view = iSaleOrderView;
+    public DeliveryPresenter(IDeliveryView iDeliveryView) {
+        view = iDeliveryView;
     }
 
+
     @Override
-    public void getSaleOrder(Activity activity, String strSaleType) {
-        String url;
-        if ("to invoice".equalsIgnoreCase(strSaleType)) {
-            url = SALE_ORDER_SEARCH + "invoice_status=" + strSaleType;
-        } else {
-            url = SALE_ORDER_SEARCH + "state=" + strSaleType;
-        }
-        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(url, activity, GET, new IConnectionListener() {
+    public void getDelivery(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(DELIVERY, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 JSONObject jsonObject;
                 try {
                     jsonObject = new JSONObject(result.getResponse());
                     Gson gson = new Gson();
-                    SaleOrderResponse saleOrderResponse = gson.fromJson(jsonObject.toString(), SaleOrderResponse.class);
-                    view.onSuccessSaleOrder(saleOrderResponse);
+                    DeliveryResponse deliveryResponse = gson.fromJson(jsonObject.toString(), DeliveryResponse.class);
+                    view.onSuccessDelivery(deliveryResponse);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

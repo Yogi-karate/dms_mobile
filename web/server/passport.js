@@ -105,6 +105,7 @@ function auth_pass({ server }) {
   });
   server.post('/login', (req, res, next) => {
     console.log("Doing LOGIN");
+    console.log("The request ...",req);
     passport.authenticate('login', (err, user, info) => {
       console.log("HALOOOOO");
       if (err) {
@@ -124,11 +125,11 @@ function auth_pass({ server }) {
           console.log("No User Avatar Found !!!!");
           user.image = "";
         }
-        firebase(user,{
-          title: 'Welcome to DMS',
-          message: 'Thanks for Logging In !!!!',
-          timestamp: '2019-05-27 8:15:01'
-      });
+      //   firebase(user,{
+      //     title: 'Welcome to DMS',
+      //     message: 'Thanks for Logging In !!!!',
+      //     timestamp: '2019-05-27 8:15:01'
+      // });
         res.status(200).send({
           name: user.name,
           email: user.email,

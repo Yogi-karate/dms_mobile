@@ -5,19 +5,20 @@ const firebase = require('../ext/firebase');
 
 class Task{
     
-    async sendTaskNotification(user,{modelName}) {
+    async sendTaskNotification(admin,user) {
         let self = this;
-        console.log("user" + '', user);
-        console.log("partner" + '', user.partner_id);
         let states = ["today"];
         let result = null;
         try {
-            let server = odoo.getOdoo(user.email);
-            console.log("user id",server.context);
+
+            let server = odoo.getOdoo(admin.email);
+            console.log("user name",user.email);
+            let user_id = await server.search('res.users',{domain:[["login","=",user.email]]});
+            console.log("The user id ",user_id);
             let model = 'mail.activity';
             let domain =this.getActivityDomain(states[0]);
           //  domain.push(["res_model", "=", modelName]);
-            domain.push(["user_id", "=", server.uid]);
+            domain.push(["user_id", "=", user_id]);
             console.log("domain ",domain);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id","res_model"]});
             console.log(model + '', result);

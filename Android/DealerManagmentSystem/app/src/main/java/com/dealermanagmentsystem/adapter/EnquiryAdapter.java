@@ -61,12 +61,13 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
             }
             itemViewHolder.mUserName.setText(mRecords.get(i).getDateFollowUp());
             itemViewHolder.mTeamName.setText(mRecords.get(i).getPartnerMobile());
+            itemViewHolder.mEnquiryId.setText(String.valueOf(mRecords.get(i).getId()));
         } else {
+            itemViewHolder.mEnquiryId.setVisibility(View.GONE);
             itemViewHolder.mName.setText(name);
             itemViewHolder.mUserName.setText(mRecords.get(i).getDateDeadLine());
             itemViewHolder.mTeamName.setText(mRecords.get(i).getMobile());
         }
-
 
        /* final Object userId = mRecords.get(i).getUserId();
         if (userId instanceof List) {
@@ -75,8 +76,6 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
             itemViewHolder.mUserName.setVisibility(View.GONE);
         }
 */
-
-
 
      /*   final Object teamId = mRecords.get(i).getTeamId();
         if (teamId instanceof List) {
@@ -98,6 +97,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
                 }
             });
         }
+
         itemViewHolder.llCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +145,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
         TextView mPartnerName;
         TextView mUserName;
         TextView mTeamName;
+        TextView mEnquiryId;
         LinearLayout llParent;
         LinearLayout llCall;
 
@@ -154,6 +155,7 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
             mPartnerName = (TextView) itemView.findViewById(R.id.partner_name);
             mUserName = (TextView) itemView.findViewById(R.id.user_name);
             mTeamName = (TextView) itemView.findViewById(R.id.team_name);
+            mEnquiryId = (TextView) itemView.findViewById(R.id.enquiry_id);
             llParent = (LinearLayout) itemView.findViewById(R.id.ll_parent);
             llCall = (LinearLayout) itemView.findViewById(R.id.ll_call);
         }

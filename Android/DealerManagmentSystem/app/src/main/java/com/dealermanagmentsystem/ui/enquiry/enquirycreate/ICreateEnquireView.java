@@ -13,7 +13,7 @@ public interface ICreateEnquireView {
 
     public void onSuccessSource(Response typesResponse);
 
-    public void onSuccessCreateEnquiry();
+    public void onSuccessCreateEnquiry(String response);
 
     public void onError(String message);
 

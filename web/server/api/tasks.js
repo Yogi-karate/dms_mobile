@@ -29,7 +29,7 @@ router.use((req, res, next) => {
 });
 router.get('/notifications', async (req, res) => {
   try {
-    let result = await task.sendTaskNotification(req.user,{ modelName: req.params.modelName});
+    let result = await task.sendTaskNotification(req.user);
     console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
