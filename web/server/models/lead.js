@@ -136,9 +136,7 @@ class Lead {
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
             let self = this;
-                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields }, true);
-                console.log("The model and groups are ",model + '', group[0].user_id[0]);
-               
+                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields }, true);               
                 let group1 = await server.read_group(model, {domain: domain1, groupby: ["user_id"] }, true);
 
                  for(var i=0 ; i<group.length ; i++){
