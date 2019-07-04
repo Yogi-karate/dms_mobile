@@ -129,13 +129,26 @@ class Lead {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             let domain = [];
-            let fields = ["user_id","user_id_count"];
+            let domain1 = [];
+            let fields = ["user_id","user_id_count","user_booked_id"];
             domain.push(["team_id", "=", parseInt(id)]);
-            //domain.push(["stage_id.name", "ilike","booked"]);
-            //domain.push(["stage_id", "=", 4]);
+            //domain1.push(["stage_id.name", "ilike","booked"]);
+            domain1.push(["team_id", "=", parseInt(id)]);
+            domain1.push(["stage_id", "=", 4]);
             let self = this;
-                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields}, true);
-                console.log("The model and groups are ",model + '', group);
+                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields }, true);
+                console.log("The model and groups are ",model + '', group[0].user_id[0]);
+               
+                let group1 = await server.read_group(model, {domain: domain1, groupby: ["user_id"] }, true);
+
+                 for(var i=0 ; i<group.length ; i++){
+                    for(var j=0; j<group1.length ; j++){
+                        console.log("inside for group is ",group[i].user_id[0] == group1[j].user_id[0]);
+                        if(group[i].user_id[0] == group1[j].user_id[0]){
+                            group[i].user_booked_id = group1[j].user_id_count;
+                        }
+                    }
+                } 
                 result.push({ result: group });
             return result;
         } catch (err) {
