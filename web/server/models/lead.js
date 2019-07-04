@@ -123,6 +123,26 @@ class Lead {
         }
         return result;
     }
+    async getLeadDashboard(user,{ id }) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lead';
+            let domain = [];
+            let fields = ["user_id","user_id_count"];
+            domain.push(["team_id", "=", parseInt(id)]);
+            //domain.push(["stage_id.name", "ilike","booked"]);
+            //domain.push(["stage_id", "=", 4]);
+            let self = this;
+                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields}, true);
+                console.log("The model and groups are ",model + '', group);
+                result.push({ result: group });
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
 }
 
 module.exports = new Lead();
