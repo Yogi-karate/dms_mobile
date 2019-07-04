@@ -13,6 +13,7 @@ const sms = require('./ext/sms');
 const OTP = require('./ext/otp');
 const odoo = require('./odoo_server');
 const firebase = require('./ext/firebase');
+const base = require('./models/base');
 
 const BCRYPT_SALT_ROUNDS = 12;
 require('dotenv').config();
@@ -54,6 +55,10 @@ function auth_pass({ server }) {
               model = 'res.partner';
               let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
               user.image = im_result.records[0].image;
+              role_result = await base.getUserRole(user);
+              console.log("User role result",role_result);
+              user.role = role_result.role;
+              user.teams = role_result.teams;
               return done(null, user);
             });
           });
@@ -124,16 +129,18 @@ function auth_pass({ server }) {
           console.log("No User Avatar Found !!!!");
           user.image = "";
         }
-        firebase(user,{
+        /* firebase(user,{
           title: 'Welcome to DMS',
           message: 'Thanks for Logging In !!!!',
           timestamp: '2019-05-27 8:15:01'
-      });
+      }); */
         res.status(200).send({
           name: user.name,
           email: user.email,
           image: user.image,
           auth: true,
+          role:user.role,
+          teams:user.teams,
           token,
           message: 'user found & logged in',
         });

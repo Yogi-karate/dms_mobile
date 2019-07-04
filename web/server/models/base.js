@@ -13,11 +13,10 @@ class Base {
             return { error: err.message || err.toString() };
         }
     }
-    async searchModels(user, { model, domain = [], fields = [] }) {
+    async searchModels(user, { model, domain = [] }) {
         let server = odoo.getOdoo(user.email);
-        console.log("Hello from base",fields,domain);
-        let result = await server.search(model, domain, true );
-        console.log("RESULT", result)
+        let result = await server.search(model, { domain: domain }, true);
+        console.log("the result for searchModels", result)
         return result;
     }
     cleanModels(models) {
@@ -36,6 +35,30 @@ class Base {
             }
         });
         return models;
+    }
+    async getUserRole(user) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.team';
+            console.log("inside getUserRole user email is", user.email);
+            let domain = [];
+            domain.push(["manager_user_ids", "in", [server.uid]]);
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
+            if (result.length !=0) {
+                return { role: "Manager", teams: result }
+            } else {
+                domain = [["user_id", "=",server.uid]];
+                result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
+                if (result.length != 0) {
+                    return { role: "Team_Lead", teams: result }
+                }
+            }
+            console.log("The model and result is ", model + '', result);
+            return { role: "user",teams:""}
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
     }
 }
 module.exports = new Base();
