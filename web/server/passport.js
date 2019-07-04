@@ -110,7 +110,6 @@ function auth_pass({ server }) {
   });
   server.post('/login', (req, res, next) => {
     console.log("Doing LOGIN");
-    console.log("The request ...",req);
     passport.authenticate('login', (err, user, info) => {
       console.log("HALOOOOO");
       if (err) {
