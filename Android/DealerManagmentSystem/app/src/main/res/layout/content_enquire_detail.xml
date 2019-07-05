@@ -34,6 +34,7 @@
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                        android:id="@+id/enquiry_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center|start"

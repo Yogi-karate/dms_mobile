@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.LeadAdapter;
@@ -40,6 +45,7 @@ public class LeadActivity extends BaseActivity implements ILeadView {
     String strState;
     String strStage;
     LeadAdapter leadAdapter;
+    SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,39 @@ public class LeadActivity extends BaseActivity implements ILeadView {
         presenter = new LeadsPresenter(this);
         presenter.getLeads(activity, strState, strStage);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        //searchEditText.setBackgroundColor(ContextCompat.getColor(this, R.color.light_grey));
+        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+        searchEditText.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary));
+
+        mSearchView.setQueryHint("Search by name and customer");
+
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                leadAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     public void onSuccessLeads(EnquiryResponse enquiryResponse) {

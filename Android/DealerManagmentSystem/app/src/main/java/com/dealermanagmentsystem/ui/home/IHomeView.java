@@ -5,6 +5,7 @@ import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
+import com.dealermanagmentsystem.data.model.teamdetail.TeamDetailResponse;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface IHomeView {
     public void onError(String message);
     public void onSuccessToken();
     public void onSuccessFeedBack(CommonResponse commonResponse);
+
+    public void onSuccessTeamDetail(List<TeamDetailResponse> commonResponse);
 
 }
