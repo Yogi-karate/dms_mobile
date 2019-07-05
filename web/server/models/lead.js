@@ -139,14 +139,14 @@ class Lead {
             let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
             let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
 
-            console.log("The group is ",group);
-            console.log("The group1 is ",group1);
-            console.log("The group is ",group.length);
-            console.log("The group1 is ",group1.length);
+            console.log("The group is ", group);
+            console.log("The group1 is ", group1);
+            console.log("The group is ", group.length);
+            console.log("The group1 is ", group1.length);
 
-            for (var i = 0; i < group.length; i++) {
+            for (let i = 0; i < group.length; i++) {
                 group[i].user_booked_id = 0;
-                for (var j = 0; j < group1.length; j++) {
+                for (let j = 0; j < group1.length; j++) {
                     console.log("inside for group is ", group[i].user_id[0] == group1[j].user_id[0]);
                     if (group[i].user_id[0] == group1[j].user_id[0]) {
                         group[i].user_booked_id = group1[j].user_id_count;
@@ -161,20 +161,35 @@ class Lead {
 
     }
     async getDailyLeads(user, { id }) {
-        let result = [];
+        let result = {};
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             let domain = [];
-            var date = new Date();
-            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-            console.log("The current month first day is ", firstDay);
-            domain.push(["user_id", "=", parseInt(id)]);
-            domain.push(["create_date", ">", firstDay])
+            let fields = ["user_id", "create_date"];
+            var today = new Date();
+            var lastDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            console.log("The current month first day is ", lastDay);
+            domain.push(["user_id", "=", 144]);
+            domain.push(["create_date", ">", lastDay])
             let self = this;
-            let group = await server.read_group(model, { domain: domain, groupby: ["create_date"] }, true);
-            result.push({ result: group });
-            return result;
+            let group = await server.search_read(model, { domain: domain, fields: fields });
+            group.records.forEach(lead => {
+                console.log("the lead data in loop", lead);
+                let uid = lead.user_id[0];
+                let day = lead.create_date.slice(0, 10);
+                if (result[day]) {
+                    result[day]++;
+                } else {
+                    result[day] = 1;
+                }
+            })
+            // result.push({ result: group });
+            let new_result = []
+            Object.keys(result).forEach(key => {
+                new_result.push({ date: key, count: result[key] });
+            })
+            return new_result;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -188,7 +203,7 @@ class Lead {
             let model = 'crm.lead';
             let domain = [];
             var date = new Date();
-            var firstDay = new Date(date.getFullYear(), date.getMonth()-2, 1);
+            var firstDay = new Date(date.getFullYear(), date.getMonth() - 2, 1);
             console.log("The current month first day is ", firstDay);
             domain.push(["user_id", "=", parseInt(id)]);
             domain.push(["stage_id", "=", 4]);
