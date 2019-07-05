@@ -76,17 +76,17 @@ class Lead {
             let model = 'mail.activity';
             let domain = [];
             domain.push(["model", "=", "crm.lead"]);
-            let ir_models = await server.search_read(ir_model, { domain: domain, fields: ["name","model", "id"] });
+            let ir_models = await server.search_read(ir_model, { domain: domain, fields: ["name", "model", "id"] });
             console.log(ir_model + '', ir_models);
-            if(ir_models.records.length > 0){
+            if (ir_models.records.length > 0) {
                 req['res_model_id'] = ir_models.records[0].id;
-                console.log("Added model id to create json",req);
+                console.log("Added model id to create json", req);
             } else {
                 throw new Error("Cannot create Activity");
             }
             let result = await server.create(model, req);
             console.log(model, result);
-            if(result == null){
+            if (result == null) {
                 throw new Error("Cannot create Activity");
             }
             return { "id": result, "Message": "Success" };
@@ -103,7 +103,7 @@ class Lead {
             let domain = [];
             domain.push(["res_model", "=", "crm.lead"]);
             domain.push(["res_id", "=", id]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id","user_id","res_model"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
             console.log(model + '', result);
         } catch (err) {
             return { error: err.message || err.toString() };
@@ -123,31 +123,79 @@ class Lead {
         }
         return result;
     }
-    async getLeadDashboard(user,{ id }) {
+    async getLeadDashboard(user, { id }) {
         let result = [];
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             let domain = [];
             let domain1 = [];
-            let fields = ["user_id","user_id_count","user_booked_id"];
+            let fields = ["user_id", "user_id_count", "user_booked_id"];
             domain.push(["team_id", "=", parseInt(id)]);
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
             let self = this;
-                let group = await server.read_group(model, {domain: domain, groupby: ["user_id"], fields: fields }, true);               
-                let group1 = await server.read_group(model, {domain: domain1, groupby: ["user_id"] }, true);
+            let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
+            let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
 
-                 for(var i=0 ; i<group.length ; i++){
-                    for(var j=0; j<group1.length ; j++){
-                        console.log("inside for group is ",group[i].user_id[0] == group1[j].user_id[0]);
-                        if(group[i].user_id[0] == group1[j].user_id[0]){
-                            group[i].user_booked_id = group1[j].user_id_count;
-                        }
+            console.log("The group is ",group);
+            console.log("The group1 is ",group1);
+            console.log("The group is ",group.length);
+            console.log("The group1 is ",group1.length);
+
+            for (var i = 0; i < group.length; i++) {
+                group[i].user_booked_id = 0;
+                for (var j = 0; j < group1.length; j++) {
+                    console.log("inside for group is ", group[i].user_id[0] == group1[j].user_id[0]);
+                    if (group[i].user_id[0] == group1[j].user_id[0]) {
+                        group[i].user_booked_id = group1[j].user_id_count;
                     }
-                } 
-                result.push({ result: group });
+                }
+            }
+            result.push({ result: group });
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
+    async getDailyLeads(user, { id }) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lead';
+            let domain = [];
+            var date = new Date();
+            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            console.log("The current month first day is ", firstDay);
+            domain.push(["user_id", "=", parseInt(id)]);
+            domain.push(["create_date", ">", firstDay])
+            let self = this;
+            let group = await server.read_group(model, { domain: domain, groupby: ["create_date"] }, true);
+            result.push({ result: group });
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
+
+    async getDailyBookedLeads(user, { id }) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lead';
+            let domain = [];
+            var date = new Date();
+            var firstDay = new Date(date.getFullYear(), date.getMonth()-2, 1);
+            console.log("The current month first day is ", firstDay);
+            domain.push(["user_id", "=", parseInt(id)]);
+            domain.push(["stage_id", "=", 4]);
+            domain.push(["create_date", ">", firstDay])
+            let self = this;
+            let group = await server.read_group(model, { domain: domain, groupby: ["create_date"] }, true);
+            result.push({ result: group });
             return result;
         } catch (err) {
             return { error: err.message || err.toString() };

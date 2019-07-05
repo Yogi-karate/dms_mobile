@@ -87,4 +87,24 @@ router.get('/leadDashboard/:id', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/dailyLeads/:id', async (req, res) => {
+  try {
+    console.log("The param id is ",req.params.id)
+    let result = await lead.getDailyLeads(req.user, {id: req.params.id });
+    console.log("Result ->" + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+router.get('/dailyBookedLeads/:id', async (req, res) => {
+  try {
+    console.log("The param id is ",req.params.id)
+    let result = await lead.getDailyBookedLeads(req.user, {id: req.params.id });
+    console.log("Result ->" + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
