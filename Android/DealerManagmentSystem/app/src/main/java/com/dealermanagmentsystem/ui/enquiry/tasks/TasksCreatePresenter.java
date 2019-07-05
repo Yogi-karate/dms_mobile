@@ -40,9 +40,9 @@ public class TasksCreatePresenter implements ITasksCreatePresenter {
     @Override
     public void createTask(Activity activity, String strSummary, String strNote,
                            int userId, int activityTypeId, String strFollowUpDate, int leadId) {
-        if (userId == -1) {
+        /*if (userId == -1) {
             view.onError("please select a assignee");
-        } else if (activityTypeId == -1) {
+        } else*/ if (activityTypeId == -1) {
             view.onError("please select a activity type");
         } else if (TextUtils.isEmpty(strSummary)) {
             view.onError("please enter a summary");
@@ -56,7 +56,9 @@ public class TasksCreatePresenter implements ITasksCreatePresenter {
             try {
                 postDataParams.put(RES_ID, leadId);
                 postDataParams.put(DATE_DEADLINE, strFollowUpDate);
-                postDataParams.put(USER_ID, userId);
+                if (userId != -1){
+                    postDataParams.put(USER_ID, userId);
+                }
                 postDataParams.put(NOTE, strNote);
                 postDataParams.put(ACTIVITY_TYPE_ID, activityTypeId);
                 postDataParams.put(SUMMARY, strSummary);

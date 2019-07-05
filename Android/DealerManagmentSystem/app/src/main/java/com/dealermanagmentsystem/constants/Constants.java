@@ -29,6 +29,8 @@ public class Constants {
     public static String KEY_USERNAME = "username";
     public static String KEY_USER_EMAIL_ID = "email_id";
     public static String KEY_USER_IMAGE = "user_image";
+    public static String KEY_ROLE = "role";
+    public static String KEY_TEAMS = "teams";
     public static String KEY_FCM_TOKEN = "fcm_token";
     public static String KEY_FCM_TOKEN_SET = "token_set";
     public static String QUOTATION = "Quotation";

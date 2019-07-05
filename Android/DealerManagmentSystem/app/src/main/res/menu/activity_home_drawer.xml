@@ -17,10 +17,10 @@
             android:id="@+id/sales_order"
             android:icon="@drawable/ic_sale_order"
             android:title="Sales Order" />
-        <item
+        <!--<item
             android:id="@+id/follow_up"
             android:icon="@drawable/ic_followup"
-            android:title="Follow Up" />
+            android:title="Follow Up" />-->
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"

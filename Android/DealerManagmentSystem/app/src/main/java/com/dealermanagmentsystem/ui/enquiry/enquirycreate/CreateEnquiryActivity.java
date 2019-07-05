@@ -86,6 +86,10 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
     @BindView(R.id.cb_test_drive)
     CheckBox cbTestDrive;
 
+    @BindView(R.id.enquiry_id)
+    TextView txtEnquiryId;
+
+
     //private DatePickerDialog.OnDateSetListener date;
     private Calendar myCalendar, myCalendarDriveDate;
     ArrayList selectedItemsTypes = new ArrayList();
@@ -125,11 +129,13 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                 showTile("Enquiry Details");
                 showBackButton();
                 String url;
+                String strEnquiryId = intent.getStringExtra(EXTRA_ENQUIRY_ID);
                 if (LEAD_EDIT_ENQUIRY.equalsIgnoreCase(stringExtra)) {
-                    url = LEAD_EDIT_ENQUIRIES + intent.getStringExtra(EXTRA_ENQUIRY_ID);//From leads edit enquiry
+                    url = LEAD_EDIT_ENQUIRIES + strEnquiryId;//From leads edit enquiry
                 } else {
-                    url = ENQUIRY + "/" + intent.getStringExtra(EXTRA_ENQUIRY_ID);//From enquiry edit it
+                    url = ENQUIRY + "/" + strEnquiryId;//From enquiry edit it
                 }
+                txtEnquiryId.setText("Enquiry id : " + strEnquiryId);
                 enquiryCreatePresenter.getEnquiryDetail(activity, url);
             }
         }
@@ -219,9 +225,16 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
         final String deleteCancel = "Cancel";
         final CharSequence[] items = types.toArray(new CharSequence[types.size()]);
 
+        boolean[] checkedReceivers = new boolean[types.size()];
+        int count = types.size();
+
+        for(int i = 0; i < count; i++)
+            checkedReceivers[i] = selectedItemsTypes.contains(types.get(i));
+
+
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(selectCategory)
-                .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(items, checkedReceivers, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
                         if (isChecked) {
@@ -236,6 +249,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         if (selectedItemsTypes.isEmpty()) {
+                            etType.setText("");
                             DMSToast.showLong(mContext, "Please select a type");
                         } else {
                             etType.setText("");

@@ -2,20 +2,13 @@ package com.dealermanagmentsystem.ui.home;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -39,20 +32,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.TasksAdapter;
+import com.dealermanagmentsystem.adapter.TeamAdapter;
 import com.dealermanagmentsystem.constants.Constants;
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
-import com.dealermanagmentsystem.data.model.saleorder.saleoverview.Result;
+import com.dealermanagmentsystem.data.model.login.Record;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
+import com.dealermanagmentsystem.data.model.teamdetail.Result;
+import com.dealermanagmentsystem.data.model.teamdetail.TeamDetailResponse;
 import com.dealermanagmentsystem.event.TasksCompleteEvent;
 import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
-import com.dealermanagmentsystem.ui.delivery.DeliveryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirysubenquirylist.EnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
@@ -72,20 +66,18 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.otto.Subscribe;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-import static com.dealermanagmentsystem.constants.Constants.BOOKED;
-import static com.dealermanagmentsystem.constants.Constants.CANCEL;
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
@@ -96,6 +88,8 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
+import static com.dealermanagmentsystem.constants.Constants.KEY_ROLE;
+import static com.dealermanagmentsystem.constants.Constants.KEY_TEAMS;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
@@ -108,7 +102,6 @@ import static com.dealermanagmentsystem.constants.Constants.STATE_OVERDUE;
 import static com.dealermanagmentsystem.constants.Constants.STATE_PLANNED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_TODAY;
 import static com.dealermanagmentsystem.constants.Constants.SUB_ENQUIRY;
-import static com.dealermanagmentsystem.constants.Constants.TO_INVOICE;
 
 public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, IHomeView {
     Activity activity;
@@ -118,8 +111,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton fabCreateEnquiry;
     @BindView(R.id.chart)
     PieChart chart;
-    @BindView(R.id.chart_sale_order)
-    PieChart salesChart;
+    /* @BindView(R.id.chart_sale_order)
+     PieChart salesChart;*/
     @BindView(R.id.card_view_title)
     CardView cardView;
     @BindView(R.id.img_title)
@@ -145,8 +138,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.ll_booked)
     LinearLayout llBooked;
     String strState;
-    @BindView(R.id.recycler_View_tasks)
-    RecyclerView recyclerViewTasks;
+    /* @BindView(R.id.recycler_View_tasks)
+     RecyclerView recyclerViewTasks;*/
     TasksAdapter tasksAdapter;
     @BindView(R.id.tasks_title)
     TextView txtTasksTitle;
@@ -154,17 +147,34 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TextView txtTasksMore;
     @BindView(R.id.cardView_tasks)
     CardView cardViewTasks;
-    @BindView(R.id.txt_delivery_count)
+   /* @BindView(R.id.txt_delivery_count)
     TextView txtDeliveryCount;
     @BindView(R.id.txt_invoice_count)
     TextView txtInvoiceCount;
     @BindView(R.id.cv_delivery_count)
     CardView cvDeliveryCount;
     @BindView(R.id.cv_invoice_count)
-    CardView cvInvoiceCount;
+    CardView cvInvoiceCount;*/
 
-    private static final String SHOWCASE_ID = "showcase";
+    @BindView(R.id.overdue)
+    TextView txtLegendOverdue;
+    @BindView(R.id.today)
+    TextView txtLegendToday;
+    @BindView(R.id.planned)
+    TextView txtLegendPlanned;
+ /*   @BindView(R.id.recycler_view_teams)
+    RecyclerView recyclerTeams;
+    @BindView(R.id.txt_team_title)
+    TextView txtTeamTitle;*/
 
+
+    Integer overdueCold, overdueWarm, overdueHot, overdueBooked;
+    Integer todayCold, todayWarm, todayHot, todayBooked;
+    Integer plannedCold, plannedWarm, plannedHot, plannedBooked;
+   /* List<Record> recordsTeamList;
+    String strRole;
+    TeamAdapter teamAdapter;
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,6 +196,23 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
+
+       /*     strRole = DMSPreference.getString(KEY_ROLE);
+            if (!strRole.equalsIgnoreCase("user")) {
+                Gson gson = new Gson();
+                String json = DMSPreference.getString(KEY_TEAMS);
+                Type type = new TypeToken<List<Record>>() {}.getType();
+                recordsTeamList = gson.fromJson(json, type);
+            }
+*/
+
+        setNavigationView();
+        presenter = new HomePresenter(this);
+        sendIdToServer();
+    }
+
+    private void setNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Menu m = navigationView.getMenu();
@@ -202,58 +229,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         tvName.setText(DMSPreference.getString(KEY_USERNAME));
         tvEmail.setText(DMSPreference.getString(KEY_USER_EMAIL_ID));
         ImageLoad.loadImageBase64(DMSPreference.getString(KEY_USER_IMAGE), imgUser);
-
-        presenter = new HomePresenter(this);
-
-      /*  //fcm
-        final Intent intent = getIntent();
-        if (intent != null) {
-            DMSToast.showLong(activity, intent.getStringExtra("key"));
-        }*/
-        //   presentShowcaseSequence();
-        sendIdToServer();
-
-
-    }
-
-    private void presentShowcaseSequence() {
-
-        ShowcaseConfig config = new ShowcaseConfig();
-        config.setDelay(500); // half second between each showcase view
-
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
-        sequence.setOnItemShownListener(new MaterialShowcaseSequence.OnSequenceItemShownListener() {
-            @Override
-            public void onShow(MaterialShowcaseView itemView, int position) {
-                Toast.makeText(itemView.getContext(), "Item #" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        sequence.setConfig(config);
-
-        sequence.addSequenceItem(chart, "This chart represents enquiries", "Got it");
-
-        sequence.addSequenceItem(
-                new MaterialShowcaseView.Builder(this)
-                        .setTarget(salesChart)
-                        .setDismissText("Got it")
-                        .setContentText("This chart represents sales")
-                        .withRectangleShape(true)
-                        .build()
-        );
-
-        sequence.addSequenceItem(
-                new MaterialShowcaseView.Builder(this)
-                        .setTarget(fabCreateEnquiry)
-                        .setDismissText("Got it")
-                        .setContentText("Here you can create enquiry")
-                        .withRectangleShape()
-                        .build()
-        );
-
-        sequence.start();
-        // MaterialShowcaseView.resetSingleUse(this, SHOWCASE_ID);
     }
 
     private void sendIdToServer() {
@@ -267,10 +242,14 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         cardView.setVisibility(View.GONE);
         presenter.getLeadsOverview(activity);
-        presenter.getSalesOverview(activity);
+        //  presenter.getSalesOverview(activity);
         presenter.getTasksOverview(activity);
-        presenter.getDeliveryCount(activity);
-        presenter.getInvoiceCount(activity);
+        // presenter.getDeliveryCount(activity);
+        // presenter.getInvoiceCount(activity);
+       /* if (!strRole.equalsIgnoreCase("user")) {
+            txtTeamTitle.setText(recordsTeamList.get(0).getName());
+            presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
+        }*/
     }
 
     @Override
@@ -280,7 +259,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessSalesOverview(List<SaleOverviewResponse> saleOverviewResponses) {
-        setPieChartSalesData(saleOverviewResponses);
+        //  setPieChartSalesData(saleOverviewResponses);
     }
 
     @Override
@@ -289,16 +268,18 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         if (tasks.size() == 0) {
             cardViewTasks.setVisibility(View.GONE);
         } else {
-            txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
+            cardViewTasks.setVisibility(View.VISIBLE);
+            //txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
 
-            LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+   /*         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclerViewTasks.setHasFixedSize(true);
             recyclerViewTasks.setLayoutManager(gridLayoutManager);
             if (tasks != null) {
                 tasksAdapter = new TasksAdapter(this, tasks);
                 recyclerViewTasks.setAdapter(tasksAdapter);
-            }
+            }*/
 
+            txtTasksMore.setText(String.valueOf(tasks.size()));
             txtTasksMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -364,21 +345,23 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+
+
     @Override
     public void onSuccessDeliveryCount(String count) {
-        txtDeliveryCount.setText(count);
+       /* txtDeliveryCount.setText(count);
         cvDeliveryCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, DeliveryActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
     public void onSuccessInvoiceCount(String count) {
-        txtInvoiceCount.setText(count);
+      /*  txtInvoiceCount.setText(count);
         cvInvoiceCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -387,7 +370,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intent.putExtra(EXTRA_SALE_TYPE_ID, "to invoice");
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -397,28 +380,27 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessToken() {
-        DMSToast.showLong(activity, "Token sent successfully");
     }
 
     public void setPieChartLeadData(List<LeadOverviewResponse> leadOverviewResponse) {
 
-        final Integer overdueCold = leadOverviewResponse.get(0).getResult().get(0).getStageIdCount();
-        final Integer overdueWarm = leadOverviewResponse.get(0).getResult().get(1).getStageIdCount();
-        final Integer overdueHot = leadOverviewResponse.get(0).getResult().get(2).getStageIdCount();
-        final Integer overdueBooked = leadOverviewResponse.get(0).getResult().get(3).getStageIdCount();
+        overdueCold = leadOverviewResponse.get(0).getResult().get(0).getStageIdCount();
+        overdueWarm = leadOverviewResponse.get(0).getResult().get(1).getStageIdCount();
+        overdueHot = leadOverviewResponse.get(0).getResult().get(2).getStageIdCount();
+        overdueBooked = leadOverviewResponse.get(0).getResult().get(3).getStageIdCount();
         int overdue = overdueCold + overdueWarm + overdueHot + overdueBooked;
 
 
-        final Integer todayCold = leadOverviewResponse.get(1).getResult().get(0).getStageIdCount();
-        final Integer todayWarm = leadOverviewResponse.get(1).getResult().get(1).getStageIdCount();
-        final Integer todayHot = leadOverviewResponse.get(1).getResult().get(2).getStageIdCount();
-        final Integer todayBooked = leadOverviewResponse.get(1).getResult().get(3).getStageIdCount();
+        todayCold = leadOverviewResponse.get(1).getResult().get(0).getStageIdCount();
+        todayWarm = leadOverviewResponse.get(1).getResult().get(1).getStageIdCount();
+        todayHot = leadOverviewResponse.get(1).getResult().get(2).getStageIdCount();
+        todayBooked = leadOverviewResponse.get(1).getResult().get(3).getStageIdCount();
         int today = todayCold + todayWarm + todayHot + todayBooked;
 
-        final Integer plannedCold = leadOverviewResponse.get(2).getResult().get(0).getStageIdCount();
-        final Integer plannedWarm = leadOverviewResponse.get(2).getResult().get(1).getStageIdCount();
-        final Integer plannedHot = leadOverviewResponse.get(2).getResult().get(2).getStageIdCount();
-        final Integer plannedBooked = leadOverviewResponse.get(2).getResult().get(3).getStageIdCount();
+        plannedCold = leadOverviewResponse.get(2).getResult().get(0).getStageIdCount();
+        plannedWarm = leadOverviewResponse.get(2).getResult().get(1).getStageIdCount();
+        plannedHot = leadOverviewResponse.get(2).getResult().get(2).getStageIdCount();
+        plannedBooked = leadOverviewResponse.get(2).getResult().get(3).getStageIdCount();
         int planned = plannedCold + plannedWarm + plannedHot + plannedBooked;
 
         int total = overdue + today + planned;
@@ -441,6 +423,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         chart.setRotationEnabled(true);
         chart.setHighlightPerTapEnabled(true);
 
+
         chart.animateY(1400, Easing.EaseInOutQuad);
 
         Legend l = chart.getLegend();
@@ -453,6 +436,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         l.setYOffset(0f);
         l.setTypeface(DMSTypeFace.getTypeface(activity));
 
+        chart.getLegend().setEnabled(false);
         chart.setEntryLabelColor(Color.WHITE);
         chart.setEntryLabelTypeface(DMSTypeFace.getTypeface(activity));
         chart.setEntryLabelTextSize(0f);//title size
@@ -500,6 +484,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         chart.highlightValues(null);
         chart.invalidate();
 
+        txtLegendOverdue.setText(String.valueOf(overdue) + " Overdue");
+        txtLegendToday.setText(String.valueOf(today) + " Today");
+        txtLegendPlanned.setText(String.valueOf(planned) + " Planned");
+
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -507,53 +495,11 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                     return;
 
                 if (h.getX() == 0) {
-                    Animation animation;
-                    animation = AnimationUtils.loadAnimation(activity,
-                            R.anim.move_left_in_activity);
-                    if (cardView.getVisibility() != View.VISIBLE) {
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    cardView.setAnimation(animation);
-                    llTitle.setBackgroundColor(getResources().getColor(R.color.light_orange));
-                    title.setText("Overdue");
-                    imageTitle.setImageResource(R.drawable.ic_overdue);
-                    strState = STATE_OVERDUE;
-                    txtCold.setText(String.valueOf(overdueCold));
-                    txtWarm.setText(String.valueOf(overdueWarm));
-                    txtHot.setText(String.valueOf(overdueHot));
-                    txtBooked.setText(String.valueOf(overdueBooked));
+                    launchOverdue();
                 } else if (h.getX() == 1) {
-                    Animation animation;
-                    animation = AnimationUtils.loadAnimation(activity,
-                            R.anim.move_left_in_activity);
-                    if (cardView.getVisibility() != View.VISIBLE) {
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    cardView.setAnimation(animation);
-                    llTitle.setBackgroundColor(getResources().getColor(R.color.light_yellow));
-                    title.setText("Today");
-                    imageTitle.setImageResource(R.drawable.ic_today);
-                    strState = STATE_TODAY;
-                    txtCold.setText(String.valueOf(todayCold));
-                    txtWarm.setText(String.valueOf(todayWarm));
-                    txtHot.setText(String.valueOf(todayHot));
-                    txtBooked.setText(String.valueOf(todayBooked));
+                    launchToday();
                 } else {
-                    Animation animation;
-                    animation = AnimationUtils.loadAnimation(activity,
-                            R.anim.move_left_in_activity);
-                    if (cardView.getVisibility() != View.VISIBLE) {
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    cardView.setAnimation(animation);
-                    llTitle.setBackgroundColor(getResources().getColor(R.color.light_blue));
-                    title.setText("Planned");
-                    imageTitle.setImageResource(R.drawable.ic_enquiry);
-                    strState = STATE_PLANNED;
-                    txtCold.setText(String.valueOf(plannedCold));
-                    txtWarm.setText(String.valueOf(plannedWarm));
-                    txtHot.setText(String.valueOf(plannedHot));
-                    txtBooked.setText(String.valueOf(plannedBooked));
+                    launchPlanned();
                 }
 
                 Log.i("VAL SELECTED",
@@ -569,7 +515,65 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
+    @OnClick(R.id.legend_overdue) //ButterKnife uses.
+    public void launchOverdue() {
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(activity,
+                R.anim.move_left_in_activity);
+        if (cardView.getVisibility() != View.VISIBLE) {
+            cardView.setVisibility(View.VISIBLE);
+        }
+        cardView.setAnimation(animation);
+        llTitle.setBackgroundColor(getResources().getColor(R.color.light_orange));
+        title.setText("Overdue");
+        imageTitle.setImageResource(R.drawable.ic_overdue);
+        strState = STATE_OVERDUE;
+        txtCold.setText(String.valueOf(overdueCold));
+        txtWarm.setText(String.valueOf(overdueWarm));
+        txtHot.setText(String.valueOf(overdueHot));
+        txtBooked.setText(String.valueOf(overdueBooked));
+    }
+
+    @OnClick(R.id.legend_today) //ButterKnife uses.
+    public void launchToday() {
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(activity,
+                R.anim.move_left_in_activity);
+        if (cardView.getVisibility() != View.VISIBLE) {
+            cardView.setVisibility(View.VISIBLE);
+        }
+        cardView.setAnimation(animation);
+        llTitle.setBackgroundColor(getResources().getColor(R.color.light_yellow));
+        title.setText("Today");
+        imageTitle.setImageResource(R.drawable.ic_today);
+        strState = STATE_TODAY;
+        txtCold.setText(String.valueOf(todayCold));
+        txtWarm.setText(String.valueOf(todayWarm));
+        txtHot.setText(String.valueOf(todayHot));
+        txtBooked.setText(String.valueOf(todayBooked));
+    }
+
+    @OnClick(R.id.legend_planned) //ButterKnife uses.
+    public void launchPlanned() {
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(activity,
+                R.anim.move_left_in_activity);
+        if (cardView.getVisibility() != View.VISIBLE) {
+            cardView.setVisibility(View.VISIBLE);
+        }
+        cardView.setAnimation(animation);
+        llTitle.setBackgroundColor(getResources().getColor(R.color.light_blue));
+        title.setText("Planned");
+        imageTitle.setImageResource(R.drawable.ic_enquiry);
+        strState = STATE_PLANNED;
+        txtCold.setText(String.valueOf(plannedCold));
+        txtWarm.setText(String.valueOf(plannedWarm));
+        txtHot.setText(String.valueOf(plannedHot));
+        txtBooked.setText(String.valueOf(plannedBooked));
+    }
+
+
+  /*  public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
         final List<Result> result = leadOverviewResponse.get(0).getResult();
 
         Integer quotation = 0;
@@ -689,7 +693,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
 
-    }
+    }*/
 
     @OnClick(R.id.ll_cold) //ButterKnife uses.
     public void launchCold() {
@@ -742,9 +746,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
             intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
             startActivity(intent);
-        } else if (id == R.id.follow_up) {
+        } /*else if (id == R.id.follow_up) {
             DMSToast.showLong(activity, "Coming Soon..");
-        } else if (id == R.id.logout) {
+        } */ else if (id == R.id.logout) {
             logOutDialog(activity);
         }
 
@@ -771,4 +775,46 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+  /*  @OnClick(R.id.ll_team_dialog) //ButterKnife uses.
+    public void openTeamDialog() {
+        showTeamDialog();
+    }*/
+
+   /* private void showTeamDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Select a team");
+
+        ArrayList<String> reasonList = new ArrayList<String>();
+
+        for (int i = 0; i < recordsTeamList.size(); i++) {
+            reasonList.add(recordsTeamList.get(i).getName());
+        }
+
+        final CharSequence[] reason = reasonList.toArray(new String[reasonList.size()]);
+
+        builder.setItems(reason, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int pos) {
+                txtTeamTitle.setText(recordsTeamList.get(pos).getName());
+                if (!strRole.equalsIgnoreCase("user")) {
+                    presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
+                }
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+*/
+    @Override
+    public void onSuccessTeamDetail(List<TeamDetailResponse> response) {
+      /*  GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        recyclerTeams.setHasFixedSize(true);
+        recyclerTeams.setLayoutManager(gridLayoutManager);
+        final List<Result> result = response.get(0).getResult();
+        if (result != null) {
+            teamAdapter = new TeamAdapter(this, result);
+            recyclerTeams.setAdapter(tasksAdapter);
+        }*/
+    }
 }
