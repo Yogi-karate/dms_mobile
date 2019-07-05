@@ -178,6 +178,12 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
     public void onSuccessUsers(ActivityTypeResponse response) {
         final List<Record> userRecords = response.getRecords();
 
+        Record record = new Record();
+        record.setDisplay_name("Assign to self");
+        record.setName("Assign to self");
+        record.setId(-1);
+        userRecords.add(0, record);
+
         SpinnerCustomAdapter customAdapter = new SpinnerCustomAdapter(activity, userRecords);
         spUser.setAdapter(customAdapter);
 

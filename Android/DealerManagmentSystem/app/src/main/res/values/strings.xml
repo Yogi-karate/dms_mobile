@@ -20,4 +20,6 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="link"><a href="http://turnright.tech/DMS/privacy/privacy_policy.html">Privacy Policy</a></string>
 </resources>

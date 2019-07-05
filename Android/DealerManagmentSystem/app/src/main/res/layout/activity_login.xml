@@ -40,14 +40,14 @@
             android:id="@+id/et_mobile_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            android:hint="Mobile number"
-            android:padding="15dp"
-            android:inputType="number"
-            android:textColor="@color/white"
+            android:backgroundTint="@color/white"
             android:drawableRight="@drawable/icn_profile_inactive"
+            android:hint="Mobile number"
+            android:inputType="number"
+            android:padding="15dp"
+            android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="16sp" />
 
@@ -55,13 +55,13 @@
             android:id="@+id/et_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:hint="Password"
-            android:layout_marginTop="25dp"
             android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="25dp"
-            android:padding="15dp"
+            android:backgroundTint="@color/white"
             android:drawableRight="@drawable/ic_pin"
+            android:hint="Password"
+            android:padding="15dp"
             android:password="true"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -82,6 +82,25 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="Forgot Password? Contact your administrator"
+            android:textColor="@color/white" />
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextView
+            android:id="@+id/txt_privacy_policy_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/link"
+            android:textColor="@color/white"
+            android:textColorLink="@color/white" />
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextView
+            android:id="@+id/txt_app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="App version"
             android:textColor="@color/white" />
     </LinearLayout>
 

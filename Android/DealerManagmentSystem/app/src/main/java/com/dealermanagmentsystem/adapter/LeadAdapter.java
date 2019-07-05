@@ -24,7 +24,9 @@ import com.dealermanagmentsystem.ui.base.BaseApplication;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
@@ -38,10 +40,13 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
     private Activity activity;
     List<Record> mRecords;
     String mStage;
+    List<Record> mFilterRecords;
 
     public LeadAdapter(Activity activity, List<Record> records, String strStage) {
         this.activity = activity;
         this.mRecords = records;
+        this.mFilterRecords = new ArrayList<>();
+        this.mFilterRecords.addAll(mRecords);
         this.mStage = strStage;
     }
 
@@ -128,6 +133,26 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
     public int getItemCount() {
         return mRecords.size();
     }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mRecords.clear();
+        if (charText.length() == 0) {
+            mRecords.addAll(mFilterRecords);
+        } else {
+            for (int i = 0; i < mFilterRecords.size(); i++) {
+                if (mFilterRecords.get(i).getName()
+                        .toLowerCase(Locale.getDefault())
+                        .contains(charText) || mFilterRecords.get(i).getPartnerName()
+                        .toLowerCase(Locale.getDefault())
+                        .contains(charText)) {
+                    mRecords.add(mFilterRecords.get(i));
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     public class AdapterItemViewHolder extends RecyclerView.ViewHolder {
 

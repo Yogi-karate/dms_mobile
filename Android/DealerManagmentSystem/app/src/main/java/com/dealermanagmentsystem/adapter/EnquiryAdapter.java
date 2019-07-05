@@ -21,7 +21,9 @@ import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.data.model.enquiry.Record;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
@@ -33,10 +35,13 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
     private Activity activity;
     List<Record> mRecords;
     String stringExtra;
+    List<Record> mFilterRecords;
 
     public EnquiryAdapter(Activity activity, List<Record> records, String stringExtra) {
         this.activity = activity;
         this.mRecords = records;
+        this.mFilterRecords = new ArrayList<>();
+        this.mFilterRecords.addAll(mRecords);
         this.stringExtra = stringExtra;
     }
 
@@ -111,18 +116,6 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + number));
-              /*  if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                activity.startActivity(callIntent);
-*/
 
                 if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, 1);
@@ -138,6 +131,26 @@ public class EnquiryAdapter extends RecyclerView.Adapter<EnquiryAdapter.AdapterI
     public int getItemCount() {
         return mRecords.size();
     }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mRecords.clear();
+        if (charText.length() == 0) {
+            mRecords.addAll(mFilterRecords);
+        } else {
+            for (int i = 0; i < mFilterRecords.size(); i++) {
+                if (mFilterRecords.get(i).getName()
+                        .toLowerCase(Locale.getDefault())
+                        .contains(charText) || mFilterRecords.get(i).getPartnerName()
+                        .toLowerCase(Locale.getDefault())
+                        .contains(charText)) {
+                    mRecords.add(mFilterRecords.get(i));
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     public class AdapterItemViewHolder extends RecyclerView.ViewHolder {
 

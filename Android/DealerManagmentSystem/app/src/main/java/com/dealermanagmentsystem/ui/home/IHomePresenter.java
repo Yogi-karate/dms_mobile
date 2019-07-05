@@ -18,4 +18,6 @@ public interface IHomePresenter {
 
     public void sendFcmToken(Activity activity, String token);
 
+    public void getTeamDetailList(Activity activity, String teamId);
+
 }

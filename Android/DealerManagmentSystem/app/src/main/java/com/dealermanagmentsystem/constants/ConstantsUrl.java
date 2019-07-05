@@ -68,4 +68,5 @@ public class ConstantsUrl {
 
     public static String DELIVERY = ROOT_URL + "api/v1/sales/inventory/search?state=confirmed";
 
+    public static String TEAM_DETAIL = ROOT_URL + "api/v1/leads/leadDashboard/";
 }

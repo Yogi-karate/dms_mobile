@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
+import com.dealermanagmentsystem.data.model.common.Response;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.login.LoginResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
+import com.dealermanagmentsystem.data.model.teamdetail.TeamDetailResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
 import com.dealermanagmentsystem.network.IConnectionListener;
 import com.dealermanagmentsystem.network.Result;
@@ -40,6 +42,7 @@ import static com.dealermanagmentsystem.constants.ConstantsUrl.SALES_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SEND_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS_OVERVIEW;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.TEAM_DETAIL;
 
 public class HomePresenter implements IHomePresenter {
 
@@ -253,6 +256,43 @@ public class HomePresenter implements IHomePresenter {
             public void onSuccess(Result result) {
                 DMSPreference.setBoolean(KEY_FCM_TOKEN_SET, true);
                 view.onSuccessToken();
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getTeamDetailList(Activity activity, String teamId) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TEAM_DETAIL + teamId, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+
+                Gson gson = new Gson();
+                String jsonOutput = result.getResponse();
+                Type listType = new TypeToken<List<TeamDetailResponse>>() {
+                }.getType();
+                List<TeamDetailResponse> teams = gson.fromJson(jsonOutput, listType);
+                view.onSuccessTeamDetail(teams);
+
+               /* JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    Gson gson = new Gson();
+                    TeamDetailResponse response = gson.fromJson(jsonObject.toString(), TeamDetailResponse.class);
+                    view.onSuccessTeamDetail(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
             }
 
             @Override

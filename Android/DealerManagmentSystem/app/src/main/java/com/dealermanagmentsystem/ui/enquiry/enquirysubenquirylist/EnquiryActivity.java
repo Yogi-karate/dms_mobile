@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.EnquiryAdapter;
@@ -33,6 +38,7 @@ public class EnquiryActivity extends BaseActivity implements IEnquiryView {
     EnquiryPresenter presenter;
     EnquiryAdapter enquiryAdapter;
     String stringExtra;
+    SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,38 @@ public class EnquiryActivity extends BaseActivity implements IEnquiryView {
             }
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        //searchEditText.setBackgroundColor(ContextCompat.getColor(this, R.color.light_grey));
+        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+        searchEditText.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary));
+
+        mSearchView.setQueryHint("Search by product and name");
+
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                enquiryAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -92,6 +130,8 @@ public class EnquiryActivity extends BaseActivity implements IEnquiryView {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
             presenter.getEnquiry(activity);
+            mSearchView.setIconified(true);
+            mSearchView.clearFocus();
         }
     }
 }
