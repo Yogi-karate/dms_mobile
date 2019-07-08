@@ -55,7 +55,7 @@ class Base {
                 }
             }
             console.log("The model and result is ", model + '', result);
-            return { role: "user",teams:[]}
+            return { role: "user",teams:{records:[]}};
         } catch (err) {
             return { error: err.message || err.toString() };
         }

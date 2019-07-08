@@ -28,78 +28,13 @@ import CardBody from "../dashboard_components/Card/CardBody.js";
 
 // import { bugs, website, server } from "variables/general.jsx";
 import Chartist from "chartist";
-
-// ##############################
-// // // variables used to create animation on charts
-// #############################
-var delays = 80,
-  durations = 500;
-var delays2 = 80,
-  durations2 = 500;
-
-// ##############################
-// // // Daily Sales
-// #############################
-
-const dailySalesChart = {
-  data: {
-    labels: ["M", "T", "W", "T", "F", "S", "S"],
-    series: [[12, 17, 7, 17, 23, 18, 38]]
-  },
-  options: {
-    lineSmooth: Chartist.Interpolation.cardinal({
-      tension: 0
-    }),
-    low: 0,
-    high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-    chartPadding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    }
-  },
-  // for animation
-  animation: {
-    draw: function(data) {
-      if (data.type === "line" || data.type === "area") {
-        data.element.animate({
-          d: {
-            begin: 600,
-            dur: 700,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint
-          }
-        });
-      } else if (data.type === "point") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
-            from: 0,
-            to: 1,
-            easing: "ease"
-          }
-        });
-      }
-    }
-  }
-};
-// import {
-//   emailsSubscriptionChart,
-//   completedTasksChart
-// } from "../lib/data/charts.js";
-
+import {getDashboard} from "../lib/api/admin.js"
 import dashboardStyle from "../lib/dashboard_styles/dashboardStyle.jsx";
 
 class Dashboard extends React.Component {
   state = {
-    value: 0
+    value: 0,
+    stages:{}
   };
   handleChange = (event, value) => {
     this.setState({ value });
@@ -108,8 +43,28 @@ class Dashboard extends React.Component {
   handleChangeIndex = index => {
     this.setState({ value: index });
   };
+  async componentDidMount() {
+    try {
+      console.log("the dashboard props",this.props);
+      const data = await getDashboard(this.props.user);
+      console.log("the dashboard data",data);
+      let stages = {}
+      data.forEach(stage => {
+      console.log(stage.state);
+      stages[stage.state] = stage.result[0].stage_id_count;
+      });
+      this.setState({stages:stages});
+      console.log("dashboard state",this.state);
+      console.log("the overdue stage",this.state.stages.overdue);
+    } catch (err) {
+      console.log(err); // eslint-disable-line
+    }
+  }
   render() {
     const { classes } = this.props;
+    const {user} = this.props
+    console.log("The stages are ",this.state.stages["overdue"]);
+    console.log("The user in dashboard",this.props);
     return (
       <div>
         <GridContainer>
@@ -119,9 +74,9 @@ class Dashboard extends React.Component {
                 <CardIcon color="warning">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                <p className={classes.cardCategory}>Used Space</p>
+                <p className={classes.cardCategory}>Today</p>
                 <h3 className={classes.cardTitle}>
-                  49/50 <small>GB</small>
+                { this.state.stages.today}
                 </h3>
               </CardHeader>
               <CardFooter stats>
@@ -142,8 +97,8 @@ class Dashboard extends React.Component {
                 <CardIcon color="success">
                   <Store />
                 </CardIcon>
-                <p className={classes.cardCategory}>Revenue</p>
-                <h3 className={classes.cardTitle}>$34,245</h3>
+                <p className={classes.cardCategory}>Planned</p>
+                <h3 className={classes.cardTitle}> { this.state.stages.planned}</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -159,8 +114,8 @@ class Dashboard extends React.Component {
                 <CardIcon color="danger">
                   <Icon>info_outline</Icon>
                 </CardIcon>
-                <p className={classes.cardCategory}>Fixed Issues</p>
-                <h3 className={classes.cardTitle}>75</h3>
+                <p className={classes.cardCategory}>Overdue</p>
+                <h3 className={classes.cardTitle}> { this.state.stages.overdue}</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -176,7 +131,7 @@ class Dashboard extends React.Component {
                 <CardIcon color="info">
                   <Accessibility />
                 </CardIcon>
-                <p className={classes.cardCategory}>Followers</p>
+                <p className={classes.cardCategory}>Booked</p>
                 <h3 className={classes.cardTitle}>+245</h3>
               </CardHeader>
               <CardFooter stats>
@@ -188,37 +143,6 @@ class Dashboard extends React.Component {
             </Card>
           </GridItem>
         </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="success">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={dailySalesChart.data}
-                  type="Line"
-                  options={dailySalesChart.options}
-                  listener={dailySalesChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Daily Sales</h4>
-                <p className={classes.cardCategory}>
-                  <span className={classes.successText}>
-                    <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                  </span>{" "}
-                  increase in today sales.
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> updated 4 minutes ago
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-         
-        </GridContainer>
-       
       </div>
     );
   }
