@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { connect } from 'react-redux'
-import { startClock, serverRenderClock } from '../lib/store'
+//import { startClock, serverRenderClock } from '../lib/store'
 import withAuth from '../lib/withAuth';
 import withLayout from '../lib/withLayout';
 import dynamic from 'next/dynamic'
