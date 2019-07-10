@@ -24,6 +24,7 @@
     "jayson": "^3.0.1",
     "lodash": "4.17.11",
     "mongoose": "5.3.4",
+    "mui-datatables": "^2.2.0",
     "next": "7.0.2",
     "now": "^15.0.3",
     "nprogress": "0.2.0",
@@ -36,11 +37,13 @@
     "react-chartist": "0.13.3",
     "react-dom": "16.5.2",
     "react-jss": "8.6.1",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.2",
+    "redux-devtools-extension": "^2.13.8",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "speakeasy": "^2.0.0",
-    "winston": "3.1.0",
-    "mui-datatables": "^2.2.0"
+    "winston": "3.1.0"
   },
   "devDependencies": {
     "babel-eslint": "10.0.1",
