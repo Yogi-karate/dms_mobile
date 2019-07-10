@@ -135,6 +135,7 @@ class Lead {
             let domain1 = [];
             let fields = ["user_id", "user_id_count", "user_booked_id"];
             domain.push(["team_id", "=", parseInt(id)]);
+            domain.push(["create_date",">=","2019-06-01"]);
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
