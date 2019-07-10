@@ -59,7 +59,10 @@ class Lead {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             console.log("State:", state, stage);
-            let domain = this.getActivityDomain(state);
+            let domain = [];
+            if (state != null) {
+                domain = this.getActivityDomain(state);
+            }
             domain.push(["stage_id.name", "ilike", stage]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
             console.log(model + '', result);
@@ -168,28 +171,40 @@ class Lead {
             let domain = [];
             let fields = ["user_id", "create_date"];
             var today = new Date();
-            var lastDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            console.log("The current month first day is ", lastDay);
-            domain.push(["user_id", "=", 144]);
-            domain.push(["create_date", ">", lastDay])
+            var firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
+            console.log("The current month first day is ", firstDay.toLocaleDateString());
+            domain.push(["user_id", "=", parseInt(id)]);
+            domain.push(["create_date", ">", firstDay])
             let self = this;
             let group = await server.search_read(model, { domain: domain, fields: fields });
+            console.log("The group is ", group);
+            console.log("The current month last day is ", lastDay.toLocaleDateString());
+            let day = firstDay.toISOString().slice(0, 10);
+            let int_date = firstDay.getDate();
+            console.log(" Day is ", day, int_date, lastDay.getDate());
+            let month = firstDay.getMonth() + 1;
+            month = month < 10 ? "0" + month : month + "";
+            while (int_date != lastDay.getDate()) {
+                let day = int_date < 10 ? "0" + int_date : int_date;
+                result[firstDay.getFullYear() + "-" + month + "-" + day] = 0;
+                int_date++;
+            }
+            console.log("result", result);
             group.records.forEach(lead => {
-                console.log("the lead data in loop", lead);
-                let uid = lead.user_id[0];
                 let day = lead.create_date.slice(0, 10);
-                if (result[day]) {
+                console.log("The day is ", lead.create_date.slice(0, 10));
+                console.log("The result[day] is ", result[day]);
+                if (result[day] >= 0) {
                     result[day]++;
-                } else {
-                    result[day] = 1;
                 }
             })
-            // result.push({ result: group });
-            let new_result = []
+            console.log("result", result);
+            let getDailyLeadsResult = []
             Object.keys(result).forEach(key => {
-                new_result.push({ date: key, count: result[key] });
+                getDailyLeadsResult.push({ date: key, count: result[key] });
             })
-            return new_result;
+            return getDailyLeadsResult;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -197,21 +212,9 @@ class Lead {
     }
 
     async getDailyBookedLeads(user, { id }) {
-        let result = [];
+        let result = {};
         try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'crm.lead';
-            let domain = [];
-            var date = new Date();
-            var firstDay = new Date(date.getFullYear(), date.getMonth() - 2, 1);
-            console.log("The current month first day is ", firstDay);
-            domain.push(["user_id", "=", parseInt(id)]);
-            domain.push(["stage_id", "=", 4]);
-            domain.push(["create_date", ">", firstDay])
-            let self = this;
-            let group = await server.read_group(model, { domain: domain, groupby: ["create_date"] }, true);
-            result.push({ result: group });
-            return result;
+            return this.searchLeadsByState(user, { stage: "booked" });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
