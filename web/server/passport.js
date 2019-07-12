@@ -84,9 +84,11 @@ function auth_pass({ server }) {
         if (user) {
           console.log('user found in db in passport');
           const server = odoo.getOdoo(user.email)
-          if (server.sid == null)
-            done(null,false);
+          if (server.sid == null){
+            done("User not Logged into Odoo");
+          } else {
           done(null, user);
+          }
         } else {
           console.log('user not found in db');
           done(null, false);
@@ -121,7 +123,7 @@ function auth_pass({ server }) {
       if (info !== undefined) {
         console.error(info.message);
         if (info.message === 'bad username') {
-          res.status(401).send({ 'error': info.message });
+          res.status(403).send({ 'error': info.message });
         } else {
           console.log("Message from passport : ", info.message);
           res.status(403).send({ 'error': info.message });
