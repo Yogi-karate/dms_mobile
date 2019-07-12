@@ -10,8 +10,7 @@ router.use((req, res, next) => {
   console.log("leads api authenication ");
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
-      console.error(err);
-      res.status(401).send("Unauthorized Access");
+      res.status(401).send({"error" : "Unauthorized Access"});
       return;
     }
     if (info !== undefined) {
