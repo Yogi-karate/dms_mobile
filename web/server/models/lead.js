@@ -53,13 +53,29 @@ class Lead {
         }
         return domain;
     };
-    async searchLeadsByState(user, { state, stage }) {
+    async search(user, domain) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lead';
+            console.log("The domain is ",domain);
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            console.log(model + '', result);
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+        return result;
+    }
+    async searchLeadsByState(user, { state, stage,create_date}) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             console.log("State:", state, stage);
             let domain = [];
+            if (create_date != null) {
+                domain.push(["create_date",">=", create_date]);
+            }
             if (state != null) {
                 domain = this.getActivityDomain(state);
             }
@@ -139,6 +155,7 @@ class Lead {
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
+            domain1.push(["create_date",">=","2019-06-01"]);
             let self = this;
             let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
             let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
@@ -215,7 +232,8 @@ class Lead {
     async getDailyBookedLeads(user, { id }) {
         let result = {};
         try {
-            return this.searchLeadsByState(user, { stage: "booked" });
+            console.log("The user id is ",parseInt(id));
+            return this.search(user,['&',["user_id","=",parseInt(id)],["stage_id.name","ilike", "booked"],["create_date" ,">=","2019-06-01"]]);
         } catch (err) {
             return { error: err.message || err.toString() };
         }
