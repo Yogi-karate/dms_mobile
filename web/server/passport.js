@@ -83,6 +83,9 @@ function auth_pass({ server }) {
         const user = await User.findById(jwt_payload.id);
         if (user) {
           console.log('user found in db in passport');
+          const server = odoo.getOdoo(user.email)
+          if (server.sid == null)
+            done(null,false);
           done(null, user);
         } else {
           console.log('user not found in db');
