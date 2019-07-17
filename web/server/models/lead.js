@@ -150,12 +150,13 @@ class Lead {
             let domain = [];
             let domain1 = [];
             let fields = ["user_id", "user_id_count", "user_booked_id"];
+            var firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
             domain.push(["team_id", "=", parseInt(id)]);
-            domain.push(["create_date",">=","2019-06-01"]);
+            domain.push(["create_date",">=",firstDay]);
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
-            domain1.push(["create_date",">=","2019-06-01"]);
+            domain1.push(["create_date",">=",firstDay]);
             let self = this;
             let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
             let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
