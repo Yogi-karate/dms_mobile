@@ -2,12 +2,12 @@ services:
   - docker
 
 script:
-  - docker build ./web -t tramm/dms_mobile
-  - docker run -d -p 127.0.0.1:80:4567 tramm/dms_mobile
+  - docker build ./web -t tramm/dms_mobile:$TRAVIS_BRANCH
+  - docker run -d -p 127.0.0.1:80:4567 tramm/dms_mobile:$TRAVIS_BRANCH
   - docker ps -a
    
 after_success:
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push tramm/dms_mobile
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push tramm/dms_mobile:$TRAVIS_BRANCH
  
 notifications:
-  slack: saboogroupworkspace:tco87KFtlVfRyVKhQoaEfKQn#mobiledev-bas
+  slack: saboogroupworkspace:tco87KFtlVfRyVKhQoaEfKQn#smartdmsdev-mobiledev
