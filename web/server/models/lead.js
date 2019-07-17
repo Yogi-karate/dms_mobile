@@ -199,7 +199,7 @@ class Lead {
             console.log("The current month first day is ", firstDay.toLocaleDateString());
             console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["user_id", "=", parseInt(id)]);
-            domain.push(["create_date", ">", lastDay])
+            domain.push(["create_date", ">=", firstDay])
             let self = this;
             let group = await server.search_read(model, { domain: domain, fields: fields });
             console.log("The group is ", group);
@@ -208,7 +208,7 @@ class Lead {
             console.log(" Day is ", day, int_date, lastDay.getDate());
             let month = firstDay.getMonth() + 1;
             month = month < 10 ? "0" + month : month + "";
-            while (int_date != lastDay.getDate()) {
+            while (int_date <= today.getDate()) {
                 let day = int_date < 10 ? "0" + int_date : int_date;
                 result[firstDay.getFullYear() + "-" + month + "-" + day] = 0;
                 int_date++;
