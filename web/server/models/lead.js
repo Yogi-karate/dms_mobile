@@ -58,7 +58,7 @@ class Lead {
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
-            console.log("The domain is ",domain);
+            console.log("The domain is ", domain);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
             console.log(model + '', result);
         } catch (err) {
@@ -66,7 +66,7 @@ class Lead {
         }
         return result;
     }
-    async searchLeadsByState(user, { state, stage,create_date}) {
+    async searchLeadsByState(user, { state, stage, create_date }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
@@ -74,7 +74,7 @@ class Lead {
             console.log("State:", state, stage);
             let domain = [];
             if (create_date != null) {
-                domain.push(["create_date",">=", create_date]);
+                domain.push(["create_date", ">=", create_date]);
             }
             if (state != null) {
                 domain = this.getActivityDomain(state);
@@ -150,13 +150,17 @@ class Lead {
             let domain = [];
             let domain1 = [];
             let fields = ["user_id", "user_id_count", "user_booked_id"];
-            var firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            var today = new Date();
+            var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
+            console.log("The current month first day is ", firstDay.toLocaleDateString());
+            console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["team_id", "=", parseInt(id)]);
-            domain.push(["create_date",">=",firstDay]);
+            domain.push(["create_date", ">", lastDay]);
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
-            domain1.push(["create_date",">=",firstDay]);
+            domain1.push(["create_date", ">", lastDay]);
             let self = this;
             let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
             let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
@@ -190,15 +194,15 @@ class Lead {
             let domain = [];
             let fields = ["user_id", "create_date"];
             var today = new Date();
-            var firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
             var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
             console.log("The current month first day is ", firstDay.toLocaleDateString());
+            console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["user_id", "=", parseInt(id)]);
-            domain.push(["create_date", ">", firstDay])
+            domain.push(["create_date", ">", lastDay])
             let self = this;
             let group = await server.search_read(model, { domain: domain, fields: fields });
             console.log("The group is ", group);
-            console.log("The current month last day is ", lastDay.toLocaleDateString());
             let day = firstDay.toISOString().slice(0, 10);
             let int_date = firstDay.getDate();
             console.log(" Day is ", day, int_date, lastDay.getDate());
@@ -233,8 +237,11 @@ class Lead {
     async getDailyBookedLeads(user, { id }) {
         let result = {};
         try {
-            console.log("The user id is ",parseInt(id));
-            return this.search(user,['&',["user_id","=",parseInt(id)],["stage_id.name","ilike", "booked"],["create_date" ,">=","2019-06-01"]]);
+            var today = new Date();
+            var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
+            console.log("The current month last day is ", lastDay.toLocaleDateString());
+            console.log("The user id is ", parseInt(id));
+            return this.search(user, ['&', ["user_id", "=", parseInt(id)], ["stage_id.name", "ilike", "booked"], ["create_date", ">", lastDay]]);
         } catch (err) {
             return { error: err.message || err.toString() };
         }
