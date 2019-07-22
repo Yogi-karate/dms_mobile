@@ -28,7 +28,7 @@ function CardHeader({ ...props }) {
 CardHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  color: PropTypes.oneOf(["warning", "success", "danger", "info", "primary"]),
+  color: PropTypes.oneOf(["warning", "success", "danger", "info", "primary","followUp"]),
   plain: PropTypes.bool
 };
 
