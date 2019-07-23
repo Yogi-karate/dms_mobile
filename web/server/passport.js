@@ -131,34 +131,11 @@ function auth_pass({ server }) {
     function (req, res) {
       res.render('/');
     });
-  server.post('/auth',
+  server.post('/login',
     passport.authenticate('local'),
     (req, res, next) => {
       const token = jwt.sign({ id: req.user.id }, jwtSecret.secret);
-      res.status(200).send({
-        auth: true,
-        token,
-        message: 'user found & logged in',
-      });
-      console.log("Successful Login");
-    });
-  server.post('/login', (req, res, next) => {
-    console.log("Doing LOGIN");
-    passport.authenticate('login', (err, user, info) => {
-      console.log("HALOOOOO");
-      if (err) {
-        console.error(`error ${err}`);
-      }
-      if (info !== undefined) {
-        console.error(info.message);
-        if (info.message === 'bad username') {
-          res.status(403).send({ 'error': info.message });
-        } else {
-          console.log("Message from passport : ", info.message);
-          res.status(403).send({ 'error': info.message });
-        }
-      } else {
-        const token = jwt.sign({ id: user.id }, jwtSecret.secret);
+      const token = jwt.sign({ id: user.id }, jwtSecret.secret);
         if (user.image == false) {
           console.log("No User Avatar Found !!!!");
           user.image = "";
@@ -179,9 +156,8 @@ function auth_pass({ server }) {
           message: 'user found & logged in',
         });
         console.log("Successful Login");
-      }
-    })(req, res, next);
-  });
+    });
+ 
   server.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
