@@ -134,8 +134,8 @@ function auth_pass({ server }) {
   server.post('/login',
     passport.authenticate('local'),
     (req, res, next) => {
+      let user = req.user;
       const token = jwt.sign({ id: req.user.id }, jwtSecret.secret);
-      const token = jwt.sign({ id: user.id }, jwtSecret.secret);
         if (user.image == false) {
           console.log("No User Avatar Found !!!!");
           user.image = "";

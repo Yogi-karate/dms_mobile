@@ -7,24 +7,29 @@ const odoo = require('../odoo_server');
 const lead = require('../models/lead');
 
 router.use((req, res, next) => {
-  console.log("leads api authenication ");
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) {
-      res.status(401).send({"error" : "Unauthorized Access"});
-      return;
-    }
-    if (info !== undefined) {
-      console.log(req);
-      console.log(info.message);
-      res.status(403).send({ "error": info.message });
-      return;
-    }
-    console.log(odoo.users);
-    console.log(user);
-    req.user = user;
-    next();
-  })(req, res, next);
+  console.log("service api authenication ");
+  if (req.user) {
+      next();
+  } else {
+      passport.authenticate('jwt', { session: false }, (err, user, info) => {
+          if (err) {
+              console.error(err);
+              res.status(401).send("Unauthorized Access");
+              return;
+          }
+          if (info !== undefined) {
+              console.log(req);
+              console.log(info.message);
+              res.status(403).send({ "error": info.message });
+              return;
+          }
+          console.log(user);
+          req.user = user;
+          next();
+      })(req, res, next);
+  }
 });
+
 router.get('/enquiry/:id', async (req, res) => {
   try {
     let result = await lead.getEnquiry(req.user, { id: req.params.id });
