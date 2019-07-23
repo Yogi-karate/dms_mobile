@@ -20,6 +20,11 @@ const ROOT_URL = dev ? `http://localhost:${port}` : 'https://mydomain.com';
 
 const sessionSecret = process.env.SESSION_SECRET;
 
+
+const URL_MAP = {
+  '/login': '/public/login',
+};
+
 const app = next({ dev });
 const handle = app.getRequestHandler();
 // Nextjs's server prepared
@@ -31,7 +36,7 @@ app.prepare().then(() => {
   // confuring MongoDB session store
   const MongoStore = mongoSessionStore(session);
   const sess = {
-    name: 'builderbook.sid',
+    name: 'dms.sid',
     secret: sessionSecret,
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
@@ -46,16 +51,23 @@ app.prepare().then(() => {
   };
 
   server.use(session(sess));
-  api(server);
   auth_pass({ server });
+  api(server);
 
   admin.initializeApp({
     credential: admin.credential.cert(firebaseAccount),
     databaseURL: "https://dealer-managment-system.firebaseio.com"
   });
 
-  server.get('*', (req, res) => handle(req, res));
-
+    server.get('*', (req, res) => {
+      const url = URL_MAP[req.path];
+      if (url) {
+        app.render(req, res, url);
+      } else {
+        handle(req, res);
+      }
+    });
+    
   // starting express server
   server.listen(port, (err) => {
     if (err) throw err;

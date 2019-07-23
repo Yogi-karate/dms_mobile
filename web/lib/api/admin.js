@@ -15,8 +15,14 @@ export const getDashboard = (user) =>
     }
   });
 
+export const addSerCategory = (serCatData) =>
+  sendRequest(`${BASE_PATH}/offer/services/add`, {
+    method: 'POST',
+    body: JSON.stringify(serCatData)
+  });
+
 export const getLoginCreds = (userData) =>
-  sendRequest(`/login`, {
+  sendRequest(`/auth`, {
     method: 'POST',
     body: JSON.stringify({ mobile: "1111111111", password: "Sdms@1234" })
   });

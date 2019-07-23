@@ -10,4 +10,4 @@ after_success:
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push tramm/dms_mobile:$TRAVIS_BRANCH
  
 notifications:
-  slack: saboogroupworkspace:tco87KFtlVfRyVKhQoaEfKQn#smartdms-dev
+  slack: saboogroupworkspace:tco87KFtlVfRyVKhQoaEfKQn#smartdms-mobiledev

@@ -31,7 +31,6 @@ class Index extends React.Component {
         </Head>
         <p> Dashboard </p>
         <Dashboard {...this.props} />
-        <p>Email: {user.email}</p>
       </div>
     );
   }

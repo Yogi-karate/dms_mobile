@@ -21,6 +21,7 @@ export default (
     };
 
     componentDidMount() {
+      console.log("Mount of With Auth");
       const { user, isFromServer } = this.props;
 
       if (isFromServer) {
@@ -28,7 +29,7 @@ export default (
       }
 
       if (loginRequired && !logoutRequired && !user) {
-        Router.push('/public/userLogin', '/userLogin');
+        Router.push('/public/login', '/login');
         return;
       }
 
@@ -42,6 +43,7 @@ export default (
     }
 
     static async getInitialProps(ctx) {
+      console.log("Init of With Auth",ctx);
       const isFromServer = !!ctx.req;
       const user = ctx.req ? ctx.req.user && ctx.req.user.toObject() : globalUser;
 
@@ -59,6 +61,7 @@ export default (
     }
 
     render() {
+      console.log("RENDER of With Auth");
       const { user } = this.props;
 
       if (loginRequired && !logoutRequired && !user) {

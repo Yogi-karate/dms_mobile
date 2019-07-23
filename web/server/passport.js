@@ -22,7 +22,7 @@ const STATIC_HOST = process.env.STATIC_WEB_HOST;
 function auth_pass({ server }) {
 
   passport.use(
-    'login',
+    'local',
     new LocalStrategy(
       {
         usernameField: 'mobile',
@@ -56,7 +56,7 @@ function auth_pass({ server }) {
               let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
               user.image = im_result.records[0].image;
               role_result = await base.getUserRole(user);
-              console.log("User role result",role_result);
+              console.log("User role result", role_result);
               user.role = role_result.role;
               user.teams = role_result.teams;
               return done(null, user);
@@ -84,10 +84,10 @@ function auth_pass({ server }) {
         if (user) {
           console.log('user found in db in passport');
           const server = odoo.getOdoo(user.email)
-          if (server.sid == null){
+          if (server.sid == null) {
             done("User not Logged into Odoo");
           } else {
-          done(null, user);
+            done(null, user);
           }
         } else {
           console.log('user not found in db');
@@ -98,7 +98,6 @@ function auth_pass({ server }) {
       }
     }),
   );
-  server.use(passport.initialize());
   server.get('/user/avatar/:id', async (req, res) => {
     console.log(req);
     try {
@@ -113,6 +112,36 @@ function auth_pass({ server }) {
       res.json({ error: err.message || err.toString() });
     }
   });
+  passport.serializeUser(function (user, cb) {
+    console.log("Serializing User", user)
+    cb(null, user.id);
+  });
+
+  passport.deserializeUser(function (id, cb) {
+    console.log("DeSerializing User", id)
+    User.findById(id, function (err, user) {
+      if (err) { return cb(err); }
+      cb(null, user);
+    });
+  });
+
+  server.use(passport.initialize());
+  server.use(passport.session());
+  server.get('/logincallback',
+    function (req, res) {
+      res.render('/');
+    });
+  server.post('/auth',
+    passport.authenticate('local'),
+    (req, res, next) => {
+      const token = jwt.sign({ id: req.user.id }, jwtSecret.secret);
+      res.status(200).send({
+        auth: true,
+        token,
+        message: 'user found & logged in',
+      });
+      console.log("Successful Login");
+    });
   server.post('/login', (req, res, next) => {
     console.log("Doing LOGIN");
     passport.authenticate('login', (err, user, info) => {
@@ -144,8 +173,8 @@ function auth_pass({ server }) {
           email: user.email,
           image: user.image,
           auth: true,
-          role:user.role,
-          teams:user.teams,
+          role: user.role,
+          teams: user.teams,
           token,
           message: 'user found & logged in',
         });
@@ -153,9 +182,9 @@ function auth_pass({ server }) {
       }
     })(req, res, next);
   });
-  server.post('/logout', (req, res, next) => {
-    console.log("Doing logout");
+  server.get('/logout', (req, res) => {
     req.logout();
+    res.redirect('/login');
   });
 
   server.post('/otp_verify', async (req, res, next) => {
