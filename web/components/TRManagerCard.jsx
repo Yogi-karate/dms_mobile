@@ -18,11 +18,11 @@ import Card from "../components/components/Card/Card.jsx";
 import CardBody from "../components/components/Card/CardBody.jsx";
 import CardHeader from "../components/components/Card/CardHeader.jsx";
 import { cardTitle,primaryCardHeader,successCardHeader } from "../components/assets/jss/material-kit-react.jsx";
-import CustomLinearProgress from "../components/components/CustomLinearProgress/CustomLinearProgress.jsx";
-import Danger from "../components/components/Typography/Danger.jsx";
-import Info from "../components/components/Typography/Info.jsx";
-import Primary from "../components/components/Typography/Primary.jsx";
-import TRCustomDropDown from '../components/components/CustomDropdown/CustomDropdown';
+//import CustomLinearProgress from "../components/components/CustomLinearProgress/CustomLinearProgress.jsx";
+// import Danger from "../components/components/Typography/Danger.jsx";
+// import Info from "../components/components/Typography/Info.jsx";
+// import Primary from "../components/components/Typography/Primary.jsx";
+//import TRCustomDropDown from '../components/components/CustomDropdown/CustomDropdown';
 
 //Cutom components from TurnRight
 import TRChartDoughnut from '../components/TRChartDoughnut';

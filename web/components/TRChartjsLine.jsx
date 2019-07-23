@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Line} from 'react-chartjs-2';
+import {Chart} from 'chart.js';
 
 Chart.defaults.global.elements.line.borderWidth = 1;
 const data = {

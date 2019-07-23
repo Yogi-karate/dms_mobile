@@ -128,8 +128,8 @@ class DMSDashboard extends React.Component {
                                 dropdownHeader="ALL TEAMS"
                                 buttonText="ALL TEAMS"
                                 buttonProps={{
-                                round: false,
-                                color: "info"
+                                round: true,
+                                color: "success"
                                 }}
                                 dropdownList={[
                                 "Showroom Narayanaguda",
@@ -161,20 +161,30 @@ class DMSDashboard extends React.Component {
     return (
         <div>
             <div class="pure-g">
-            <div class="pure-u-1-4">
-                   
-            </div>
-            <div class="pure-u-1-4">
-                   
-            </div>
-            <div class="pure-u-1-4">
-                {customCompanyDropdownRender}
-            </div>
-            <div class="pure-u-1-4">
-                
-                {customTeamDropdownRender}
-            </div>           
-                
+                <div class="pure-u-1-4">
+                    
+                </div>
+                <div class="pure-u-1-4">
+                    
+                </div>
+                <div class="pure-u-1-4">
+                    
+                </div>
+                <div class="pure-u-1-4">
+                    <div class="pure-u-1-2">
+                        {customCompanyDropdownRender}
+                    </div>
+                    <div class="pure-u-1-2">
+                        {customTeamDropdownRender}
+                    </div>                    
+                    
+                </div>           
+                <div class="pure-g">
+                    <div class="pure-u-1-1">
+                        &nbsp;
+                    </div>
+   
+                </div>
             </div>
             <div class="pure-g">
                 <div class="pure-u-1-4">
