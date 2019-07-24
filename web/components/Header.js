@@ -18,7 +18,7 @@ const optionsMenu = [
     text: 'Log out',
     href: '/logout',
   },
-];
+]; 
 
 function Header({ user }) {
   return (

@@ -24,7 +24,7 @@ class Login extends React.Component {
 
         this.state = {
             mobile: '',
-            pin: '',
+            password: '',
             error: ''
         };
         this.handleMobileChange = this.handleMobileChange.bind(this);
@@ -53,20 +53,16 @@ class Login extends React.Component {
 
     handlePinChange(evt) {
         console.log("Inside handlePinChange", evt.target.value);
-        this.setState({ pin: evt.target.value });
+        this.setState({ password: evt.target.value });
     }
 
     async checkForLoginUser() {
         console.log("Inside checkForLoginUser");
         try {
             const data = await getLoginCreds(this.state);
-            console.log("The result is ", data.error);
+            console.log("The result is ", data);
             if (data.error === undefined || data.error === null || data.error === "") {
-                console.log("Correct input");
-                console.log("Data", data);
-                console.log("Props in user login", this.props);
                 this.props.login(data);
-                console.log("replacing route to /")
                 document.location.pathname = "/"
             } else {
                 console.log("Wrong input", this.props.errorValue);
@@ -74,15 +70,13 @@ class Login extends React.Component {
             }
         } catch (err) {
             console.log(err); // eslint-disable-line
-            this.setState({mobile:"",pin:""});
-            Router.push('/login');
+            this.setState({mobile:"",pin:"",error:"Invalid Username or Password"});
         }
     }
 
     render() {
         const { classes } = this.props;
         const props = this.props;
-        console.log("Rendering login component",this.state);
         return (
             <Grid container className={classes.container}>
                 <div className={classes.logotypeContainer}>
@@ -125,7 +119,7 @@ class Login extends React.Component {
                                             input: classes.textField
                                         }
                                     }}
-                                    defaultValue={this.state.pin}
+                                    defaultValue={this.state.password}
                                     onChange={this.handlePinChange}
                                     margin="normal"
                                     placeholder="Password"
@@ -140,7 +134,7 @@ class Login extends React.Component {
                                             <Button
                                                  disabled={
                                                     this.state.mobile.length === 0 ||
-                                                    this.state.pin.length === 0
+                                                    this.state.password.length === 0
                                                 } 
                                                 onClick={this.onSubmitHandler}
                                                 variant="contained"

@@ -10,8 +10,7 @@ export const getDashboard = (user) =>
   sendRequest(`${BASE_PATH}/leads/dashboard`, {
     method: 'GET',
     headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      'Authorization': "JWT " + user.token
+      'Content-type': 'application/json; charset=UTF-8'
     }
   });
 
@@ -22,7 +21,7 @@ export const addSerCategory = (serCatData) =>
   });
 
 export const getLoginCreds = (userData) =>
-  sendRequest(`/auth`, {
+  sendRequest(`/login`, {
     method: 'POST',
-    body: JSON.stringify({ mobile: "1111111111", password: "Sdms@1234" })
+    body: JSON.stringify(userData)
   });
