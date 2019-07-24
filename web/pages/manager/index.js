@@ -6,9 +6,8 @@ import Head from 'next/head';
 
 import withAuth from '../lib/withAuth';
 import withLayout from '../lib/withLayout';
-import dynamic from 'next/dynamic'
-const Dashboard = dynamic(import('../components/dashboard'), { ssr: false })
-//import Dashboard from '../components/dashboard';
+import DMSDashboard from '../components/dashboard/DMSManagerDashboard';
+
 
 class Index extends React.Component {
   static propTypes = {
@@ -30,7 +29,7 @@ class Index extends React.Component {
           <meta name="description" content="description for indexing bots" />
         </Head>
         <p> Dashboard </p>
-        <Dashboard {...this.props} />
+        <DMSDashboard {...this.props} />
       </div>
     );
   }
