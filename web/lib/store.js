@@ -5,7 +5,8 @@ const exampleInitialState = {
   lastUpdate: 0,
   light: false,
   count: 0,
-  user: null
+  user: null,
+  team:null
 }
 
 export const actionTypes = {
@@ -13,7 +14,8 @@ export const actionTypes = {
   INCREMENT: 'INCREMENT',
   DECREMENT: 'DECREMENT',
   RESET: 'RESET',
-  LOGIN: 'LOGIIN'
+  LOGIN: 'LOGIN',
+  TEAM_CHANGE:'TEAM',
 }
 
 // REDUCERS
@@ -40,6 +42,11 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         user: action.user
       })
+      case actionTypes.TEAM_CHANGE:
+      return Object.assign({}, state, {
+        team: action.team
+      })
+      
     default:
       return state
   }
@@ -49,6 +56,10 @@ export const reducer = (state = exampleInitialState, action) => {
 export const login = (user) => {
   console.log("Trying store login");
   return { type: actionTypes.LOGIN, user:user }
+}
+export const team = (team) => {
+  console.log("Trying to change team");
+  return { type: actionTypes.TEAM_CHANGE, team:team }
 }
 export const serverRenderClock = () => {
   return { type: actionTypes.TICK, light: false, ts: Date.now() }

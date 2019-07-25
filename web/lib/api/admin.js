@@ -13,6 +13,20 @@ export const getDashboard = (user) =>
       'Content-type': 'application/json; charset=UTF-8'
     }
   });
+  export const getTeams = (user) =>
+  sendRequest(`${BASE_PATH}/customer/odoo/crm.team`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8'
+    }
+  });
+  export const getDailyLeads = (id) =>
+  sendRequest(`${BASE_PATH}/leads/leadDashboard/`+id, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8'
+    }
+  });
 
 export const addSerCategory = (serCatData) =>
   sendRequest(`${BASE_PATH}/offer/services/add`, {

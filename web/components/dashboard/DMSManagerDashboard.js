@@ -1,13 +1,19 @@
 import React from "react";
+
+import GridItem from "../common/Grid/GridItem.js";
+import GridContainer from "../common/Grid/GridContainer.js";
+
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
-import TRCustomDropDown from '../common/Dropdown';
+import TeamDropDown from './TeamDropdown';
+import withAuth from '../../lib/withAuth';
+import DailyLeads from './DailyLeads';
 
 const EnquiryCardProps = {
 
     cardTitle: 'Total Enquiries',
-     cardIcon: 'faClipboardList',
-     cardColor: 'primary',
+    cardIcon: 'faClipboardList',
+    cardColor: 'primary',
     graphType: 'doughnut',
     progressBarColor: 'primary',
     progressBarVariant: 'determinate',
@@ -23,7 +29,7 @@ const EnquiryCardProps = {
         '#EE82EE',
         '#BA55D3'
     ],
-    renderDropdown :false,
+    renderDropdown: false,
 }
 
 
@@ -47,49 +53,49 @@ const FollowupCardProps = {
         '#DE6695',
         '#F54A90'
     ],
-    renderDropdown :true,
-    
+    renderDropdown: true,
+
 }
 
 const BookingCardProps = {
 
     cardTitle: 'Bookings',
-     cardColor: 'info',
-     cardIcon: 'faCar',
-     graphType: 'pie',
-     graphData: [80, 120, 100],
-     graphLabel: [
-         'Mettuguda',
-         'Tirumalgiri',
-         'Nacharam'
-     ],
-     graphColors: [
-         '#AFEEEE',
-         '#48D1CC',
-         '#00CED1'
-     ],
-     renderDropdown :false,
-    
+    cardColor: 'info',
+    cardIcon: 'faCar',
+    graphType: 'pie',
+    graphData: [80, 120, 100],
+    graphLabel: [
+        'Mettuguda',
+        'Tirumalgiri',
+        'Nacharam'
+    ],
+    graphColors: [
+        '#AFEEEE',
+        '#48D1CC',
+        '#00CED1'
+    ],
+    renderDropdown: false,
+
 }
 
 const SalesCardProps = {
 
     cardTitle: 'Inventory',
-     cardColor: 'success',
-     cardIcon: 'faWarehouse',
-     graphType: 'pie',
-     graphData: [80, 120, 100],
-     graphLabel: [
-         'In stock',
-         'Allocation',
-         'In Transit'
-     ],
-     graphColors: [
-         '#48DA4A',
-         '#3BD574',
-         '#28B85D'
-     ],
-     renderDropdown :false,
+    cardColor: 'success',
+    cardIcon: 'faWarehouse',
+    graphType: 'pie',
+    graphData: [80, 120, 100],
+    graphLabel: [
+        'In stock',
+        'Allocation',
+        'In Transit'
+    ],
+    graphColors: [
+        '#48DA4A',
+        '#3BD574',
+        '#28B85D'
+    ],
+    renderDropdown: false,
 }
 
 const dropDownlistProps = {
@@ -97,111 +103,44 @@ const dropDownlistProps = {
 }
 
 class DMSDashboard extends React.Component {
-
-  render() {
-    // const { classes } = this.props;
-    let customTeamDropdownRender;
-    let customCompanyDropdownRender;
-
-    customCompanyDropdownRender = <TRCustomDropDown
-                                dropdown
-                                dropdownHeader="ALL TEAMS"
-                                buttonText="ALL TEAMS"
-                                buttonProps={{
-                                round: true,
-                                color: "success"
-                                }}
-                                dropdownList={[
-                                "Showroom Narayanaguda",
-                                "Amberpet Team",
-                                {divider: true},
-                                "Separated link",
-                                {divider: true},
-                                "One more separated link",
-                                ]}
-                            />    
-
-    customTeamDropdownRender = <TRCustomDropDown
-                                dropup
-                                dropdownHeader="ALL TEAMS"
-                                buttonText="ALL TEAMS"
-                                buttonProps={{
-                                round: true,
-                                color: "info"
-                                }}
-                                dropdownList={[
-                                "Showroom Narayanaguda",
-                                "Amberpet Team",
-                                {divider: true},
-                                "Separated link",
-                                {divider: true},
-                                "One more separated link",
-                                ]}
-                            />
-    return (
-        <div>
-            <div class="pure-g">
-                <div class="pure-u-1-4">
-                    
-                </div>
-                <div class="pure-u-1-4">
-                    
-                </div>
-                <div class="pure-u-1-4">
-                    
-                </div>
-                <div class="pure-u-1-4">
-                    <div class="pure-u-1-2">
-                        {customCompanyDropdownRender}
-                    </div>
-                    <div class="pure-u-1-2">
-                        {customTeamDropdownRender}
-                    </div>                    
-                    
-                </div>           
-                <div class="pure-g">
-                    <div class="pure-u-1-1">
-                        &nbsp;
-                    </div>
-   
-                </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1-4">
-                    <TRManagerCard {...EnquiryCardProps} ></TRManagerCard>
-                </div>
-                <div class="pure-u-1-4">
-                    <TRManagerCard {...BookingCardProps}></TRManagerCard>
-                </div>
-                <div class="pure-u-1-4">
-                    <TRManagerCard {...FollowupCardProps}></TRManagerCard>
-                </div>
-                <div class="pure-u-1-4">    
-                    <TRManagerCard {...SalesCardProps}></TRManagerCard>
-                </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1-1">
-                    {/* {customDropdownRender} */}
-                </div>
-                {/* <div class="pure-u-1-2">
-                    <TRCharjsBar ></TRCharjsBar>
-                    
-                </div>
-                <div class="pure-u-1-2">
-                   <TRChartjsLine></TRChartjsLine>
-                </div> */}
-            </div>
-            <div class="pure-u-1-1">
-                <TRTable></TRTable>
-            </div>
-            <div class="pure-u-1-1">
-                {/* <TRChartDoughnut></TRChartDoughnut>
-                <TRChartPie></TRChartPie> */}
-            </div>
-        </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        console.log("The props are in dasboar", props);
+        this.props = props;
+        this.state = {
+            teams: [],
+        };
+    }
+    render() {
+        return (
+            <GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={6} md={3}>
+                        <TeamDropDown {...this.props} />
+                    </GridItem>
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={6} md={3}>
+                        <TRManagerCard {...EnquiryCardProps} ></TRManagerCard>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={3}>
+                        <TRManagerCard {...BookingCardProps}></TRManagerCard>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={3}>
+                        <TRManagerCard {...FollowupCardProps}></TRManagerCard>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={3}>
+                        <TRManagerCard {...SalesCardProps}></TRManagerCard>
+                    </GridItem>
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={24} sm={16} md={45}>
+                        <DailyLeads {... this.props} />
+                    </GridItem>
+                </GridContainer>
+            </GridContainer>
+        );
+    }
 }
 
-export default DMSDashboard;
+export default withAuth(DMSDashboard);
