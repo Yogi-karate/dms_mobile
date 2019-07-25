@@ -215,6 +215,7 @@ public class EnquiryCreatePresenter implements IEnquiryCreatePresenter {
                     view.onSuccessEnquiryDetail(enquiryDetailResponse);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    view.onFailEnquiryDetail();
                 }
             }
 

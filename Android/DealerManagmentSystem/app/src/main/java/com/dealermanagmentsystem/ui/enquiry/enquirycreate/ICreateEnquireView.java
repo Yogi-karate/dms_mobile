@@ -20,4 +20,6 @@ public interface ICreateEnquireView {
     public void onSuccessEnquiryDetail(EnquiryDetailResponse enquiryDetailResponse);
 
     public void onSuccessEditEnquiryDetail(String message);
+
+    public void onFailEnquiryDetail();
 }

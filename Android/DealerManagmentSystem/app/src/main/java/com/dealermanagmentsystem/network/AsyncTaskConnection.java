@@ -2,13 +2,23 @@ package com.dealermanagmentsystem.network;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.dealermanagmentsystem.preference.DMSPreference;
+import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.utils.ConnectionUtils;
 import com.dealermanagmentsystem.utils.progress.ProgressDialogUtil;
+import com.dealermanagmentsystem.utils.ui.DMSToast;
 import com.taishi.flipprogressdialog.FlipProgressDialog;
 
+import static com.dealermanagmentsystem.constants.Constants.BAD_AUTHENTICATION;
 import static com.dealermanagmentsystem.constants.Constants.EXCEPTION_CODE;
+import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
+import static com.dealermanagmentsystem.constants.Constants.KEY_TOKEN;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
 import static com.dealermanagmentsystem.constants.Constants.NO_INTERNET;
 import static com.dealermanagmentsystem.constants.Constants.NO_INTERNET_CONNECTION;
 import static com.dealermanagmentsystem.constants.Constants.OK;
@@ -74,8 +84,24 @@ public class AsyncTaskConnection extends AsyncTask<String, Void, Result> {
             mConnectionListener.onSuccess(result);
         } else if (result.getStatusCode() == NO_INTERNET) {
             mConnectionListener.onNetworkFail(result.getResponse());
+        } else if (result.getStatusCode() == BAD_AUTHENTICATION) {
+            DMSPreference.setString(KEY_TOKEN, "");
+            DMSPreference.setString(KEY_USERNAME, "");
+            DMSPreference.setString(KEY_USER_EMAIL_ID, "");
+            DMSPreference.setString(KEY_USER_IMAGE, "");
+            //  DMSPreference.setString(KEY_FCM_TOKEN, "");
+            DMSPreference.setBoolean(KEY_FCM_TOKEN_SET, false);
+
+            Intent intent = new Intent(mActivity, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mActivity.startActivity(intent);
+            DMSToast.showLong(mActivity,"Session expired, please login..");
         } else {
             mConnectionListener.onFail(result);
         }
+
+
     }
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
+    android:background="@color/card_bg"
     android:orientation="vertical"
     android:padding="15dp">
 
@@ -30,6 +31,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
         android:hint="Feedback"
+        android:textColorHint="@color/textSecondary"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/textPrimary" />
 

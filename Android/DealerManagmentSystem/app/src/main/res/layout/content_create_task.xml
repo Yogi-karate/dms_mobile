@@ -18,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical">
 
 
@@ -25,25 +26,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:background="@color/card_bg"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <Spinner
                         android:id="@+id/sp_activity_type"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/border_line_icon"
-                        android:hint="Activity Type"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="15dp"
                         android:layout_marginBottom="5dp"
-                        />
+                        android:background="@drawable/border_line_icon"
+                        android:hint="Activity Type" />
 
 
                     <Spinner
@@ -69,6 +71,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/border_line"
                         android:hint="Summary"
+                        android:textColorHint="@color/textSecondary"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
@@ -84,6 +87,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Note"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -98,6 +102,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Follow-up Date"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 

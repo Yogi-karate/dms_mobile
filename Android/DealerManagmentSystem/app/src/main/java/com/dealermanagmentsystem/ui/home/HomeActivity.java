@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dealermanagmentsystem.R;
+import com.dealermanagmentsystem.adapter.SaleOrderAdapter;
 import com.dealermanagmentsystem.adapter.TasksAdapter;
 import com.dealermanagmentsystem.adapter.TeamAdapter;
 import com.dealermanagmentsystem.constants.Constants;
@@ -72,6 +74,7 @@ import com.squareup.otto.Subscribe;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -82,12 +85,14 @@ import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
+import static com.dealermanagmentsystem.constants.Constants.KEY_NIGHT_MODE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_ROLE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_TEAMS;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
@@ -140,7 +145,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     String strState;
     /* @BindView(R.id.recycler_View_tasks)
      RecyclerView recyclerViewTasks;*/
-    TasksAdapter tasksAdapter;
+    // TasksAdapter tasksAdapter;
     @BindView(R.id.tasks_title)
     TextView txtTasksTitle;
     @BindView(R.id.tasks_more)
@@ -162,21 +167,29 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TextView txtLegendToday;
     @BindView(R.id.planned)
     TextView txtLegendPlanned;
- /*   @BindView(R.id.recycler_view_teams)
+    @BindView(R.id.recycler_view_teams)
     RecyclerView recyclerTeams;
     @BindView(R.id.txt_team_title)
-    TextView txtTeamTitle;*/
-
+    TextView txtTeamTitle;
+    @BindView(R.id.cardView_teams)
+    CardView cardViewTeams;
 
     Integer overdueCold, overdueWarm, overdueHot, overdueBooked;
     Integer todayCold, todayWarm, todayHot, todayBooked;
     Integer plannedCold, plannedWarm, plannedHot, plannedBooked;
-   /* List<Record> recordsTeamList;
+    List<Record> recordsTeamList;
     String strRole;
     TeamAdapter teamAdapter;
-*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (DMSPreference.getBoolean(KEY_NIGHT_MODE)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
@@ -196,16 +209,17 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
-       /*     strRole = DMSPreference.getString(KEY_ROLE);
-            if (!strRole.equalsIgnoreCase("user")) {
-                Gson gson = new Gson();
-                String json = DMSPreference.getString(KEY_TEAMS);
-                Type type = new TypeToken<List<Record>>() {}.getType();
-                recordsTeamList = gson.fromJson(json, type);
-            }
-*/
+        strRole = DMSPreference.getString(KEY_ROLE, "user");
+        if (!strRole.equalsIgnoreCase("user")) {
+            Gson gson = new Gson();
+            String json = DMSPreference.getString(KEY_TEAMS);
+            Type type = new TypeToken<List<Record>>() {
+            }.getType();
+            recordsTeamList = gson.fromJson(json, type);
+            cardViewTeams.setVisibility(View.VISIBLE);
+        } else {
+            cardViewTeams.setVisibility(View.GONE);
+        }
 
         setNavigationView();
         presenter = new HomePresenter(this);
@@ -246,10 +260,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         presenter.getTasksOverview(activity);
         // presenter.getDeliveryCount(activity);
         // presenter.getInvoiceCount(activity);
-       /* if (!strRole.equalsIgnoreCase("user")) {
+        if (!strRole.equalsIgnoreCase("user")) {
             txtTeamTitle.setText(recordsTeamList.get(0).getName());
             presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
-        }*/
+        }
     }
 
     @Override
@@ -346,7 +360,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-
     @Override
     public void onSuccessDeliveryCount(String count) {
        /* txtDeliveryCount.setText(count);
@@ -390,7 +403,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         overdueBooked = leadOverviewResponse.get(0).getResult().get(3).getStageIdCount();
         int overdue = overdueCold + overdueWarm + overdueHot + overdueBooked;
 
-
         todayCold = leadOverviewResponse.get(1).getResult().get(0).getStageIdCount();
         todayWarm = leadOverviewResponse.get(1).getResult().get(1).getStageIdCount();
         todayHot = leadOverviewResponse.get(1).getResult().get(2).getStageIdCount();
@@ -412,9 +424,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         chart.setCenterTextTypeface(DMSTypeFace.getTypeface(activity));
         chart.setCenterTextSize(16f);//center size
         chart.setCenterText(String.valueOf(total));
+        chart.setCenterTextColor(getResources().getColor(R.color.textPrimary));
         chart.setDrawHoleEnabled(true);
-        chart.setHoleColor(getResources().getColor(R.color.white));
-        chart.setTransparentCircleColor(Color.WHITE);
+        chart.setHoleColor(getResources().getColor(R.color.card_bg));
+        chart.setTransparentCircleColor(getResources().getColor(R.color.card_bg));
         chart.setTransparentCircleAlpha(110);
         chart.setHoleRadius(50f);
         chart.setTransparentCircleRadius(51f);
@@ -700,6 +713,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent = new Intent(this, LeadActivity.class);
         intent.putExtra(EXTRA_STATE, strState);
         intent.putExtra(EXTRA_STAGE, STAGE_COLD);
+        intent.putExtra(EXTRA_FROM, "home");
         startActivity(intent);
     }
 
@@ -708,6 +722,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent = new Intent(this, LeadActivity.class);
         intent.putExtra(EXTRA_STATE, strState);
         intent.putExtra(EXTRA_STAGE, STAGE_WARM);
+        intent.putExtra(EXTRA_FROM, "home");
         startActivity(intent);
     }
 
@@ -716,6 +731,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent = new Intent(this, LeadActivity.class);
         intent.putExtra(EXTRA_STATE, strState);
         intent.putExtra(EXTRA_STAGE, STAGE_HOT);
+        intent.putExtra(EXTRA_FROM, "home");
         startActivity(intent);
     }
 
@@ -724,6 +740,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent = new Intent(this, LeadActivity.class);
         intent.putExtra(EXTRA_STATE, strState);
         intent.putExtra(EXTRA_STAGE, STAGE_BOOKED);
+        intent.putExtra(EXTRA_FROM, "home");
         startActivity(intent);
     }
 
@@ -748,7 +765,18 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(intent);
         } /*else if (id == R.id.follow_up) {
             DMSToast.showLong(activity, "Coming Soon..");
-        } */ else if (id == R.id.logout) {
+        } */ else if (id == R.id.change_theme) {
+            if (DMSPreference.getBoolean(KEY_NIGHT_MODE)) {
+                DMSPreference.setBoolean(KEY_NIGHT_MODE, false);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            } else {
+                DMSPreference.setBoolean(KEY_NIGHT_MODE, true);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                recreate();
+            }
+
+        } else if (id == R.id.logout) {
             logOutDialog(activity);
         }
 
@@ -775,12 +803,12 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-  /*  @OnClick(R.id.ll_team_dialog) //ButterKnife uses.
+    @OnClick(R.id.ll_team_dialog) //ButterKnife uses.
     public void openTeamDialog() {
         showTeamDialog();
-    }*/
+    }
 
-   /* private void showTeamDialog() {
+    private void showTeamDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select a team");
 
@@ -797,7 +825,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             public void onClick(DialogInterface dialog, int pos) {
                 txtTeamTitle.setText(recordsTeamList.get(pos).getName());
                 if (!strRole.equalsIgnoreCase("user")) {
-                    presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
+                    presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(pos).getId()));
                 }
             }
         });
@@ -805,16 +833,16 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-*/
+
     @Override
     public void onSuccessTeamDetail(List<TeamDetailResponse> response) {
-      /*  GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerTeams.setHasFixedSize(true);
         recyclerTeams.setLayoutManager(gridLayoutManager);
         final List<Result> result = response.get(0).getResult();
-        if (result != null) {
-            teamAdapter = new TeamAdapter(this, result);
-            recyclerTeams.setAdapter(tasksAdapter);
-        }*/
+
+        teamAdapter = new TeamAdapter(result, this);
+        recyclerTeams.setAdapter(teamAdapter);
+
     }
 }

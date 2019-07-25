@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" android:drawable="@drawable/edit_bg_with_ic"/>
-    <item android:drawable="@drawable/edit_bg_with_ic" />
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/card_bg"/>
+            <corners android:radius="10dp" />
+            <stroke android:color="@color/fossil" android:width="1dp"/>
+
+        </shape>
+    </item>
+    <item android:gravity="center_vertical|right" android:right="8dp">
+        <layer-list>
+            <item android:width="12dp" android:height="12dp"  android:gravity="center" android:bottom="10dp">
+                <rotate
+                    android:fromDegrees="45"
+                    android:toDegrees="45">
+                    <shape android:shape="rectangle">
+                        <solid android:color="@color/textPrimary" />
+
+                    </shape>
+                </rotate>
+            </item>
+            <item android:width="20dp" android:height="10dp" android:bottom="21dp" android:gravity="center">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/card_bg"/>
+
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</layer-list>

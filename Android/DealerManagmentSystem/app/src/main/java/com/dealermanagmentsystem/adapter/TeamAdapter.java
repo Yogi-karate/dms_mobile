@@ -1,40 +1,43 @@
 package com.dealermanagmentsystem.adapter;
 
+
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dealermanagmentsystem.R;
-import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.data.model.teamdetail.Result;
-import com.dealermanagmentsystem.event.TasksCompleteEvent;
-import com.dealermanagmentsystem.ui.base.BaseApplication;
-import com.dealermanagmentsystem.ui.enquiry.tasks.TaskCreateActivity;
+import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
+import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
+import com.dealermanagmentsystem.ui.home.HomeActivity;
+import com.dealermanagmentsystem.ui.userenquiry.UserMonthDetailsActivity;
 
 import java.util.List;
 
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_DATE_DEADLINE;
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_ID;
-import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_SUMMARY;
-import static com.dealermanagmentsystem.constants.Constants.KEY_EDIT_ACTIVITY;
+import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_NAME;
+import static com.dealermanagmentsystem.constants.Constants.STAGE_WARM;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.AdapterItemViewHolder> {
 
-    private Activity activity;
     List<Result> mRecords;
+    Activity mActivity;
 
-    public TeamAdapter(Activity activity, List<Result> records) {
-        this.activity = activity;
+    public TeamAdapter(List<Result> records, Activity activity) {
         this.mRecords = records;
+        this.mActivity = activity;
     }
 
     @NonNull
@@ -47,15 +50,43 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.AdapterItemVie
     @Override
     public void onBindViewHolder(@NonNull final TeamAdapter.AdapterItemViewHolder itemViewHolder, final int i) {
 
-        itemViewHolder.mCount.setText(mRecords.get(i).getUserIdCount());
-        itemViewHolder.mBooked.setText(mRecords.get(i).getUserBookedId());
+        itemViewHolder.mCount.setText(String.valueOf(mRecords.get(i).getUserIdCount()));
+        itemViewHolder.mBooked.setText(String.valueOf(mRecords.get(i).getUserBookedId()));
 
+        itemViewHolder.mCount.setPaintFlags(itemViewHolder.mCount.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        itemViewHolder.mBooked.setPaintFlags(itemViewHolder.mBooked.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        String id = "";
+        String name = "";
         final Object userId = mRecords.get(i).getUserId();
         if (userId instanceof List) {
-            itemViewHolder.mName.setText(String.valueOf(((List) userId).get(1)));
-        } else {
-            itemViewHolder.mName.setVisibility(View.GONE);
+            name = String.valueOf(((List) userId).get(1));
+            id = String.valueOf(((List) userId).get(0));
+            itemViewHolder.mName.setText(name);
         }
+
+        final String finalId = id;
+        final String finalName = name;
+        itemViewHolder.mCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, UserMonthDetailsActivity.class);
+                intent.putExtra(EXTRA_USER_ID, finalId);
+                intent.putExtra(EXTRA_USER_NAME, finalName);
+                mActivity.startActivity(intent);
+            }
+        });
+
+        itemViewHolder.mBooked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, LeadActivity.class);
+                intent.putExtra(EXTRA_USER_ID, finalId);
+                intent.putExtra(EXTRA_USER_NAME, finalName);
+                intent.putExtra(EXTRA_FROM, "team");
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
@@ -55,6 +56,7 @@
                         android:background="@drawable/border_line"
                         android:editable="false"
                         android:hint="Types"
+                        android:textColorHint="@color/textSecondary"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
@@ -70,6 +72,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Product"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -84,6 +87,7 @@
                         android:background="@drawable/border_line"
                         android:editable="false"
                         android:hint="Follow-up Date"
+                        android:textColorHint="@color/textSecondary"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
@@ -102,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
@@ -125,6 +130,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Name"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -140,6 +146,7 @@
                         android:hint="Mobile"
                         android:inputType="phone"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -155,6 +162,7 @@
                         android:hint="Email"
                         android:inputType="textEmailAddress"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -166,12 +174,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
@@ -195,6 +205,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Source"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary" />
 
                 </LinearLayout>
@@ -204,12 +215,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
@@ -246,6 +259,7 @@
                         android:editable="false"
                         android:hint="Test Drive Date"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:visibility="visible"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
@@ -263,6 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular

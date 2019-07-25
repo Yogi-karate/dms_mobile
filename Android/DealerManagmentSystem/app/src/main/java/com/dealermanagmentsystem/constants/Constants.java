@@ -33,6 +33,7 @@ public class Constants {
     public static String KEY_TEAMS = "teams";
     public static String KEY_FCM_TOKEN = "fcm_token";
     public static String KEY_FCM_TOKEN_SET = "token_set";
+    public static String KEY_NIGHT_MODE = "night_mode";
     public static String QUOTATION = "Quotation";
     public static String BOOKED = "Booked";
     public static String CANCEL = "Cancel";
@@ -43,6 +44,7 @@ public class Constants {
 
     public static int OK = 200;
     public static int BAD_AUTHENTICATION = 401;
+    public static int BAD_USERNAME_PASSWORD = 403;
     public static int EXCEPTION_CODE = 12;
     public static int NO_INTERNET = 13;
     public static int TIMEOUT = 15000;
@@ -58,6 +60,8 @@ public class Constants {
     public static String EXTRA_ACTIVITY_TYPE = "activity_type";
     public static String EXTRA_ACTIVITY_COMING_FROM = "activity_coming_from";
     public static String EXTRA_ENQUIRY = "extra_enquiry";
+    public static String EXTRA_USER_ID = "extra_user_id";
+    public static String EXTRA_USER_NAME = "extra_user_name";
     public static String ENQUIRY = "enquiry";
     public static String SUB_ENQUIRY = "sub_enquiry";
     public static String CREATE_ENQUIRY = "create_enquiry";
@@ -66,6 +70,7 @@ public class Constants {
     public static String EXTRA_ENQUIRY_ID = "id_enquiry";
     public static String EXTRA_STATE = "state";
     public static String EXTRA_STAGE = "stage";
+    public static String EXTRA_FROM = "from";
     public static String STATE_OVERDUE = "overdue";
     public static String STATE_TODAY = "today";
     public static String STATE_PLANNED = "planned";

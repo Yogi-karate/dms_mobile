@@ -49,4 +49,11 @@
     <color name="rustDarker">#c55b2c</color>
     <color name="black">#000000</color>
 
+
+    <color name="toolbar">#F0F6FF</color>
+    <color name="card_bg">#ffffff</color>
+    <color name="ic_color">#324755</color>
+    <color name="header_title">#ffffff</color>
+    <color name="nav_header_bg">#ffffff</color>
+
 </resources>

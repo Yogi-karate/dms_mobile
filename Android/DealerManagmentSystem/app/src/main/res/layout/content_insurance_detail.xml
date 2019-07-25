@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/card_bg"
                     android:padding="5dp">
 
                     <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
@@ -64,6 +65,7 @@
                         android:background="@drawable/border_line"
                         android:hint="Insurance Company"
                         android:padding="15dp"
+                        android:textColorHint="@color/textSecondary"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
 
@@ -77,6 +79,7 @@
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/border_line"
                         android:hint="Policy No"
+                        android:textColorHint="@color/textSecondary"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
                         android:textSize="16sp" />
@@ -92,6 +95,7 @@
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/border_line"
                         android:hint="IDV"
+                        android:textColorHint="@color/textSecondary"
                         android:inputType="numberDecimal"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
@@ -107,6 +111,7 @@
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/border_line"
                         android:hint="Insurance valid from"
+                        android:textColorHint="@color/textSecondary"
                         android:inputType="numberDecimal"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"
@@ -119,6 +124,7 @@
                         android:layout_margin="5dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="10dp"
+                        android:textColorHint="@color/textSecondary"
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/border_line"
                         android:hint="Insurance valid to"
@@ -147,6 +153,7 @@
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/border_line"
                         android:hint="Premium amount"
+                        android:textColorHint="@color/textSecondary"
                         android:inputType="numberDecimal"
                         android:padding="15dp"
                         android:textColor="@color/textSecondary"

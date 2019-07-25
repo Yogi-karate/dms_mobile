@@ -6,6 +6,8 @@ public interface ILeadPresenter {
 
     public void getLeads(Activity activity, String strState, String strStage);
 
+    public void getLeadsBooked(Activity activity, String strId);
+
     public void getLostReason(Activity activity, String id);
 
     public void getStage(Activity activity, String id);

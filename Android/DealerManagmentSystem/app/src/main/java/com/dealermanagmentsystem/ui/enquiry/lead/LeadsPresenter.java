@@ -24,6 +24,7 @@ import static com.dealermanagmentsystem.constants.ConstantsUrl.GET_LOST_REASON;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.GET_STAGE;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LEADS;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.MARK_WON_LOST;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.USER_DETAIL_BOOKED;
 
 public class LeadsPresenter implements ILeadPresenter {
 
@@ -36,6 +37,35 @@ public class LeadsPresenter implements ILeadPresenter {
     @Override
     public void getLeads(Activity activity, String strState, String strStage) {
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(LEADS + "?state=" + strState + "&stage=" + strStage, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    Gson gson = new Gson();
+                    EnquiryResponse enquiryResponse = gson.fromJson(jsonObject.toString(), EnquiryResponse.class);
+                    view.onSuccessLeads(enquiryResponse);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getLeadsBooked(Activity activity, String strId) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(USER_DETAIL_BOOKED + strId, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 JSONObject jsonObject;

@@ -33,8 +33,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_NAME;
+import static com.dealermanagmentsystem.constants.Constants.STAGE_BOOKED;
 
 public class LeadActivity extends BaseActivity implements ILeadView {
 
@@ -43,7 +47,10 @@ public class LeadActivity extends BaseActivity implements ILeadView {
     Activity activity;
     LeadsPresenter presenter;
     String strState;
+    String strFrom;
     String strStage;
+    String strId;
+    String strName;
     LeadAdapter leadAdapter;
     SearchView mSearchView;
 
@@ -60,8 +67,16 @@ public class LeadActivity extends BaseActivity implements ILeadView {
 
         final Intent intent = getIntent();
         if (intent != null) {
-            strState = intent.getStringExtra(EXTRA_STATE);
-            strStage = intent.getStringExtra(EXTRA_STAGE);
+            strFrom = intent.getStringExtra(EXTRA_FROM);
+            if (strFrom.equalsIgnoreCase("home")) {
+                strState = intent.getStringExtra(EXTRA_STATE);
+                strStage = intent.getStringExtra(EXTRA_STAGE);
+            } else {
+                strId = intent.getStringExtra(EXTRA_USER_ID);
+                strName = intent.getStringExtra(EXTRA_USER_NAME);
+                strStage = STAGE_BOOKED;
+            }
+
 
         }
         GridLayoutManager gridLayoutManagerCategories = new GridLayoutManager(this, 1);
@@ -69,7 +84,11 @@ public class LeadActivity extends BaseActivity implements ILeadView {
         recyclerView.setLayoutManager(gridLayoutManagerCategories);
 
         presenter = new LeadsPresenter(this);
-        presenter.getLeads(activity, strState, strStage);
+        if (strFrom.equalsIgnoreCase("home")) {
+            presenter.getLeads(activity, strState, strStage);
+        } else {
+            presenter.getLeadsBooked(activity, strId);
+        }
     }
 
     @Override
@@ -112,8 +131,12 @@ public class LeadActivity extends BaseActivity implements ILeadView {
             leadAdapter = new LeadAdapter(this, enquiryResponse.getRecords(), strStage);
             recyclerView.setAdapter(leadAdapter);
         }
+        if (strFrom.equalsIgnoreCase("home")) {
+            showTile(strState + "/" + strStage + "-" + String.valueOf(enquiryResponse.getLength()));
+        } else {
+            showTile(strName + "/" + strStage + "-" + String.valueOf(enquiryResponse.getLength()));
+        }
 
-        showTile(strState + "/" + strStage + "-" + String.valueOf(enquiryResponse.getLength()));
     }
 
     @Override
@@ -163,7 +186,6 @@ public class LeadActivity extends BaseActivity implements ILeadView {
         String id = event.getCastedObject();
         presenter.markWonLost(activity, id, "Won", 0);
     }
-
 
 
     @SuppressWarnings("unused") //Otto uses.

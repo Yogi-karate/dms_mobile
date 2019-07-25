@@ -479,6 +479,12 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
     }
 
     @Override
+    public void onFailEnquiryDetail() {
+        finish();
+        DMSToast.showLong(activity, "Your not authorised to view this enquiry");
+    }
+
+    @Override
     public void onError(String message) {
         DMSToast.showLong(activity, message);
     }

@@ -21,12 +21,17 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:allowBackup">
 
-      <!--  <meta-data
+        <!--
+          <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
--->
+        -->
         <activity
             android:name=".ui.delivery.DeliveryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.userenquiry.UserMonthDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

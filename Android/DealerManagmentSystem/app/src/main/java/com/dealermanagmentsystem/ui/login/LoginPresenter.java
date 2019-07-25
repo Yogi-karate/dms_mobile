@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.dealermanagmentsystem.constants.Constants.BAD_AUTHENTICATION;
+import static com.dealermanagmentsystem.constants.Constants.BAD_USERNAME_PASSWORD;
 import static com.dealermanagmentsystem.constants.Constants.MOBILE;
 import static com.dealermanagmentsystem.constants.Constants.PASSWORD;
 import static com.dealermanagmentsystem.constants.Constants.POST;
@@ -63,7 +64,7 @@ public class LoginPresenter implements ILoginPresenter {
 
                 @Override
                 public void onFail(Result result) {
-                    if (result.getStatusCode() == BAD_AUTHENTICATION) {
+                    if (result.getStatusCode() == BAD_USERNAME_PASSWORD) {
                         view.onError("Wrong username or password");
                     } else {
                         view.onError("Something went wrong, Please try after sometime");

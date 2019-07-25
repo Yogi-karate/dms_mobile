@@ -86,15 +86,15 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             DMSPreference.setString(KEY_USERNAME, response.getName());
             DMSPreference.setString(KEY_USER_EMAIL_ID, response.getEmail());
             DMSPreference.setString(KEY_USER_IMAGE, response.getImage());
-          //  DMSPreference.setString(KEY_ROLE, response.getRole());
+            DMSPreference.setString(KEY_ROLE, response.getRole());
 
             Intent intent = new Intent(this, HomeActivity.class);
-          /*  if (!response.getRole().equalsIgnoreCase("user")) {
+            if (!response.getRole().equalsIgnoreCase("user")) {
                 final List<Record> records = response.getTeams().getRecords();
                 Gson gson = new Gson();
                 String json = gson.toJson(records);
                 DMSPreference.setString(KEY_TEAMS, json);
-            }*/
+            }
             startActivity(intent);
             DMSToast.showLong(activity, "Logged in successfully");
         }
