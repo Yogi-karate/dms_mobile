@@ -39,3 +39,11 @@ export const getLoginCreds = (userData) =>
     method: 'POST',
     body: JSON.stringify(userData)
   });
+
+  export const getSalesDashboard = (user) =>
+  sendRequest(`${BASE_PATH}/sales/dashboard`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8'
+    }
+  });
