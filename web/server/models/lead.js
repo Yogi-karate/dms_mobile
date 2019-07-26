@@ -254,12 +254,20 @@ class Lead {
             let server = odoo.getOdoo(user.email);
             let model = 'account.payment';
             let domain = [];
-            var today = new Date();
-            let fields = ["name","state","payment_type","amount","payment_date","create_date"];
-           // domain.push(["state", "ilike", "posted"]);
+            let fields = ["name","state","payment_type","amount","payment_date","create_date","partner_id"];
             result = await server.search_read(model,{domain: domain, fields: fields});
             console.log("The getPaymentAccount result ",result);
+            if(result == null || result == undefined){
+                return {length:0, records:[]};
+            }else{
+                const totalPaymentAmount = result.records.reduce(function (acc, record) {
+                    console.log("The record is ", record.amount);
+                    return record.amount + acc;
+                }, 0);//add and get all customer payment amount. 
+                console.log("The total amount is ",totalPaymentAmount);
+                result.totalAmount = totalPaymentAmount;
             return result;
+            }
         } catch (err) {
             return { error: err.message || err.toString() };
         }
