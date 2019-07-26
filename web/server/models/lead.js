@@ -247,6 +247,23 @@ class Lead {
         }
 
     }
+
+    async getPaymentAccount(user) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'account.payment';
+            let domain = [];
+            var today = new Date();
+            let fields = ["name","state","payment_type","amount","payment_date","create_date"];
+           // domain.push(["state", "ilike", "posted"]);
+            result = await server.search_read(model,{domain: domain, fields: fields});
+            console.log("The getPaymentAccount result ",result);
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+    }
 }
 
 module.exports = new Lead();

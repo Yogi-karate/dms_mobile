@@ -111,4 +111,13 @@ router.get('/dailyBookedLeads/:id', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/paymentAccDetails', async (req,res) => {
+  try{
+    let result = await lead.getPaymentAccount(req.user);
+    console.log("The result for payment account api is ",result);  
+    res.json(result);
+  }catch(err){
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
