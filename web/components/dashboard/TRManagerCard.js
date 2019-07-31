@@ -53,6 +53,7 @@ class TRCard extends React.Component {
     const graphData = this.props.graphData;
     const graphLabel = this.props.graphLabel;
     const graphColors = this.props.graphColors;
+    const onclick = this.props.onClick;
     let cardIconRender;
     let graphRender;
     let dropdownComboRender;
@@ -75,7 +76,7 @@ class TRCard extends React.Component {
     }
 
     if(graphType === 'doughnut') {
-        graphRender = <TRChartDoughnut graphData={graphData} graphLabel = {graphLabel} graphColors = {graphColors}></TRChartDoughnut>
+        graphRender = <TRChartDoughnut graphData={graphData} graphLabel = {graphLabel} graphColors = {graphColors} onclick = {onclick}></TRChartDoughnut>
     }
     else if(graphType === 'pie') {
         graphRender = <TRChartPie graphData={graphData} graphLabel = {graphLabel} graphColors = {graphColors}></TRChartPie>

@@ -26,9 +26,14 @@ class TRChartDoughnut extends Component {
 				labels: {
 					boxWidth: 10
 				}
-			}
+			}/* ,
+			'onClick': function (evt, item) {
+				console.log('legend onClick', evt);
+				console.log('legd item', item);
+			} */
 
 		}
+		options.onClick = this.props.onclick;
 		return (
 			<div>
 				<div>

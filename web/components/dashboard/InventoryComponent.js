@@ -2,7 +2,7 @@ import React from "react";
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
-import { getSalesDashboard } from '../../lib/api/admin';
+import { getInventoryStock } from '../../lib/api/dashboard';
 
 
 class InventoryCardComponent extends React.Component {
@@ -30,25 +30,28 @@ class InventoryCardComponent extends React.Component {
         };
     }
 
-    async componentDidMount() {
+    async getResultData(){
         try {
             console.log("The complete props ", this.props)
-            const resp = await getSalesDashboard();
+            const resp = await getInventoryStock();
             console.log("The data from admin js for inventory", resp);
             let graphData = [];
             let graphLabel = [];
-            const inventoryArray = resp[0].result.map((inventory) => {
+            const inventoryArray = resp.result.map((inventory) => {
                 console.log("The inventory are ", inventory);
                 graphData.push(inventory.state_count);
                 graphLabel.push(inventory.state);
                 return [inventory.state, inventory.state_count]
             });
             console.log("The data inventory", inventoryArray);
-            this.setState({ inventories: inventoryArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
-
+            return ({ inventories: inventoryArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
+    }
+
+    async componentDidMount() {
+        this.setState(await this.getResultData());
     }
 
     render() {

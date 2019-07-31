@@ -54,6 +54,20 @@ class Sale {
             return { error: err.message || err.toString() };
         }
     }
+
+    async getInventoryStock(user, { model, domain = [], fields = []}) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            result = await server.read_group(model, { domain: domain, groupby: ["state"], fields: ["name"] }, true);
+            console.log("The fields aree ",fields);
+            console.log("The model and result is ", model + '', result);
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+        return result;
+    }
+
 }
 
 module.exports = new Sale();

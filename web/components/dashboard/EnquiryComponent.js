@@ -2,12 +2,14 @@ import React from "react";
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
-import { getDashboard } from '../../lib/api/admin';
-
+import { getDashboard } from '../../lib/api/dashboard';
+import { enquiry_stage_change } from '../../lib/store';
+import { connect } from 'react-redux';
 
 class EnquiryCardComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.enquiryClick = this.enquiryClick.bind(this);
 
         this.state = {
             enquires: [],
@@ -24,12 +26,18 @@ class EnquiryCardComponent extends React.Component {
                 '#BA55D3'
             ],
             renderDropdown: false,
+            onClick:this.enquiryClick,
         };
     }
-
+    enquiryClick(evt, item) {
+        if(item[0] != undefined && item[0] != null){
+        console.log('onclick piechart item', item[0]._model.label);
+        this.props.enquiry_stage_change(item[0]._model.label);
+        }
+    }
     async componentDidMount() {
         try {
-            console.log("The complete props ", this.props)
+            console.log("The complete propsssssssssssssssssssssssssssssssssssssssssssssssss ", this.props)
             const resp = await getDashboard();
             console.log("The data from admin js", resp);
             let graphData = [];
@@ -72,4 +80,8 @@ class EnquiryCardComponent extends React.Component {
     }
 }
 
-export default EnquiryCardComponent;
+const mapDispatchToProps = { enquiry_stage_change }
+export default connect(
+    null,
+    mapDispatchToProps
+)(EnquiryCardComponent);

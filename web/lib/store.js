@@ -6,7 +6,8 @@ const exampleInitialState = {
   light: false,
   count: 0,
   user: null,
-  team:null
+  team:null,
+  enquiry_stage:null,
 }
 
 export const actionTypes = {
@@ -16,6 +17,7 @@ export const actionTypes = {
   RESET: 'RESET',
   LOGIN: 'LOGIN',
   TEAM_CHANGE:'TEAM',
+  ENQUIRY_STAGE:'ENQUIRY_STAGE'
 }
 
 // REDUCERS
@@ -46,6 +48,10 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         team: action.team
       })
+      case actionTypes.ENQUIRY_STAGE:
+      return Object.assign({}, state, {
+        enquiry_stage: action.stage
+      })
       
     default:
       return state
@@ -60,6 +66,10 @@ export const login = (user) => {
 export const team = (team) => {
   console.log("Trying to change team");
   return { type: actionTypes.TEAM_CHANGE, team:team }
+}
+export const enquiry_stage_change = (stage) => {
+  console.log("Trying to change enq stage");
+  return { type: actionTypes.ENQUIRY_STAGE, stage:stage }
 }
 export const serverRenderClock = () => {
   return { type: actionTypes.TICK, light: false, ts: Date.now() }

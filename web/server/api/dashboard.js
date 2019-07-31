@@ -3,9 +3,8 @@ const _ = require('lodash');
 const logger = require('../logs');
 const router = express.Router();
 const passport = require('passport');
-const odoo = require('../odoo_server');
 const base = require('../models/base');
-const User = require('../models/MUser');
+const sale = require('../models/sale');
 
 router.use((req, res, next) => {
   console.log("service api authenication ");
@@ -47,6 +46,22 @@ router.get('/inventory', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+
+router.get('/inventory/stock', async (req, res) => {
+  try {
+    model = 'stock.picking';
+    console.log("Hello from inventory stock api");
+    let domain = [];
+    let fields = ["name","origin","state"];
+    let result = await sale.getInventoryStock(req.user, {model, domain: domain, fields: fields});
+    console.log(model + '', result);
+    res.json({result});
+  } catch (err) {
+    console.log(err);
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 router.get('/invoice', async (req, res) => {
   let result = null;
   try {

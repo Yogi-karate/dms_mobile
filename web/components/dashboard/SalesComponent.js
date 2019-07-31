@@ -2,7 +2,7 @@ import React from "react";
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
-import { getSalesDashboard } from '../../lib/api/admin';
+import { getSalesDashboard } from '../../lib/api/dashboard';
 
 
 class SalesCardComponent extends React.Component {

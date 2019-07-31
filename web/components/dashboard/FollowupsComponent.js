@@ -2,7 +2,7 @@ import React from "react";
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
-import { getDashboard } from '../../lib/api/admin';
+import { getDashboard } from '../../lib/api/dashboard';
 
 
 class FollowupsCardComponent extends React.Component {

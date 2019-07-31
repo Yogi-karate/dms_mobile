@@ -79,7 +79,9 @@ class Lead {
             if (state != null) {
                 domain = this.getActivityDomain(state);
             }
-            domain.push(["stage_id.name", "ilike", stage]);
+            if(stage != null || stage != undefined){
+                domain.push(["stage_id.name", "ilike", stage]);
+            }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
             console.log(model + '', result);
         } catch (err) {

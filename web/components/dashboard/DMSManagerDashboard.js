@@ -9,6 +9,7 @@ import TeamDropDown from './TeamDropdown';
 import withAuth from '../../lib/withAuth';
 import DailyLeads from './DailyLeads';
 import EnquiryCardComponent from './EnquiryComponent';
+import StageCount from './EnquiryStateTable';
 import FollowupsCardComponent from './FollowupsComponent';
 import SalesCardComponent from './SalesComponent';
 import InventoryCardComponent from './InventoryComponent';
@@ -49,8 +50,11 @@ class DMSDashboard extends React.Component {
                     </GridItem>
                 </GridContainer>
                 <GridContainer>
-                    <GridItem xs={24} sm={16} md={45}>
+                    <GridItem xs={6} sm={6} md={6}>
                         <DailyLeads {... this.props} />
+                    </GridItem>
+                    <GridItem xs={6} sm={6} md={6} lg={6}>
+                        <StageCount {... this.props} />
                     </GridItem>
                 </GridContainer>
             </GridContainer>
