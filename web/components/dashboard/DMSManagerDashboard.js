@@ -13,6 +13,8 @@ import StageCount from './EnquiryStateTable';
 import FollowupsCardComponent from './FollowupsComponent';
 import SalesCardComponent from './SalesComponent';
 import InventoryCardComponent from './InventoryComponent';
+import DailyUserCount from './DailyUserCount';
+import { connect } from 'react-redux';
 
 const dropDownlistProps = {
 
@@ -50,9 +52,12 @@ class DMSDashboard extends React.Component {
                     </GridItem>
                 </GridContainer>
                 <GridContainer>
-                    <GridItem xs={6} sm={6} md={6}>
-                        <DailyLeads {... this.props} />
-                    </GridItem>
+                    {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
+                        (<GridItem xs={6} sm={6} md={6}>
+                            <DailyLeads {... this.props} />
+                        </GridItem>) : (<GridItem xs={6} sm={6} md={6}>
+                            <DailyUserCount {... this.props} />
+                        </GridItem>)}
                     <GridItem xs={6} sm={6} md={6} lg={6}>
                         <StageCount {... this.props} />
                     </GridItem>
@@ -62,4 +67,12 @@ class DMSDashboard extends React.Component {
     }
 }
 
-export default withAuth(DMSDashboard);
+const mapStateToProps = state => {
+    console.log("state in mapping", state);
+    return { dailyLeadsUser: state.dailyleads_userIndex, showDailyLeads: state.showDailyLeads };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(withAuth(DMSDashboard));

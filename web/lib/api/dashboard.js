@@ -53,7 +53,14 @@ export const getPaymentAccount = (user) =>
         }
     });
 export const getEnqStateData = (enqState) =>
-    sendRequest(`${BASE_PATH}/leads/search?state=`+enqState, {
+    sendRequest(`${BASE_PATH}/leads/search?state=` + enqState, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+export const getUserCount = (id) =>
+    sendRequest(`${BASE_PATH}/leads/dailyLeads/`+id, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

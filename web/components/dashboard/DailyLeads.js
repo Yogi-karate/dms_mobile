@@ -2,22 +2,18 @@ import React, { Component } from 'react';
 
 import MUIDataTable from "mui-datatables";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { getDailyLeads } from '../..//lib/api/admin';
+import { getDailyLeads } from '../../lib/api/admin';
 import { connect } from 'react-redux';
-
-const options = {
-  filter: true,
-  search: true,
-  print: false,
-  download: false,
-  selectableRows: false,
-  filterType: 'dropdown',
-  responsive: 'stacked',
-  rowsPerPage: 10,
-
-};
+import { dailyleads_userIndex,showDailyLeads } from '../../lib/store'
 
 const columns = [
+  {
+    name: "UserId",
+    options: {
+      filter: true,
+      sortDirection: 'asc'
+    }
+  },
   {
     name: "User Name",
     options: {
@@ -41,18 +37,35 @@ const columns = [
   },
 ];
 
-class TRTable extends Component {
+class DailyLeads extends Component {
   constructor(props) {
     super(props);
+    this.leadTableRowClick = this.leadTableRowClick.bind(this);
+
     this.state = {
       leads: [],
+      filter: true,
+      search: true,
+      print: false,
+      download: false,
+      selectableRows: true,
+      selectableRowsOnClick: true,
+      filterType: 'dropdown',
+      responsive: 'stacked',
+      rowsPerPage: 10,
+      onRowsSelect: this.leadTableRowClick,
     };
-    // this.handleMobileChange = this.handleMobileChange.bind(this);
-    // this.handlePinChange = this.handlePinChange.bind(this);
   }
+
+  leadTableRowClick(rowsSelected, allRows) {
+    console.log("the onRowSelect dataaaaaaaaaaaaa", allRows, this.state.leads[allRows[0].index]);
+    this.props.dailyleads_userIndex(this.state.leads[allRows[0].index]);
+    this.props.showDailyLeads(true);
+  }
+
   async componentDidUpdate(prevProps) {
     console.log("Old props and new props", this.props.team, prevProps.team);
-    if(this.props.team && prevProps.team && this.props.team != prevProps.team){
+    if (this.props.team && prevProps.team && this.props.team != prevProps.team) {
       console.log("changing state ----");
       this.setState({ leads: await this.getLeads() });
     }
@@ -60,14 +73,14 @@ class TRTable extends Component {
   async getLeads() {
     console.log("Inside getting Leads");
     try {
-      if(!this.props.team) return [];
+      if (!this.props.team) return [];
       const data = await getDailyLeads(this.props.team);
       console.log("The result is ", data);
-      if (data == null  || data[0] == null) {
+      if (data == null || data[0] == null) {
         return [];
       }
       let result = data[0].result.map(user => {
-        return [user.user_id[1], user.user_id_count, user.user_booked_id];
+        return [user.user_id[0],user.user_id[1], user.user_id_count, user.user_booked_id];
       })
       return result;
     } catch (err) {
@@ -76,7 +89,7 @@ class TRTable extends Component {
     }
   }
   async componentDidMount() {
-    this.setState({ leads: await this.getLeads()});
+    this.setState({ leads: await this.getLeads() });
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -109,7 +122,7 @@ class TRTable extends Component {
 
   render() {
     let leads = this.state.leads;
-    console.log("Calling table render",leads);
+    console.log("Calling table render", leads);
     return (
 
       <MuiThemeProvider theme={this.getMuiTheme()}>
@@ -117,7 +130,7 @@ class TRTable extends Component {
           title={"MTD Team Performance"}
           data={leads}
           columns={columns}
-          options={options}
+          options={this.state}
         />
       </MuiThemeProvider>
     );
@@ -129,7 +142,9 @@ const mapStateToProps = state => {
   console.log("state in mapping", state);
   return { team: state.team };
 }
+
+const mapDispatchToProps = { dailyleads_userIndex , showDailyLeads};
 export default connect(
   mapStateToProps,
-  null
-)(TRTable);
+  mapDispatchToProps
+)(DailyLeads);
