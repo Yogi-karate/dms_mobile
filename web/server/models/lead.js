@@ -22,6 +22,27 @@ class Lead {
         }
 
     }
+    async getStageCounts(user) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lead';
+            let states = ["overdue", "today", "planned"];
+            let domain = [];
+            let fields = ["stage_id"];
+            let self = this;
+            let group = await server.read_group(model, { domain: domain, groupby: ["stage_id"], fields: fields }, true);
+            console.log("The getStageCountssssssss", group);
+            if (group == null) {
+                return [];
+            } else {
+                return group;
+            }
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
     async getEnquiry(user, { id }) {
         let result = null;
         try {
@@ -79,7 +100,7 @@ class Lead {
             if (state != null) {
                 domain = this.getActivityDomain(state);
             }
-            if(stage != null || stage != undefined){
+            if (stage != null || stage != undefined) {
                 domain.push(["stage_id.name", "ilike", stage]);
             }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
@@ -154,7 +175,7 @@ class Lead {
             let fields = ["user_id", "user_id_count", "user_booked_id"];
             var today = new Date();
             var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            var lastDay = new Date(today.getFullYear(), today.getMonth()-1, 0);
+            var lastDay = new Date(today.getFullYear(), today.getMonth() - 1, 0);
             console.log("The current month first day is ", firstDay.toLocaleDateString());
             console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["team_id", "=", parseInt(id)]);
@@ -256,19 +277,19 @@ class Lead {
             let server = odoo.getOdoo(user.email);
             let model = 'account.payment';
             let domain = [];
-            let fields = ["name","state","payment_type","amount","payment_date","create_date","partner_id"];
-            result = await server.search_read(model,{domain: domain, fields: fields});
-            console.log("The getPaymentAccount result ",result);
-            if(result == null || result == undefined){
-                return {length:0, records:[]};
-            }else{
+            let fields = ["name", "state", "payment_type", "amount", "payment_date", "create_date", "partner_id"];
+            result = await server.search_read(model, { domain: domain, fields: fields });
+            console.log("The getPaymentAccount result ", result);
+            if (result == null || result == undefined) {
+                return { length: 0, records: [] };
+            } else {
                 const totalPaymentAmount = result.records.reduce(function (acc, record) {
                     console.log("The record is ", record.amount);
                     return record.amount + acc;
                 }, 0);//add and get all customer payment amount. 
-                console.log("The total amount is ",totalPaymentAmount);
+                console.log("The total amount is ", totalPaymentAmount);
                 result.totalAmount = totalPaymentAmount;
-            return result;
+                return result;
             }
         } catch (err) {
             return { error: err.message || err.toString() };

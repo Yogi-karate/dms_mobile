@@ -23,6 +23,14 @@ export const getDailyLeads = (id) =>
         }
     });
 
+    export const getStageCounts = () =>
+    sendRequest(`${BASE_PATH}/leads/stageCount`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
 export const addSerCategory = (serCatData) =>
     sendRequest(`${BASE_PATH}/offer/services/add`, {
         method: 'POST',
@@ -60,7 +68,7 @@ export const getEnqStateData = (enqState) =>
         }
     });
 export const getUserCount = (id) =>
-    sendRequest(`${BASE_PATH}/leads/dailyLeads/`+id, {
+    sendRequest(`${BASE_PATH}/leads/dailyLeads/` + id, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

@@ -7,7 +7,7 @@ const exampleInitialState = {
   count: 0,
   user: null,
   team: null,
-  enquiry_stage: null,
+  lead_state: null,
   dailyleads_userIndex: null,
   showDailyLeads: null,
 }
@@ -19,7 +19,7 @@ export const actionTypes = {
   RESET: 'RESET',
   LOGIN: 'LOGIN',
   TEAM_CHANGE: 'TEAM',
-  ENQUIRY_STAGE: 'ENQUIRY_STAGE',
+  LEAD_STATE: 'LEAD_STATE',
   DAILYLEADS_USERINDEX: 'DAILYLEADS_USERINDEX',
   SHOWDAILYLEADS: 'SHOWDAILYLEADS'
 }
@@ -52,9 +52,9 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         team: action.team
       })
-    case actionTypes.ENQUIRY_STAGE:
+    case actionTypes.LEAD_STATE:
       return Object.assign({}, state, {
-        enquiry_stage: action.stage
+        lead_state: action.leadstate
       })
     case actionTypes.DAILYLEADS_USERINDEX:
       return Object.assign({}, state, {
@@ -79,9 +79,9 @@ export const team = (team) => {
   console.log("Trying to change team");
   return { type: actionTypes.TEAM_CHANGE, team: team }
 }
-export const enquiry_stage_change = (stage) => {
+export const state_select = (leadstate) => {
   console.log("Trying to change enq stage");
-  return { type: actionTypes.ENQUIRY_STAGE, stage: stage }
+  return { type: actionTypes.LEAD_STATE, leadstate: leadstate }
 }
 export const dailyleads_userIndex = (dailyLead) => {
   console.log("Trying to store daily lead row data");

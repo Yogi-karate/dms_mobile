@@ -4,7 +4,9 @@ import MUIDataTable from "mui-datatables";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { getUserCount } from '../../lib/api/dashboard';
 import { connect } from 'react-redux';
-import { showDailyLeads } from '../../lib/store'
+import { showDailyLeads } from '../../lib/store';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IconButton from '@material-ui/core/IconButton';
 
 const columns = [
     {
@@ -38,14 +40,19 @@ class DailyUserCount extends Component {
             responsive: 'stacked',
             rowsPerPage: 10,
         };
-        // this.getUserLeads = this.getUserLeads.bind(this);
+        this.backButtonClick = this.backButtonClick.bind(this);
+    }
+
+    backButtonClick(){
+        console.log("Inside backButtonnnnnnnnnnnnnn");
+        this.props.showDailyLeads(false);
     }
 
     async componentDidUpdate(prevProps) {
         console.log("the componentDidUpdate props are ", this.props.dailyLeadsUser, this.props.showDailyLeads);
         if (this.props.dailyLeadsUser && prevProps.dailyLeadsUser && this.props.dailyLeadsUser != prevProps.dailyLeadsUser) {
-        console.log("changing state ----");
-        this.setState({ userLeads: await this.getDailyUserCount() });
+            console.log("changing state ----");
+            this.setState({ userLeads: await this.getDailyUserCount() });
         }
     }
 
@@ -105,6 +112,9 @@ class DailyUserCount extends Component {
         return (
 
             <MuiThemeProvider theme={this.getMuiTheme()}>
+                <IconButton aria-label="delete" size="small">
+                    <ArrowBackIcon fontSize="inherit" onClick= {this.backButtonClick}/>
+                </IconButton>
                 <MUIDataTable
                     title="User Count"
                     data={userLeads}
@@ -117,9 +127,9 @@ class DailyUserCount extends Component {
 }
 const mapStateToProps = state => {
     console.log("state in mapping", state);
-    return { dailyLeadsUser: state.dailyleads_userIndex};
+    return { dailyLeadsUser: state.dailyleads_userIndex };
 }
-const mapDispatchToProps = { showDailyLeads};
+const mapDispatchToProps = { showDailyLeads };
 
 export default connect(
     mapStateToProps,

@@ -3,11 +3,14 @@ import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
 import { getDashboard } from '../../lib/api/dashboard';
+import { state_select } from '../../lib/store';
+import { connect } from 'react-redux';
 
 
 class FollowupsCardComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.followupClick = this.followupClick.bind(this);
 
         this.state = {
             followups: [],
@@ -23,39 +26,40 @@ class FollowupsCardComponent extends React.Component {
                 '#DE6695',
                 '#F54A90'
             ],
-            renderDropdown: true,
+            renderDropdown: false,
+            onClick: this.followupClick,
         };
     }
 
+    followupClick(evt, item) {
+        if (item[0] != undefined && item[0] != null) {
+            console.log('onclick piechart item', item[0]._model.label);
+            this.props.state_select(item[0]._model.label);
+        }
+    }
     async componentDidMount() {
         try {
-            console.log("The complete props ", this.props)
+            console.log("The complete propsssssssssssssssssssssssssssssssssssssssssssssssss ", this.props)
             const resp = await getDashboard();
             console.log("The data from admin js", resp);
             let graphData = [];
             let graphLabel = [];
-            let stateStageArray = [];
-            const followupsArray = resp.map((followup) => {
+            const followUpArray = resp.map((record) => {
+                graphLabel.push(record.state);
 
-                const stageTotalCount = followup.result.reduce(function (acc, stage) {
+                const stageTotalCount = record.result.reduce(function (acc, stage) {
                     console.log("The reduce is ", stage.stage_id_count);
                     return stage.stage_id_count + acc;
                 }, 0);//add and get each staged total stage_id_count (eg:overdue,planned,today). 
 
-                const eachStageStateCount = followup.result.map((eachState) => {
-                    return {[eachState.stage_id[1]]:eachState.stage_id_count};
-                }); 
-
-                stateStageArray.push(eachStageStateCount);
-                graphLabel.push(followup.state);
                 graphData.push(stageTotalCount);
                 console.log("The stage array is ", stageTotalCount);
-                console.log("followup data", followup);
-                return [followup.state, followup.result, stageTotalCount, stateStageArray]
+                console.log("followups data", record);
+                return [record.state, record.result, stageTotalCount]
             });
 
-            console.log("The data followup", followupsArray[0]);
-            this.setState({ followups: followupsArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
+            console.log("The data followups", followUpArray[0]);
+            this.setState({ followups: followUpArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
 
         } catch (err) {
             console.log(err); // eslint-disable-line
@@ -78,4 +82,8 @@ class FollowupsCardComponent extends React.Component {
     }
 }
 
-export default FollowupsCardComponent;
+const mapDispatchToProps = { state_select }
+export default connect(
+    null,
+    mapDispatchToProps
+)(FollowupsCardComponent);

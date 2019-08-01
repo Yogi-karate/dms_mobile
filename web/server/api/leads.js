@@ -47,6 +47,15 @@ router.get('/dashboard', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/stageCount', async (req, res) => {
+  try {
+    let result = await lead.getStageCounts(req.user);
+    console.log("Result ->" + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 
 router.get('/search', async (req, res) => {
   try {

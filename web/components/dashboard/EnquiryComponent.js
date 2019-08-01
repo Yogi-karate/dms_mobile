@@ -2,14 +2,11 @@ import React from "react";
 import TRManagerCard from './TRManagerCard';
 import TRTable from './TRTable';
 import TRCustomDropDown from '../common/Dropdown';
-import { getDashboard } from '../../lib/api/dashboard';
-import { enquiry_stage_change } from '../../lib/store';
-import { connect } from 'react-redux';
+import { getStageCounts } from '../../lib/api/dashboard';
 
 class EnquiryCardComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.enquiryClick = this.enquiryClick.bind(this);
 
         this.state = {
             enquires: [],
@@ -25,43 +22,33 @@ class EnquiryCardComponent extends React.Component {
                 '#EE82EE',
                 '#BA55D3'
             ],
-            renderDropdown: false,
-            onClick:this.enquiryClick,
+            renderDropdown: true,
         };
     }
-    enquiryClick(evt, item) {
-        if(item[0] != undefined && item[0] != null){
-        console.log('onclick piechart item', item[0]._model.label);
-        this.props.enquiry_stage_change(item[0]._model.label);
-        }
-    }
-    async componentDidMount() {
+    async stageCounts() {
         try {
-            console.log("The complete propsssssssssssssssssssssssssssssssssssssssssssssssss ", this.props)
-            const resp = await getDashboard();
+            console.log("The complete props ", this.props)
+            const resp = await getStageCounts();
             console.log("The data from admin js", resp);
             let graphData = [];
             let graphLabel = [];
-            const enquiryArray = resp.map((enquiry) => {
-                graphLabel.push(enquiry.state);
-
-                const stageTotalCount = enquiry.result.reduce(function (acc, stage) {
-                    console.log("The reduce is ", stage.stage_id_count);
-                    return stage.stage_id_count + acc;
-                }, 0);//add and get each staged total stage_id_count (eg:overdue,planned,today). 
-
-                graphData.push(stageTotalCount);
-                console.log("The stage array is ", stageTotalCount);
-                console.log("enquiry data", enquiry);
-                return [enquiry.state, enquiry.result, stageTotalCount]
+            const enquiresArray = resp.map((stage) => {
+                graphLabel.push(stage.stage_id[1]);
+                graphData.push(stage.stage_id_count);
+                console.log("enquiryyyyyyy data", stage.stage_id[1]);
+                return [stage.stage_id[1], stage.stage_id_count]
             });
 
-            console.log("The data enquiry", enquiryArray[0]);
-            this.setState({ enquires: enquiryArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
+            console.log("The data followup", enquiresArray[0]);
+            return({ enquires: enquiresArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
 
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
+    }
+
+    async componentDidMount() {
+        this.setState(await this.stageCounts());
     }
 
     render() {
@@ -80,8 +67,4 @@ class EnquiryCardComponent extends React.Component {
     }
 }
 
-const mapDispatchToProps = { enquiry_stage_change }
-export default connect(
-    null,
-    mapDispatchToProps
-)(EnquiryCardComponent);
+export default EnquiryCardComponent;

@@ -86,6 +86,7 @@ class TRTable extends Component {
     }
   }
   async componentDidMount() {
+    console.log("Insideeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ",this.props.stage);
     this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
   }
 
@@ -136,7 +137,7 @@ class TRTable extends Component {
 }
 const mapStateToProps = state => {
   console.log("enquiry stage change ", state);
-  return { stage: state.enquiry_stage, team: state.team };
+  return { stage: state.lead_state, team: state.team };
 }
 export default connect(
   mapStateToProps,
