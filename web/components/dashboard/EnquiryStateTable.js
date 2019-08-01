@@ -14,7 +14,6 @@ const options = {
   filterType: 'dropdown',
   responsive: 'stacked',
   rowsPerPage: 10,
-
 };
 
 const columns = [
@@ -64,21 +63,15 @@ class TRTable extends Component {
   }
   async componentDidUpdate(prevProps) {
     console.log("Old props and new props in stage coutn table", this.props.stage, prevProps.stage);
-    if(this.props.stage != prevProps.stage){
+    if (this.props.stage != prevProps.stage) {
       console.log("changing state ----");
-      this.setState({ enquiryStates: await this.getStateData() });
+      this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
     }
   }
-  async getStateData() {
-    console.log("Inside getStateData",this.props.stage);
+  async getStateData(state) {
+    console.log("Inside getStateData", this.props.stage);
     try {
-        let myState = '';
-      if(!this.props.stage){
-            myState = "overdue";
-      }else{
-        myState = this.props.state;
-      }//data to show before onclick of graph;
-      const data = await getEnqStateData(myState);
+      const data = await getEnqStateData(state == null ? "overdue":state);
       console.log("The result is ", data);
       if (data == null) {
         return [];
@@ -93,7 +86,7 @@ class TRTable extends Component {
     }
   }
   async componentDidMount() {
-    this.setState({ enquiryStates: await this.getStateData()});
+    this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -126,7 +119,7 @@ class TRTable extends Component {
 
   render() {
     let enquiryStates = this.state.enquiryStates;
-    console.log("Calling table render",enquiryStates);
+    console.log("Calling table render", enquiryStates);
     return (
 
       <MuiThemeProvider theme={this.getMuiTheme()}>
@@ -143,7 +136,7 @@ class TRTable extends Component {
 }
 const mapStateToProps = state => {
   console.log("enquiry stage change ", state);
-  return { stage: state.enquiry_stage,team:state.team };
+  return { stage: state.enquiry_stage, team: state.team };
 }
 export default connect(
   mapStateToProps,

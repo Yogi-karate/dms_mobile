@@ -27,7 +27,6 @@ class Index extends React.Component {
       <div style={{ padding: '10px 45px' }}>
         <Head>
           <title>Dashboard</title>
-          <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"/>
           <meta name="description" content="description for indexing bots" />
         </Head>
         <p> Dashboard </p>

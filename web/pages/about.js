@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
-import { getPartners } from '../lib/api/admin';
 import withAuth from '../lib/withAuth';
 import { connect } from 'react-redux';
 
@@ -17,19 +16,19 @@ class Tables extends React.Component {
   }
 
   async componentDidMount() {
-    try {
-      console.log("The props",this.props)
-      const resp = await getPartners();
-      console.log("The data from admin js", resp.partners);
-      const partnerArray  = resp.partners.map((partner) => {
-        console.log("Partner NAme",partner.name);
-       return [partner.name,partner.mobile,partner.email,partner.tag]
-      });
-      console.log("The data -partner", partnerArray);
-      this.setState({ partners: partnerArray }); // eslint-disable-line
-    } catch (err) {
-      console.log(err); // eslint-disable-line
-    }
+    // try {
+    //   console.log("The props",this.props)
+    //   const resp = await getPartners();
+    //   console.log("The data from admin js", resp.partners);
+    //   const partnerArray  = resp.partners.map((partner) => {
+    //     console.log("Partner NAme",partner.name);
+    //    return [partner.name,partner.mobile,partner.email,partner.tag]
+    //   });
+    //   console.log("The data -partner", partnerArray);
+    //   this.setState({ partners: partnerArray }); // eslint-disable-line
+    // } catch (err) {
+    //   console.log(err); // eslint-disable-line
+    // }
   }
 
   render() {

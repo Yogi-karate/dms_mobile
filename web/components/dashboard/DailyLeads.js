@@ -14,7 +14,6 @@ const options = {
   filterType: 'dropdown',
   responsive: 'stacked',
   rowsPerPage: 10,
-
 };
 
 const columns = [
@@ -47,8 +46,6 @@ class TRTable extends Component {
     this.state = {
       leads: [],
     };
-    // this.handleMobileChange = this.handleMobileChange.bind(this);
-    // this.handlePinChange = this.handlePinChange.bind(this);
   }
   async componentDidUpdate(prevProps) {
     console.log("Old props and new props", this.props.team, prevProps.team);
@@ -111,7 +108,6 @@ class TRTable extends Component {
     let leads = this.state.leads;
     console.log("Calling table render",leads);
     return (
-
       <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
           title={"MTD Team Performance"}
@@ -122,10 +118,8 @@ class TRTable extends Component {
       </MuiThemeProvider>
     );
   }
-
 }
 const mapStateToProps = state => {
-  //const {app_state} = state;     
   console.log("state in mapping", state);
   return { team: state.team };
 }

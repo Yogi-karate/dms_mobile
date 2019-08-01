@@ -25,32 +25,22 @@ function Header({ user }) {
     <div>
       <Toolbar style={styleToolbar}>
         <Grid container direction="row" justify="space-around" alignItems="center">
-          <Grid item sm={10} xs={9} style={{ textAlign: 'left' }}>
-            {user ? (
-              <div>
-                <Hidden smDown>
-                  <Link prefetch href="/">
-                    <a style={{ marginRight: '20px' }}>Settings</a>
-                  </Link>
-                </Hidden>
-              </div>
-            ) : (
+          <Grid item sm={9} xs={9} style={{ textAlign: 'left' }}>
               <Link prefetch href="/">
-                <a>
-                  <Avatar
-                    src="https://storage.googleapis.com/builderbook/logo.svg"
-                    alt="Builder Book logo"
+                <a href="http://dms.saboo.group">
+                  <img
+                    src="/static/Saboo-02.png"
+                    alt="Saboo logo"
                     style={{ margin: '0px auto 0px 20px' }}
                   />
                 </a>
               </Link>
-            )}
           </Grid>
           <Grid item sm={1} xs={3} style={{ textAlign: 'right' }}>
             {user ? (
               <div style={{ whiteSpace: ' nowrap' }}>
-                {user.avatarUrl ? (
-                  <MenuDrop options={optionsMenu} src={user.avatarUrl} alt="Builder Book" />
+                {user ? (
+                  <MenuDrop options={optionsMenu} src='/static/avatar.png' alt="Builder Book" />
                 ) : null}
               </div>
             ) : (
@@ -59,6 +49,11 @@ function Header({ user }) {
               </Link>
             )}
           </Grid>
+          {user ? (
+          <Grid item sm={1} xs={10} style={{ textAlign: 'left' }}>
+              <div>Welcome {user.email}</div>
+          </Grid>
+          ):""}
         </Grid>
       </Toolbar>
     </div>

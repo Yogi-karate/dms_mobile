@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from "@material-ui/core/MenuItem";
+import MenuList from "@material-ui/core/MenuList";
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
-import MUIDataTable from "mui-datatables";
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { getTeams } from '../../lib/api/admin';
 import TRCustomDropDown from '../common/Dropdown';
 import { team } from '../../lib/store';
@@ -25,8 +30,26 @@ class TeamDropDown extends Component {
         console.log("dropdown props are", this.props);
         this.state = {
             teams: [],
+            classes: {
+                button: {
+                    display: 'block',
+                    marginTop: 2,
+                    fulwidth:true,
+                },
+                formControl: {
+                    margin: 1,
+                    fullWidth: true,
+                    display:'flex',
+                },
+            },
+            open: false,
+            team: 12,
         };
         this.onClick = this.onClick.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
+
         // this.handlePinChange = this.handlePinChange.bind(this);
     }
     onClick(param) {
@@ -34,6 +57,24 @@ class TeamDropDown extends Component {
         // let teams = this.state.teams
         this.props.team(param[1]);
     };
+    handleChange(event) {
+        console.log("clicked team",event.target);
+        //this.props.team(event.target.value);
+        this.setState({age:event.target.value});
+    }
+    handleTeamChange(prop,key) {
+        console.log("clicked team",prop,key);
+        //this.props.team(event.target.value);
+        this.setState({team:prop[0],open:false});
+    }
+    handleClose(evt) {
+        //this.props.team(event.target.value);
+        this.setState({open:false});
+    }
+
+    handleOpen() {
+        this.setState({open:true});
+    }
     async componentDidMount() {
         console.log("Inside getting teams");
         try {
@@ -57,19 +98,56 @@ class TeamDropDown extends Component {
     }
 
     render() {
+        const { classes } = this.state;
         return (
-
+            <Grid container direction="row" justify="space-around" alignItems="center">
+            <Grid item sm={9} xs={9} style={{ textAlign: 'right' }}>
             <TRCustomDropDown
-                dropdown
-                dropdownHeader="ALL TEAMS"
-                buttonText="ALL TEAMS"
-                buttonProps={{
-                    round: true,
-                    color: "success"
-                }}
-                dropdownList={this.state.teams}
-                onClick={this.onClick}
-            />
+                    dropdown
+                    dropdownHeader="ALL TEAMS"
+                    buttonText="ALL TEAMS"
+                    buttonProps={{
+                        round: true,
+                        color: "success"
+                    }}
+                    dropdownList={this.state.teams}
+                    onClick={this.onClick}
+                />
+                </Grid>
+                <Grid item sm={1} xs={6} style={{ textAlign: 'right' }}>
+                <form autoComplete="off">
+                    <Button className={classes.button} onClick={this.handleOpen}>
+                    </Button>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="demo-controlled-open-select">Teams</InputLabel>
+                        <Select
+                            native
+                            open={this.state.open}
+                            onClose={this.handleClose}
+                            onOpen={this.handleOpen}
+                            value={this.state.team}
+                            onChange={this.handleChange}
+                            inputProps={{
+                                name: 'teams',
+                                id: 'demo-controlled-open-select',
+                            }}
+                        >
+                    <MenuList>
+                    {this.state.teams.map((prop, key) => {
+                      return (
+                        <MenuItem
+                          key={prop[1]}
+                        >
+                          {prop[0]}
+                        </MenuItem>
+                      );
+                    })}
+                  </MenuList>
+                        </Select>
+                    </FormControl>
+                </form>
+                </Grid>
+            </Grid>
         );
     }
 

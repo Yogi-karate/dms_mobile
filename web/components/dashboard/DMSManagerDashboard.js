@@ -3,8 +3,6 @@ import React from "react";
 import GridItem from "../common/Grid/GridItem.js";
 import GridContainer from "../common/Grid/GridContainer.js";
 
-import TRManagerCard from './TRManagerCard';
-import TRTable from './TRTable';
 import TeamDropDown from './TeamDropdown';
 import withAuth from '../../lib/withAuth';
 import DailyLeads from './DailyLeads';
@@ -13,10 +11,6 @@ import StageCount from './EnquiryStateTable';
 import FollowupsCardComponent from './FollowupsComponent';
 import SalesCardComponent from './SalesComponent';
 import InventoryCardComponent from './InventoryComponent';
-
-const dropDownlistProps = {
-
-}
 
 class DMSDashboard extends React.Component {
     constructor(props) {
@@ -30,12 +24,9 @@ class DMSDashboard extends React.Component {
     render() {
         return (
             <GridContainer>
-                <GridContainer>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12}>
                         <TeamDropDown {...this.props} />
                     </GridItem>
-                </GridContainer>
-                <GridContainer>
                     <GridItem xs={12} sm={6} md={3}>
                         <EnquiryCardComponent></EnquiryCardComponent>
                     </GridItem>
@@ -48,15 +39,12 @@ class DMSDashboard extends React.Component {
                     <GridItem xs={12} sm={6} md={3}>
                         <InventoryCardComponent></InventoryCardComponent>
                     </GridItem>
-                </GridContainer>
-                <GridContainer>
-                    <GridItem xs={6} sm={6} md={6}>
+                    <GridItem xs={12} sm={6} md={6}>
                         <DailyLeads {... this.props} />
                     </GridItem>
-                    <GridItem xs={6} sm={6} md={6} lg={6}>
+                    <GridItem xs={12} sm={6} md={6}>
                         <StageCount {... this.props} />
                     </GridItem>
-                </GridContainer>
             </GridContainer>
         );
     }
