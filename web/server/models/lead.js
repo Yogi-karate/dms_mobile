@@ -154,7 +154,7 @@ class Lead {
             let fields = ["user_id", "user_id_count", "user_booked_id"];
             var today = new Date();
             var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
+            var lastDay = new Date(today.getFullYear(), today.getMonth()-1, 0);
             console.log("The current month first day is ", firstDay.toLocaleDateString());
             console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["team_id", "=", parseInt(id)]);

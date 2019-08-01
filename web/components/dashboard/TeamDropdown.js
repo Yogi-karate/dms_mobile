@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 
 import { getTeams } from '../../lib/api/admin';
 import TRCustomDropDown from '../common/Dropdown';
-import { team } from '../../lib/store';
+import { team,showDailyLeads } from '../../lib/store';
 import { connect } from 'react-redux';
 
 const options = {
@@ -56,6 +56,7 @@ class TeamDropDown extends Component {
         console.log(" On click method in parent", param);
         // let teams = this.state.teams
         this.props.team(param[1]);
+        this.props.showDailyLeads(false);
     };
     handleChange(event) {
         console.log("clicked team",event.target);
@@ -157,7 +158,7 @@ const mapStateToProps = state => {
     console.log("state in mapping", state);
     return { team: state.team };
 }
-const mapDispatchToProps = { team }
+const mapDispatchToProps = { team,showDailyLeads }
 export default connect(
     mapStateToProps,
     mapDispatchToProps
