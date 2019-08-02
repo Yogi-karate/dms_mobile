@@ -29,7 +29,7 @@
     "jayson": "^3.0.1",
     "lodash": "^4.17.15",
     "mongoose": "5.3.4",
-    "mui-datatables": "^2.6.4",
+    "mui-datatables": "^2.7.0",
     "next": "^9.0.0",
     "nprogress": "0.2.0",
     "passport": "0.4.0",

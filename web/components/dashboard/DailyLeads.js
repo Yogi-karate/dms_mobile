@@ -74,7 +74,7 @@ class DailyLeads extends Component {
     console.log("Inside getting Leads");
     try {
       if (!this.props.team) return [];
-      const data = await getDailyLeads(this.props.team);
+      const data = await getDailyLeads(this.props.team[1]);
       console.log("The result is ", data);
       if (data == null || data[0] == null) {
         return [];
@@ -124,12 +124,14 @@ class DailyLeads extends Component {
     let leads = this.state.leads;
     console.log("Calling table render", leads);
     return (
+      <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
-          title={"MTD Team Performance"}
+          title={"Team Performance ( "+this.props.team[0]+" )" }
           data={leads}
           columns={columns}
           options={this.state}
         />
+        </MuiThemeProvider>
     );
   }
 }

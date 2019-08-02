@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
+import {withStyles} from "@material-ui/styles";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 // core components
@@ -21,7 +21,7 @@ function Footer({ ...props }) {
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a href="#company" className={classes.block}>
-                Company
+                Company a
               </a>
             </ListItem>
           </List>

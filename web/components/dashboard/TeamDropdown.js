@@ -97,7 +97,7 @@ class TeamDropDown extends Component {
                         onChange={this.handleTChange('team')}
                     >
                         {this.state.teams.map(option => (
-                            <MenuItem key={option[1]} value={option[1]}>
+                            <MenuItem key={option[1]} value={option}>
                                 {option[0]}
                             </MenuItem>
                         ))}

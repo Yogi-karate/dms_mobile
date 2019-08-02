@@ -34,8 +34,8 @@ class DailyUserCount extends Component {
             search: true,
             print: false,
             download: false,
-            selectableRows: true,
-            selectableRowsOnClick: true,
+            selectableRows: false,
+            selectableRowsOnClick: false,
             filterType: 'dropdown',
             responsive: 'stacked',
             rowsPerPage: 10,
@@ -43,7 +43,7 @@ class DailyUserCount extends Component {
         this.backButtonClick = this.backButtonClick.bind(this);
     }
 
-    backButtonClick(){
+    backButtonClick() {
         console.log("Inside backButtonnnnnnnnnnnnnn");
         this.props.showDailyLeads(false);
     }
@@ -60,7 +60,7 @@ class DailyUserCount extends Component {
         console.log("Inside  getUserLeads");
         try {
             if (!this.props.dailyLeadsUser) return [];
-            const data = await getUserCount(this.props.dailyLeadsUser);
+            const data = await getUserCount(this.props.dailyLeadsUser[0]);
             console.log("The result is ", data);
             if (data == null) {
                 return [];
@@ -110,16 +110,16 @@ class DailyUserCount extends Component {
         let userLeads = this.state.userLeads;
         console.log("Calling table render", userLeads);
         return (
-                <div>
+            <MuiThemeProvider theme={this.getMuiTheme()}>
                 <IconButton aria-label="delete" size="small">
-                    <ArrowBackIcon fontSize="inherit" onClick= {this.backButtonClick}/>
+                    <ArrowBackIcon fontSize="inherit" onClick={this.backButtonClick} />
                 </IconButton>
                 <MUIDataTable
-                    title="User Count"
+                    title={this.props.dailyLeadsUser[1]}
                     data={userLeads}
                     columns={["date", "count"]}
                 />
-                </div>
+            </MuiThemeProvider>
 
         );
     }

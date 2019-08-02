@@ -33,7 +33,7 @@ class EnquiryCardComponent extends React.Component {
             let graphData = [];
             let graphLabel = [];
             const enquiresArray = resp.map((stage) => {
-                graphLabel.push(stage.stage_id[1]);
+                graphLabel.push(stage.stage_id[1]+" - "+stage.stage_id_count);
                 graphData.push(stage.stage_id_count);
                 console.log("enquiryyyyyyy data", stage.stage_id[1]);
                 return [stage.stage_id[1], stage.stage_id_count]
