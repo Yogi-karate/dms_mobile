@@ -3,7 +3,6 @@ import {
     Grid,
     CircularProgress,
     Typography,
-    withStyles,
     Button,
     Tabs,
     Tab,
@@ -15,7 +14,7 @@ import { getLoginCreds } from '../../lib/api/admin';
 import Router from 'next/router';
 import { login } from '../../lib/store';
 import { connect } from 'react-redux';
-import withAuth from "../../lib/withAuth";
+import {withStyles} from '@material-ui/styles';
 
 class Login extends React.Component {
 
@@ -25,7 +24,8 @@ class Login extends React.Component {
         this.state = {
             mobile: '',
             password: '',
-            error: ''
+            error: '',
+            isLoading:false,
         };
         this.handleMobileChange = this.handleMobileChange.bind(this);
         this.handlePinChange = this.handlePinChange.bind(this);
@@ -48,17 +48,18 @@ class Login extends React.Component {
 
     handleMobileChange(evt) {
         console.log("Inside handleMobileChange", evt.target.value);
-        this.setState({ mobile: evt.target.value });
+        this.setState({ mobile: evt.target.value,error:"" });
     }
 
     handlePinChange(evt) {
         console.log("Inside handlePinChange", evt.target.value);
-        this.setState({ password: evt.target.value });
+        this.setState({ password: evt.target.value,error:""});
     }
 
     async checkForLoginUser() {
         console.log("Inside checkForLoginUser");
         try {
+            this.setState({isLoading:true});
             const data = await getLoginCreds(this.state);
             console.log("The result is ", data);
             if (data.error === undefined || data.error === null || data.error === "") {
@@ -72,6 +73,7 @@ class Login extends React.Component {
             console.log(err); // eslint-disable-line
             this.setState({mobile:"",pin:"",error:"Invalid Username or Password"});
         }
+        this.setState({isLoading:false});
     }
 
     render() {
@@ -80,7 +82,7 @@ class Login extends React.Component {
         return (
             <Grid container className={classes.container}>
                 <div className={classes.logotypeContainer}>
-                    <img src="/static/crick1.png" alt="logo" className={classes.logotypeImage} />
+                    <img src="/static/Saboo-02.png" alt="logo" className={classes.logotypeImage} />
                     <Typography className={classes.logotypeText}>DMS</Typography>
                 </div>
                 <div className={classes.formContainer}>
@@ -128,13 +130,13 @@ class Login extends React.Component {
                                 />
                                 <div className={classes.errorMessage}>{this.state.error}</div>
                                 <div className={classes.formButtons}>
-                                    {props.isLoading ? (
+                                    {this.state.isLoading ? (
                                         <CircularProgress size={26} className={classes.loginLoader} />
                                     ) : (
                                             <Button
                                                  disabled={
-                                                    this.state.mobile.length === 0 ||
-                                                    this.state.password.length === 0
+                                                    this.state.password.length === 0 ||
+                                                    this.state.mobile.length === 0
                                                 } 
                                                 onClick={this.onSubmitHandler}
                                                 variant="contained"
@@ -323,4 +325,4 @@ const mapDispatchToProps = { login }
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(Login));
+)(withStyles(styles)(Login));

@@ -30,17 +30,12 @@ function withLayout(BaseComponent) {
 
     render() {
       return (
-        <MuiThemeProvider
-          theme={this.pageContext.theme}
-          sheetsManager={this.pageContext.sheetsManager}
-        >
-          <CssBaseline />
+      
           <div>
             <Header {...this.props} />
             <BaseComponent {...this.props} />
             <Footer {...this.props} />
           </div>
-        </MuiThemeProvider>
       );
     }
   }

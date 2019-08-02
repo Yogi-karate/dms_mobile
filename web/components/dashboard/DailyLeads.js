@@ -124,14 +124,12 @@ class DailyLeads extends Component {
     let leads = this.state.leads;
     console.log("Calling table render", leads);
     return (
-      <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
           title={"MTD Team Performance"}
           data={leads}
           columns={columns}
           options={this.state}
         />
-      </MuiThemeProvider>
     );
   }
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import MUIDataTable from "mui-datatables";
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { getEnqStateData } from '../../lib/api/dashboard';
 import { connect } from 'react-redux';
 
@@ -90,47 +89,18 @@ class TRTable extends Component {
     this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
   }
 
-  getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-          backgroundColor: "#FFFFCC",
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyCell: {
-        fixedHeader: {
-          background: '#D2F7FC'
-        }
-      },
-      MUIDataTableHeadCell: {
-        root: {
-          backgroundColor: "#D2F7FC"
-        }
-      },
-      MUIDataTableSelectCell: {
-        headerCell: {
-          background: '#3B9AF0'
-        }
-      }
-    }
-  });
-
+  
   render() {
     let enquiryStates = this.state.enquiryStates;
     console.log("Calling table render", enquiryStates);
     return (
 
-      <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
           title={"Leads Stage count"}
           data={enquiryStates}
           columns={columns}
           options={options}
         />
-      </MuiThemeProvider>
     );
   }
 

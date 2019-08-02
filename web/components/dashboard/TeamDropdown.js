@@ -35,7 +35,7 @@ const styles = theme => ({
         top: '-6px',
         textAlign: 'left',
     },
-  });
+});
 
 class TeamDropDown extends Component {
     constructor(props) {

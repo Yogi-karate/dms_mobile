@@ -1,6 +1,6 @@
 import React from "react";
 // material-ui components
-import withStyles from "@material-ui/core/styles/withStyles";
+import {withStyles} from "@material-ui/styles";
 
 //Fontawesome icons
 

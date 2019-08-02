@@ -110,8 +110,7 @@ class DailyUserCount extends Component {
         let userLeads = this.state.userLeads;
         console.log("Calling table render", userLeads);
         return (
-
-            <MuiThemeProvider theme={this.getMuiTheme()}>
+                <div>
                 <IconButton aria-label="delete" size="small">
                     <ArrowBackIcon fontSize="inherit" onClick= {this.backButtonClick}/>
                 </IconButton>
@@ -120,7 +119,8 @@ class DailyUserCount extends Component {
                     data={userLeads}
                     columns={["date", "count"]}
                 />
-            </MuiThemeProvider>
+                </div>
+
         );
     }
 
