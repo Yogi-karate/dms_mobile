@@ -85,7 +85,6 @@ class TRTable extends Component {
     }
   }
   async componentDidMount() {
-    console.log("Insideeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ",this.props.stage);
     this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
   }
   getMuiTheme = () => createMuiTheme({

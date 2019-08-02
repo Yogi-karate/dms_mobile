@@ -33,14 +33,14 @@ class EnquiryCardComponent extends React.Component {
             let graphData = [];
             let graphLabel = [];
             const enquiresArray = resp.map((stage) => {
-                graphLabel.push(stage.stage_id[1]+" - "+stage.stage_id_count);
+                graphLabel.push(stage.stage_id[1] + " - " + stage.stage_id_count);
                 graphData.push(stage.stage_id_count);
                 console.log("enquiryyyyyyy data", stage.stage_id[1]);
                 return [stage.stage_id[1], stage.stage_id_count]
             });
 
             console.log("The data followup", enquiresArray[0]);
-            return({ enquires: enquiresArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
+            return ({ enquires: enquiresArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
 
         } catch (err) {
             console.log(err); // eslint-disable-line
@@ -57,11 +57,7 @@ class EnquiryCardComponent extends React.Component {
 
         return (
             <div>
-                <div class="pure-g">
-                    <div class="pure-u-1-4">
-                        <TRManagerCard {...this.state} ></TRManagerCard>
-                    </div>
-                </div>
+                <TRManagerCard {...this.state} ></TRManagerCard>
             </div>
         );
     }

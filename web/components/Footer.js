@@ -21,7 +21,7 @@ function Footer({ ...props }) {
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a href="#company" className={classes.block}>
-                Company a
+                Company
               </a>
             </ListItem>
           </List>

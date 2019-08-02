@@ -34,10 +34,12 @@ export default (
       }
 
       if (logoutRequired && user) {
+        console.log("Printing User in With Auth -----------",user);
         Router.push('/');
       }
 
       if (adminRequired && (!user || !user.isAdmin)) {
+        console.log("Printing User in With Auth -----------",user);
         Router.push('/');
       }
     }
@@ -75,7 +77,7 @@ export default (
       if (adminRequired && (!user || !user.isAdmin)) {
         return null;
       }
-
+      console.log("Printing User in With Auth ----------- render",user);
       return <Page {...this.props} />;
     }
 };

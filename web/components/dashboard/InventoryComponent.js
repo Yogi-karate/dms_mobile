@@ -15,12 +15,6 @@ class InventoryCardComponent extends React.Component {
             cardColor: 'success',
             cardIcon: 'faWarehouse',
             graphType: 'pie',
-            graphData: [80, 120, 100],
-            graphLabel: [
-                'In stock',
-                'Allocation',
-                'In Transit'
-            ],
             graphColors: [
                 '#48DA4A',
                 '#3BD574',
@@ -30,7 +24,7 @@ class InventoryCardComponent extends React.Component {
         };
     }
 
-    async getResultData(){
+    async getResultData() {
         try {
             console.log("The complete props ", this.props)
             const resp = await getInventoryStock();
@@ -40,7 +34,7 @@ class InventoryCardComponent extends React.Component {
             const inventoryArray = resp.result.map((inventory) => {
                 console.log("The inventory are ", inventory);
                 graphData.push(inventory.state_count);
-                graphLabel.push(inventory.state);
+                graphLabel.push(inventory.state + " - " + inventory.state_count);
                 return [inventory.state, inventory.state_count]
             });
             console.log("The data inventory", inventoryArray);
@@ -55,16 +49,10 @@ class InventoryCardComponent extends React.Component {
     }
 
     render() {
-        let customTeamDropdownRender;
-        let customCompanyDropdownRender;
-
         return (
             <div>
-                <div class="pure-g">
-                    <div class="pure-u-1-4">
-                        <TRManagerCard {...this.state} ></TRManagerCard>
-                    </div>
-                </div>
+
+                <TRManagerCard {...this.state} ></TRManagerCard>
             </div>
         );
     }

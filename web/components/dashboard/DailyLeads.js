@@ -122,11 +122,12 @@ class DailyLeads extends Component {
 
   render() {
     let leads = this.state.leads;
+    let team = this.props.team != undefined ? this.props.team[0]:""
     console.log("Calling table render", leads);
     return (
       <MuiThemeProvider theme={this.getMuiTheme()}>
         <MUIDataTable
-          title={"Team Performance ( "+this.props.team[0]+" )" }
+          title={"Team Performance ( "+team+" )" }
           data={leads}
           columns={columns}
           options={this.state}

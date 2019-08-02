@@ -15,12 +15,6 @@ class SalesCardComponent extends React.Component {
             cardColor: 'info',
             cardIcon: 'faCar',
             graphType: 'pie',
-            graphData: [80, 120, 100],
-            graphLabel: [
-                'Mettuguda',
-                'Tirumalgiri',
-                'Nacharam'
-            ],
             graphColors: [
                 '#AFEEEE',
                 '#48D1CC',
@@ -38,10 +32,10 @@ class SalesCardComponent extends React.Component {
             let graphData = [];
             let graphLabel = [];
             const salesArray = resp[0].result.map((sales) => {
-                console.log("The sales are ",sales);
+                //console.log("The sales are ",sales);
                 graphData.push(sales.state_count);
-                graphLabel.push(sales.state);
-                return[sales.state, sales.state_count]
+                graphLabel.push(sales.state + " - " + sales.state_count);
+                return [sales.state, sales.state_count]
             });
             console.log("The data sales", salesArray);
             this.setState({ sales: salesArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
@@ -57,11 +51,7 @@ class SalesCardComponent extends React.Component {
 
         return (
             <div>
-                <div class="pure-g">
-                    <div class="pure-u-1-4">
-                        <TRManagerCard {...this.state} ></TRManagerCard>
-                    </div>
-                </div>
+                <TRManagerCard {...this.state} ></TRManagerCard>
             </div>
         );
     }

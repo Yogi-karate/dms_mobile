@@ -30,7 +30,16 @@ router.use((req, res, next) => {
       })(req, res, next);
   }
 });
-
+router.get('/roles', async (req, res) => {
+  try {
+    console.log(req.user);
+    let result = await base.getUserRole(req.user);
+    console.log(result);
+    res.json({result});
+  } catch (err) {
+  res.json({ error: err.message || err.toString() });
+}
+});
 router.post('/odoo/:model', async (req, res) => {
   try {
     console.log(req.user);

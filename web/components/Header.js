@@ -11,8 +11,8 @@ import { styleToolbar } from '../lib/SharedStyles';
 
 const optionsMenu = [
   {
-    text: 'Got question?',
-    href: 'https://github.com/builderbook/builderbook/issues',
+    text: 'Got questions?',
+    href: 'https://github.com/tramm/dms_mobile/issues',
   },
   {
     text: 'Log out',
@@ -36,7 +36,7 @@ function Header({ user }) {
                 </a>
               </Link>
           </Grid>
-          {/* <Grid item sm={1} xs={3} style={{ textAlign: 'right' }}>
+          <Grid item sm={1} xs={3} style={{ textAlign: 'right' }}>
             {user ? (
               <div style={{ whiteSpace: ' nowrap' }}>
                 {user ? (
@@ -48,7 +48,7 @@ function Header({ user }) {
                 <a style={{ margin: '0px 20px 0px auto' }}>Log in</a>
               </Link>
             )}
-          </Grid> */}
+          </Grid>
           {user ? (
           <Grid item sm={1} xs={10} style={{ textAlign: 'left' }}>
               <div>Welcome {user.email}</div>

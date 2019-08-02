@@ -35,10 +35,10 @@ class DMSDashboard extends React.Component {
                         <EnquiryCardComponent></EnquiryCardComponent>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
-                        <SalesCardComponent></SalesCardComponent>
+                        <FollowupsCardComponent></FollowupsCardComponent>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
-                        <FollowupsCardComponent></FollowupsCardComponent>
+                        <SalesCardComponent></SalesCardComponent>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
                         <InventoryCardComponent></InventoryCardComponent>

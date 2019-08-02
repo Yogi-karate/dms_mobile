@@ -63,19 +63,19 @@ class TeamDropDown extends Component {
     async componentDidMount() {
         console.log("Inside getting teams");
         try {
+            console.log("Printing the user ",this.props.user);
             const data = await getTeams();
             console.log("The result is ", data);
-            if (data.error === undefined || data.error === null || data.error === "") {
-                // this.props.login(data);
-                // document.location.pathname = "/"
+            console.log("The result teams is ", data.result.teams.records);
+            if (data == null || data == [] || data.result.teams.records == []) {
+                this.setState({ teams: [], team: "" });
             } else {
-                console.log("Wrong input", this.props.errorValue);
-                this.setState({ error: "Email/Password incorrect" });
+                let result = data.result.teams.records.map(team => {
+                    return [team.name, team.id];
+                })
+                this.setState({ teams: result, team: result[0] });
+                this.props.team(result[0]);
             }
-            let result = data.records.map(team => {
-                return [team.name, team.id];
-            })
-            this.setState({ teams: result });
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -111,7 +111,7 @@ class TeamDropDown extends Component {
 const mapStateToProps = state => {
     //const {app_state} = state;     
     console.log("state in mapping", state);
-    return { team: state.team };
+    return { team: state.team,user:state.user };
 }
 const mapDispatchToProps = { team }
 export default connect(

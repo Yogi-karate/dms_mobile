@@ -45,16 +45,14 @@ class FollowupsCardComponent extends React.Component {
             let graphData = [];
             let graphLabel = [];
             const followUpArray = resp.map((record) => {
-                graphLabel.push(record.state);
-
                 const stageTotalCount = record.result.reduce(function (acc, stage) {
-                    console.log("The reduce is ", stage.stage_id_count);
+                    // console.log("The reduce is ", stage.stage_id_count);
                     return stage.stage_id_count + acc;
                 }, 0);//add and get each staged total stage_id_count (eg:overdue,planned,today). 
-
+                graphLabel.push(record.state + " - " + stageTotalCount);
                 graphData.push(stageTotalCount);
-                console.log("The stage array is ", stageTotalCount);
-                console.log("followups data", record);
+                //  console.log("The stage array is ", stageTotalCount);
+                // console.log("followups data", record);
                 return [record.state, record.result, stageTotalCount]
             });
 
@@ -67,16 +65,10 @@ class FollowupsCardComponent extends React.Component {
     }
 
     render() {
-        let customTeamDropdownRender;
-        let customCompanyDropdownRender;
 
         return (
             <div>
-                <div class="pure-g">
-                    <div class="pure-u-1-4">
-                        <TRManagerCard {...this.state} ></TRManagerCard>
-                    </div>
-                </div>
+                <TRManagerCard {...this.state} ></TRManagerCard>
             </div>
         );
     }
