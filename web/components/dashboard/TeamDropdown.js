@@ -8,11 +8,13 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/styles';
 
 import { getTeams } from '../../lib/api/admin';
 import TRCustomDropDown from '../common/Dropdown';
 import { team } from '../../lib/store';
 import { connect } from 'react-redux';
+import { boxShadow } from '../../lib/styles/material-kit-react';
 
 const options = {
     filter: true,
@@ -25,6 +27,16 @@ const options = {
     rowsPerPage: 10,
 
 };
+
+const styles = theme => ({
+    textField: {
+        width: '50%',
+        position: 'relative',
+        top: '-6px',
+        textAlign: 'left',
+    },
+  });
+
 class TeamDropDown extends Component {
     constructor(props) {
         super(props);
@@ -44,8 +56,8 @@ class TeamDropDown extends Component {
         this.handleTChange = this.handleTChange.bind(this);
     }
     handleTChange = prop => event => {
-        this.setState({[prop]: event.target.value });
-        console.log("The selected val is ",event.target.value);
+        this.setState({ [prop]: event.target.value });
+        console.log("The selected val is ", event.target.value);
         this.props.team(event.target.value);
     };
     async componentDidMount() {
@@ -71,27 +83,27 @@ class TeamDropDown extends Component {
     }
 
     render() {
-        const { classes } = this.state;
+        const { classes } = this.props;
         return (
             <Grid container direction="row" justify="space-around" alignItems="center">
-            <Grid item sm={6} xs={6} style={{ textAlign: 'right' }}>
-            </Grid>
-            <Grid item sm={6} xs={6} style={{ textAlign: 'right' }}>
-                <TextField
-                    select
-                    variant="filled"
-                    classes={classes.textField}
-                    label="Select a Team"
-                    value={this.state.team}
-                    onChange={this.handleTChange('team')}
-                >
-                    {this.state.teams.map(option => (
-                        <MenuItem key={option[1]} value={option[1]}>
-                            {option[0]}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>
+                <Grid item sm={6} xs={6} style={{ textAlign: 'right' }}>
+                </Grid>
+                <Grid item sm={6} xs={6} style={{ textAlign: 'right' }}>
+                    <TextField
+                        select
+                        variant="filled"
+                        className={classes.textField}
+                        label="Select a Team"
+                        value={this.state.team}
+                        onChange={this.handleTChange('team')}
+                    >
+                        {this.state.teams.map(option => (
+                            <MenuItem key={option[1]} value={option[1]}>
+                                {option[0]}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </Grid>
             </Grid>
         );
     }
@@ -106,4 +118,4 @@ const mapDispatchToProps = { team }
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(TeamDropDown);
+)(withStyles(styles)(TeamDropDown));
