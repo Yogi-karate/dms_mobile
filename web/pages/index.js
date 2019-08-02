@@ -24,12 +24,11 @@ class Index extends React.Component {
   render() {
     const { user } = this.props;
     return (
-      <div style={{ padding: '10px 45px' }}>
+      <div style={{ padding: '10px 10px' }}>
         <Head>
           <title>Dashboard</title>
           <meta name="description" content="description for indexing bots" />
         </Head>
-        <p> Dashboard </p>
         <DMSDashboard {...this.props} />
         {/* <p>Email: {user.email}</p> */}
       </div>

@@ -91,7 +91,6 @@ class TeamDropDown extends Component {
                 <Grid item sm={6} xs={6} style={{ textAlign: 'right' }}>
                     <TextField
                         select
-                        variant="filled"
                         className={classes.textField}
                         label="Select a Team"
                         value={this.state.team}

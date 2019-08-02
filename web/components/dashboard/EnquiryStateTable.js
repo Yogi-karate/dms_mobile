@@ -33,7 +33,7 @@ const columns = [
     }
   },
   {
-    name: "CustomerName",
+    name: "Customer Name",
     options: {
       filter: false,
     }
@@ -77,7 +77,7 @@ class TRTable extends Component {
         return [];
       }
       let result = data.records.map(record => {
-        return [record.name, record.mobile, record.partner_name, record.stage_id[1], record.name, record.date_deadline];
+        return [record.name, record.mobile, record.partner_name, record.stage_id[1],record.date_deadline];
       })
       return result;
     } catch (err) {

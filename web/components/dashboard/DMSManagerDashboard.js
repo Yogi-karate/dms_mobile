@@ -2,6 +2,7 @@ import React from "react";
 
 import GridItem from "../common/Grid/GridItem.js";
 import GridContainer from "../common/Grid/GridContainer.js";
+import Grid from "@material-ui/core/Grid";
 
 import TeamDropDown from './TeamDropdown';
 import withAuth from '../../lib/withAuth';
@@ -25,31 +26,35 @@ class DMSDashboard extends React.Component {
     }
     render() {
         return (
-            <GridContainer>
+            <GridContainer direction="column">           
                     <GridItem xs={12}>
                         <TeamDropDown {...this.props} />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <Grid container>
+                    <GridItem xs={12} sm={12} md={3}>
                         <EnquiryCardComponent></EnquiryCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={12} md={3}>
                         <SalesCardComponent></SalesCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={12} md={3}>
                         <FollowupsCardComponent></FollowupsCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={12} md={3}>
                         <InventoryCardComponent></InventoryCardComponent>
                     </GridItem>
+                    </Grid>
+                    <Grid container>
                     {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
-                        (<GridItem xs={6} sm={6} md={6}>
+                        (<GridItem xs={12} sm={12} md={6}>
                             <DailyLeads {... this.props} />
-                        </GridItem>) : (<GridItem xs={6} sm={6} md={6}>
+                        </GridItem>) : (<GridItem xs={12} sm={12} md={6}>
                             <DailyUserCount {... this.props} />
                         </GridItem>)}
-                    <GridItem xs={6} sm={6} md={6} lg={6}>
+                    <GridItem xs={12} sm={12} md={6}>
                         <StageCount {... this.props} />
                     </GridItem>
+                    </Grid>
             </GridContainer>
         );
     }
