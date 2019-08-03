@@ -1,5 +1,5 @@
 import 'isomorphic-unfetch';
-import getRootUrl from './getRootUrl';
+import {getRootUrl} from './config';
 
 export default async function sendRequest(path, opts = {}) {
   const headers = Object.assign({}, opts.headers || {}, {

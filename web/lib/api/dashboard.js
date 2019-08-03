@@ -14,16 +14,7 @@ export const getDashboard = (user) =>
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
-
-export const getDailyLeads = (id) =>
-    sendRequest(`${BASE_PATH}/leads/leadDashboard/` + id, {
-        method: 'GET',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    });
-
-    export const getStageCounts = () =>
+export const getStageCounts = () =>
     sendRequest(`${BASE_PATH}/leads/stageCount`, {
         method: 'GET',
         headers: {
@@ -69,6 +60,13 @@ export const getEnqStateData = (enqState) =>
     });
 export const getUserCount = (id) =>
     sendRequest(`${BASE_PATH}/leads/dailyLeads/` + id, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+export const getDailyLeads = (team,month,year,) =>
+    sendRequest(`${BASE_PATH}/leads/leadDashboards/` + team+'/'+month+'/'+year, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

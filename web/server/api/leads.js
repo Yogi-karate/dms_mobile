@@ -90,6 +90,19 @@ router.post('/activity/create', async (req, res) => {
   res.json({ error: err.message || err.toString() });
 }
 });
+router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
+  try {
+    console.log("The param id is ",req.params.id)
+    console.log("The param month is ",req.params.month)
+    console.log("The param year is ",req.params.year);
+
+    let result = await lead.getLeadDashboards(req.user, {id: req.params.id },{month: req.params.month },{year: req.params.year });
+    console.log("Result ->" + '', result);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 router.get('/leadDashboard/:id', async (req, res) => {
   try {
     console.log("The param id is ",req.params.id)

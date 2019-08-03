@@ -165,49 +165,54 @@ class Lead {
         }
         return result;
     }
-    async getLeadDashboard(user, { id }) {
+    async getLeadDashboards(user, { id },{month},{year}) {
         let result = [];
         try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'crm.lead';
-            let domain = [];
-            let domain1 = [];
-            let fields = ["user_id", "user_id_count", "user_booked_id"];
-            var today = new Date();
-            var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
-            console.log("The current month first day is ", firstDay.toLocaleDateString());
-            console.log("The current month last day is ", lastDay.toLocaleDateString());
-            domain.push(["team_id", "=", parseInt(id)]);
-            domain.push(["create_date", ">", lastDay]);
-            //domain1.push(["stage_id.name", "ilike","booked"]);
-            domain1.push(["team_id", "=", parseInt(id)]);
-            domain1.push(["stage_id", "=", 4]);
-            domain1.push(["create_date", ">", lastDay]);
-            let self = this;
-            let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
-            let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
+        let server = odoo.getOdoo(user.email);
+        let model = 'crm.lead';
+        let domain = [];
+        let domain1 = [];
+        let current_year = parseInt(year);
+        let current_month = parseInt(month);
+        console.log("The current month and year ",current_month,current_year);
+        let fields = ["user_id", "user_id_count", "user_booked_id"];
+        var today = new Date();
+        var firstDay = new Date(current_year,current_month-1, 1);
+        var lastDay = new Date(current_year,current_month-1, 0);
+        console.log("The current month first day is ", firstDay.toLocaleDateString());
+        console.log("The current month last day is ", lastDay.toLocaleDateString());
+        domain.push(["team_id", "=", parseInt(id)]);
+        domain.push(["create_date", ">", lastDay]);
+        //domain1.push(["stage_id.name", "ilike","booked"]);
+        domain1.push(["team_id", "=", parseInt(id)]);
+        domain1.push(["stage_id", "=", 4]);
+        domain1.push(["create_date", ">", lastDay]);
+        let self = this;
+        let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
+        let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
 
-            console.log("The group is ", group);
-            console.log("The group1 is ", group1);
-            console.log("The group is ", group.length);
-            console.log("The group1 is ", group1.length);
+        console.log("The group is ", group);
+        console.log("The group1 is ", group1);
+        console.log("The group is ", group.length);
+        console.log("The group1 is ", group1.length);
 
-            for (let i = 0; i < group.length; i++) {
-                group[i].user_booked_id = 0;
-                for (let j = 0; j < group1.length; j++) {
-                    console.log("inside for group is ", group[i].user_id[0] == group1[j].user_id[0]);
-                    if (group[i].user_id[0] == group1[j].user_id[0]) {
-                        group[i].user_booked_id = group1[j].user_id_count;
-                    }
+        for (let i = 0; i < group.length; i++) {
+            group[i].user_booked_id = 0;
+            for (let j = 0; j < group1.length; j++) {
+                console.log("inside for group is ", group[i].user_id[0] == group1[j].user_id[0]);
+                if (group[i].user_id[0] == group1[j].user_id[0]) {
+                    group[i].user_booked_id = group1[j].user_id_count;
                 }
             }
-            result.push({ result: group });
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
         }
-
+        result.push({ result: group });
+        return result;
+    } catch (err) {
+        return { error: err.message || err.toString() };
+    }
+    }
+    async getLeadDashboard(user, { id }) {
+        return this.getLeadDashboards(user,id,8,2019);
     }
     async getDailyLeads(user, { id }) {
         let result = {};

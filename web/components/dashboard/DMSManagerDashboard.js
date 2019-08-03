@@ -14,6 +14,7 @@ import SalesCardComponent from './SalesComponent';
 import InventoryCardComponent from './InventoryComponent';
 import DailyUserCount from './DailyUserCount';
 import { connect } from 'react-redux';
+import PerfToolbar from './perfToolbar';
 
 class DMSDashboard extends React.Component {
     constructor(props) {
@@ -26,24 +27,27 @@ class DMSDashboard extends React.Component {
     }
     render() {
         return (
-            <GridContainer direction="column">           
-                    <GridItem xs={12}>
-                        <TeamDropDown {...this.props} />
-                    </GridItem>
+            <GridContainer direction="column">                              
                     <Grid container>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={6} md={3}>
                         <EnquiryCardComponent></EnquiryCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={6} md={3}>
                         <FollowupsCardComponent></FollowupsCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={6} md={3}>
                         <SalesCardComponent></SalesCardComponent>
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={6} md={3}>
                         <InventoryCardComponent></InventoryCardComponent>
                     </GridItem>
                     </Grid>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <StageCount {... this.props} />
+                    </GridItem>
+                    <GridItem xs={12}>
+                        <PerfToolbar {...this.props} />
+                    </GridItem>
                     <Grid container direction="column">
                     {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
                         (<GridItem xs={12} sm={12} md={12}>
@@ -51,9 +55,7 @@ class DMSDashboard extends React.Component {
                         </GridItem>) : (<GridItem xs={12} sm={12} md={12}>
                             <DailyUserCount {... this.props} />
                         </GridItem>)}
-                    <GridItem xs={12} sm={12} md={12}>
-                        <StageCount {... this.props} />
-                    </GridItem>
+                    
                     </Grid>
             </GridContainer>
         );

@@ -6,3 +6,4 @@ node_modules
 dist
 .next
 Android/DealerManagmentSystem/.idea/vcs.xml
+.env

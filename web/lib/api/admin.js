@@ -9,13 +9,6 @@ export const getTeams = (user) =>
       'Content-type': 'application/json; charset=UTF-8'
     }
   });
-export const getDailyLeads = (id) =>
-  sendRequest(`${BASE_PATH}/leads/leadDashboard/` + id, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8'
-    }
-  });
 
 export const getLoginCreds = (userData) =>
   sendRequest(`/login`, {
