@@ -117,12 +117,15 @@ class TRTable extends Component {
   
   render() {
     let enquiryStates = this.state.enquiryStates;
+    let enq = "Enquiry Followup"
+    let status = this.props.stage == null ? "overdue":this.props.stage;
+    let header = enq+" ( "+status+" )"
     console.log("Calling table render", enquiryStates);
     return (
 
       <MuiThemeProvider theme={this.getMuiTheme()}>
       <MUIDataTable
-        title={"Leads Stage count"}
+        title={header}
         data={enquiryStates}
         columns={columns}
         options={options}

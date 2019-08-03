@@ -33,8 +33,8 @@ class FollowupsCardComponent extends React.Component {
 
     followupClick(evt, item) {
         if (item[0] != undefined && item[0] != null) {
-            console.log('onclick piechart item', item[0]._model.label);
-            this.props.state_select(item[0]._model.label);
+            console.log('onclick piechart item', item[0]._model.label.split("-")[0]);
+            this.props.state_select(item[0]._model.label.split("-")[0]);
         }
     }
     async componentDidMount() {

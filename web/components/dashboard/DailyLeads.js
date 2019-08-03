@@ -65,13 +65,13 @@ class DailyLeads extends Component {
 
   async componentDidUpdate(prevProps) {
     console.log("Old props and new props", this.props.team, prevProps.team);
-    if (this.props.team && prevProps.team && this.props.team != prevProps.team) {
+    if (this.props.team && this.props.team != prevProps.team) {
       console.log("changing state ----");
       this.setState({ leads: await this.getLeads() });
     }
   }
   async getLeads() {
-    console.log("Inside getting Leads");
+    console.log("Inside getting Leads ----",this.props.team);
     try {
       if (!this.props.team) return [];
       const data = await getDailyLeads(this.props.team[1]);

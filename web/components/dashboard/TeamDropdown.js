@@ -73,6 +73,7 @@ class TeamDropDown extends Component {
                 let result = data.result.teams.records.map(team => {
                     return [team.name, team.id];
                 })
+                console.log("The result teams is ", result[0][1]);
                 this.setState({ teams: result, team: result[0] });
                 this.props.team(result[0]);
             }

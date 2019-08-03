@@ -7,6 +7,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../lib/theme';
 
 class MyApp extends App {
+  componentDidMount() {
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+  }
   render () {
     const { Component, pageProps, reduxStore } = this.props
     return (

@@ -1,7 +1,5 @@
 import React from "react";
 import TRManagerCard from './TRManagerCard';
-import TRTable from './TRTable';
-import TRCustomDropDown from '../common/Dropdown';
 import { getStageCounts } from '../../lib/api/dashboard';
 
 class EnquiryCardComponent extends React.Component {
@@ -52,9 +50,6 @@ class EnquiryCardComponent extends React.Component {
     }
 
     render() {
-        let customTeamDropdownRender;
-        let customCompanyDropdownRender;
-
         return (
             <div>
                 <TRManagerCard {...this.state} ></TRManagerCard>

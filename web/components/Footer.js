@@ -32,7 +32,7 @@ function Footer({ ...props }) {
             <a href="https://turnright.tech" className={classes.a}>
               Turn Right
             </a>
-            , dealer management system
+            , Dealer Management System
           </span>
         </p>
       </div>

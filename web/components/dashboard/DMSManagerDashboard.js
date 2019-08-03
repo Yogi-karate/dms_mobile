@@ -44,14 +44,14 @@ class DMSDashboard extends React.Component {
                         <InventoryCardComponent></InventoryCardComponent>
                     </GridItem>
                     </Grid>
-                    <Grid container>
+                    <Grid container direction="column">
                     {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
-                        (<GridItem xs={12} sm={12} md={6}>
+                        (<GridItem xs={12} sm={12} md={12}>
                             <DailyLeads {... this.props} />
-                        </GridItem>) : (<GridItem xs={12} sm={12} md={6}>
+                        </GridItem>) : (<GridItem xs={12} sm={12} md={12}>
                             <DailyUserCount {... this.props} />
                         </GridItem>)}
-                    <GridItem xs={12} sm={12} md={6}>
+                    <GridItem xs={12} sm={12} md={12}>
                         <StageCount {... this.props} />
                     </GridItem>
                     </Grid>
