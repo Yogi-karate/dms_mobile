@@ -11,6 +11,8 @@ module.exports = {
     // Will be available on both server and client
     port:process.env.PORT,
     env:process.env.NODE_ENV,
-    host:process.env.HOST_URL,
+    mode:process.env.MODE,
+    phost:process.env.PROD_HOST_URL,
+    dhost:process.env.DEV_HOST_URL,
   },
 }
