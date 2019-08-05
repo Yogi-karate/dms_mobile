@@ -34,18 +34,15 @@ export default (
       }
 
       if (logoutRequired && user) {
-        console.log("Printing User in With Auth -----------",user);
         Router.push('/');
       }
 
       if (adminRequired && (!user || !user.isAdmin)) {
-        console.log("Printing User in With Auth -----------",user);
         Router.push('/');
       }
     }
 
     static async getInitialProps(ctx) {
-      console.log("Init of With Auth",ctx);
       const isFromServer = !!ctx.req;
       const user = ctx.req ? ctx.req.user && ctx.req.user.toObject() : globalUser;
 
@@ -63,7 +60,6 @@ export default (
     }
 
     render() {
-      console.log("RENDER of With Auth");
       const { user } = this.props;
 
       if (loginRequired && !logoutRequired && !user) {

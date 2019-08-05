@@ -124,7 +124,6 @@ function auth_pass({ server }) {
       cb(null, user);
     });
   });
-
   server.use(passport.initialize());
   server.use(passport.session());
   server.get('/logincallback',

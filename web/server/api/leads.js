@@ -9,24 +9,30 @@ const lead = require('../models/lead');
 router.use((req, res, next) => {
   console.log("service api authenication ");
   if (req.user) {
-      next();
+    server = odoo.getOdoo(req.user.email);
+    if (server.sid == null) {
+      console.error("Not connected to backend !!!!");
+      res.status(401).send("Unauthorized Access");
+      return;
+    } else next();
+
   } else {
-      passport.authenticate('jwt', { session: false }, (err, user, info) => {
-          if (err) {
-              console.error(err);
-              res.status(401).send("Unauthorized Access");
-              return;
-          }
-          if (info !== undefined) {
-              console.log(req);
-              console.log(info.message);
-              res.status(403).send({ "error": info.message });
-              return;
-          }
-          console.log(user);
-          req.user = user;
-          next();
-      })(req, res, next);
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+      if (err) {
+        console.error(err);
+        res.status(401).send("Unauthorized Access");
+        return;
+      }
+      if (info !== undefined) {
+        console.log(req);
+        console.log(info.message);
+        res.status(403).send({ "error": info.message });
+        return;
+      }
+      console.log(user);
+      req.user = user;
+      next();
+    })(req, res, next);
   }
 });
 
@@ -87,16 +93,16 @@ router.post('/activity/create', async (req, res) => {
     let result = await lead.createActivity(req.user, req.body);
     res.json(result);
   } catch (err) {
-  res.json({ error: err.message || err.toString() });
-}
+    res.json({ error: err.message || err.toString() });
+  }
 });
 router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
   try {
-    console.log("The param id is ",req.params.id)
-    console.log("The param month is ",req.params.month)
-    console.log("The param year is ",req.params.year);
+    console.log("The param id is ", req.params.id)
+    console.log("The param month is ", req.params.month)
+    console.log("The param year is ", req.params.year);
 
-    let result = await lead.getLeadDashboards(req.user, {id: req.params.id },{month: req.params.month },{year: req.params.year });
+    let result = await lead.getLeadDashboards(req.user, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
     console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
@@ -105,8 +111,8 @@ router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
 });
 router.get('/leadDashboard/:id', async (req, res) => {
   try {
-    console.log("The param id is ",req.params.id)
-    let result = await lead.getLeadDashboard(req.user, {id: req.params.id });
+    console.log("The param id is ", req.params.id)
+    let result = await lead.getLeadDashboard(req.user, { id: req.params.id });
     console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
@@ -115,8 +121,8 @@ router.get('/leadDashboard/:id', async (req, res) => {
 });
 router.get('/dailyLeads/:id', async (req, res) => {
   try {
-    console.log("The param id is ",req.params.id)
-    let result = await lead.getDailyLeads(req.user, {id: req.params.id });
+    console.log("The param id is ", req.params.id)
+    let result = await lead.getDailyLeads(req.user, { id: req.params.id });
     console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
@@ -125,20 +131,20 @@ router.get('/dailyLeads/:id', async (req, res) => {
 });
 router.get('/dailyBookedLeads/:id', async (req, res) => {
   try {
-    console.log("The param id is ",req.params.id)
-    let result = await lead.getDailyBookedLeads(req.user, {id: req.params.id });
+    console.log("The param id is ", req.params.id)
+    let result = await lead.getDailyBookedLeads(req.user, { id: req.params.id });
     console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.get('/paymentAccDetails', async (req,res) => {
-  try{
+router.get('/paymentAccDetails', async (req, res) => {
+  try {
     let result = await lead.getPaymentAccount(req.user);
-    console.log("The result for payment account api is ",result);  
+    console.log("The result for payment account api is ", result);
     res.json(result);
-  }catch(err){
+  } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });

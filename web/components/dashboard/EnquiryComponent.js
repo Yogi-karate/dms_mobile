@@ -41,7 +41,8 @@ class EnquiryCardComponent extends React.Component {
             return ({ enquires: enquiresArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
 
         } catch (err) {
-            console.log(err); // eslint-disable-line
+            console.log("Error in API call");
+            console.log(err.error); // eslint-disable-line
         }
     }
 
