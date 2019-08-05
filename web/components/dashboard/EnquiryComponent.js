@@ -1,6 +1,8 @@
 import React from "react";
 import TRManagerCard from './TRManagerCard';
 import { getStageCounts } from '../../lib/api/dashboard';
+import { connect } from 'react-redux';
+import { isLoggedIn } from '../../lib/store'
 
 class EnquiryCardComponent extends React.Component {
     constructor(props) {
@@ -41,6 +43,7 @@ class EnquiryCardComponent extends React.Component {
             return ({ enquires: enquiresArray, graphData: graphData, graphLabel: graphLabel }); // eslint-disable-line
 
         } catch (err) {
+            this.props.isLoggedIn(false);
             console.log("Error in API call");
             console.log(err.error); // eslint-disable-line
         }
@@ -59,4 +62,8 @@ class EnquiryCardComponent extends React.Component {
     }
 }
 
-export default EnquiryCardComponent;
+const mapDispatchToProps = { isLoggedIn };
+export default connect(
+  null,
+  mapDispatchToProps
+)(EnquiryCardComponent);

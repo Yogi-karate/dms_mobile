@@ -7,6 +7,7 @@ const exampleInitialState = {
   count: 0,
   user: null,
   team: null,
+  loggedIn: true,
   lead_state: null,
   dailyleads_userIndex: null,
   showDailyLeads: null,
@@ -23,7 +24,8 @@ export const actionTypes = {
   PERF_FILTER: 'PERF_FILTER',
   LEAD_STATE: 'LEAD_STATE',
   DAILYLEADS_USERINDEX: 'DAILYLEADS_USERINDEX',
-  SHOWDAILYLEADS: 'SHOWDAILYLEADS'
+  SHOWDAILYLEADS: 'SHOWDAILYLEADS',
+  LOGGEDIN: 'LOGGEDIN'
 }
 
 // REDUCERS
@@ -53,6 +55,11 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         performanceFilters: action.performanceFilters
       })
+    case actionTypes.LOGGEDIN_STATUS:
+      return Object.assign({}, state, {
+        loggedIn: action.loggedIn
+      })
+
     default:
       return state
   }
@@ -82,6 +89,10 @@ export const showDailyLeads = (showDailyLeads) => {
 export const changePerformanceFilters = (filters) => {
   console.log("Trying to show daily leads");
   return { type: actionTypes.PERF_FILTER, performanceFilters: filters }
+}
+export const isLoggedIn = (loggedIn) => {
+  console.log("checking logged in user");
+  return { type: actionTypes.LOGGEDIN_STATUS, loggedIn: loggedIn }
 }
 
 
