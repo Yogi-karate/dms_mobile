@@ -11,7 +11,7 @@ router.use((req, res, next) => {
   if (req.user) {
     server = odoo.getOdoo(req.user.email);
     if (server.sid == null) {
-      console.error("Not connected to backend !!!!");
+      console.error("Not connected to backend !!!!!");
       res.status(401).send("Unauthorized Access");
       return;
     } else next();

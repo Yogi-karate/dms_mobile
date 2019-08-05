@@ -95,6 +95,7 @@ class DailyLeads extends Component {
       })
       return result;
     } catch (err) {
+      this.props.isLoggedIn(false);
       console.log(err); // eslint-disable-line
       return [];
     }

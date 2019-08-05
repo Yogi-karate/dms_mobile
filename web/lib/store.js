@@ -25,7 +25,7 @@ export const actionTypes = {
   LEAD_STATE: 'LEAD_STATE',
   DAILYLEADS_USERINDEX: 'DAILYLEADS_USERINDEX',
   SHOWDAILYLEADS: 'SHOWDAILYLEADS',
-  LOGGEDIN: 'LOGGEDIN'
+  LOGGEDIN: 'LOGGEDIN',
 }
 
 // REDUCERS
@@ -55,7 +55,7 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         performanceFilters: action.performanceFilters
       })
-    case actionTypes.LOGGEDIN_STATUS:
+    case actionTypes.LOGGEDIN:
       return Object.assign({}, state, {
         loggedIn: action.loggedIn
       })
@@ -92,7 +92,7 @@ export const changePerformanceFilters = (filters) => {
 }
 export const isLoggedIn = (loggedIn) => {
   console.log("checking logged in user");
-  return { type: actionTypes.LOGGEDIN_STATUS, loggedIn: loggedIn }
+  return { type: actionTypes.LOGGEDIN, loggedIn: loggedIn }
 }
 
 

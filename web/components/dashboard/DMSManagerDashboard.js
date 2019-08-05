@@ -4,8 +4,6 @@ import GridItem from "../common/Grid/GridItem.js";
 import GridContainer from "../common/Grid/GridContainer.js";
 import Grid from "@material-ui/core/Grid";
 
-import TeamDropDown from './TeamDropdown';
-import withAuth from '../../lib/withAuth';
 import DailyLeads from './DailyLeads';
 import EnquiryCardComponent from './EnquiryComponent';
 import StageCount from './EnquiryStateTable';
@@ -25,21 +23,28 @@ class DMSDashboard extends React.Component {
             teams: [],
         };
     }
+    async componentDidUpdate(prevProps) {
+        console.log("the componentDidUpdate props are ", this.props.loggedIn, prevProps.loggedIn);
+        if (this.props.loggedIn && this.props.loggedIn != prevProps.loggedIn) {
+            console.log("changing state ----");
+            this.setState({ loggedIn: this.props.loggedIn});
+        }
+    }
     render() {
         return (
             <GridContainer direction="column">                              
                     <Grid container>
                     <GridItem xs={12} sm={6} md={3}>
-                        <EnquiryCardComponent></EnquiryCardComponent>
+                        <EnquiryCardComponent {... this.props}/>
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
-                        <FollowupsCardComponent></FollowupsCardComponent>
+                        <FollowupsCardComponent {... this.props}/>
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
-                        <SalesCardComponent></SalesCardComponent>
+                        <SalesCardComponent {... this.props}/>
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
-                        <InventoryCardComponent></InventoryCardComponent>
+                        <InventoryCardComponent {... this.props}/>
                     </GridItem>
                     </Grid>
                     <GridItem xs={12} sm={12} md={12}>
@@ -64,10 +69,10 @@ class DMSDashboard extends React.Component {
 
 const mapStateToProps = state => {
     console.log("state in mapping", state);
-    return { dailyLeadsUser: state.dailyleads_userIndex, showDailyLeads: state.showDailyLeads };
+    return {showDailyLeads: state.showDailyLeads };
 }
 
 export default connect(
     mapStateToProps,
     null
-)(withAuth(DMSDashboard));
+)(DMSDashboard);
