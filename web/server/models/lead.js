@@ -176,19 +176,19 @@ class Lead {
             let current_month = parseInt(month);
             console.log("The current month and year ", current_month, current_year);
             let fields = ["user_id", "user_id_count", "user_booked_id"];
-            var firstDay = new Date(current_year, current_month - 1, 0);
-            var lastDay = new Date(current_year, current_month, 1);
+            var firstDay = new Date(current_year, current_month, 1);
+            var lastDay = new Date(current_year, current_month+1, 0);
             console.log("The current month first day is ", firstDay.toLocaleDateString());
             console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["team_id", "=", parseInt(id)]);
             domain.push(["create_date", ">", firstDay]);
-            domain.push(["create_date", "<", lastDay]);
+            domain.push(["create_date", "<=", lastDay]);
 
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
             domain1.push(["create_date", ">", firstDay]);
-            domain1.push(["create_date", "<", lastDay]);
+            domain1.push(["create_date", "<=", lastDay]);
             let group = await server.read_group(model, { domain: domain, groupby: ["user_id"], fields: fields }, true);
             let group1 = await server.read_group(model, { domain: domain1, groupby: ["user_id"] }, true);
 
@@ -213,29 +213,32 @@ class Lead {
         }
     }
     async getLeadDashboard(user, { id }) {
-        return this.getLeadDashboards(user, id, 8, 2019);
+        var today = new Date();
+        return this.getLeadDashboards(user, id, today.getMonth(), today.getFullYear());
     }
-    async getDailyLeads(user, { id }, { month }, { year }) {
+    async getDailyLeads(user, { id }) {
+        var today = new Date();
+        return this.getLeadDashboards(user, id, today.getMonth(), today.getFullYear());
+    }
+    async getDailyLeadsNew(user,{team}, { id }, { month }, { year }) {
         let result = {};
         try {
+            console.log("Current Month", month);
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             let domain = [];
             let fields = ["user_id", "create_date"];
             var today = new Date();
-            if (!month || !year) {
-                var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                var lastDay = new Date(today.getFullYear(), today.getMonth(), 0);
-            } else {
-                let current_year = parseInt(year);
-                let current_month = parseInt(month);
-                var firstDay = new Date(current_year, current_month - 1, 0);
-                var lastDay = new Date(current_year, current_month, 1);
-            }
+
+            let current_year = parseInt(year);
+            let current_month = parseInt(month);
+            var firstDay = new Date(current_year, current_month, 1);
+            var lastDay = new Date(current_year, current_month+1, 0);
             console.log("The current month first day is ", firstDay.toLocaleDateString());
             console.log("The current month last day is ", lastDay.toLocaleDateString());
             domain.push(["user_id", "=", parseInt(id)]);
-            domain.push(["create_date", ">=", firstDay])
+            domain.push(["team_id", "=", parseInt(team)]);
+            domain.push(["create_date", ">", firstDay])
             domain.push(["create_date", "<=", lastDay])
             let self = this;
             let group = await server.search_read(model, { domain: domain, fields: fields });
@@ -243,11 +246,11 @@ class Lead {
             let day = firstDay.toISOString().slice(0, 10);
             let int_date = firstDay.getDate();
             console.log(" Day is ", day, int_date, lastDay.getDate());
-            let month = firstDay.getMonth() + 1;
-            month = month < 10 ? "0" + month : month + "";
-            while (int_date <= today.getDate()) {
+            let cmonth = firstDay.getMonth() + 1;
+            cmonth = cmonth < 10 ? "0" + cmonth : cmonth + "";
+            while (int_date <= lastDay.getDate()) {
                 let day = int_date < 10 ? "0" + int_date : int_date;
-                result[firstDay.getFullYear() + "-" + month + "-" + day] = 0;
+                result[firstDay.getFullYear() + "-" + cmonth + "-" + day] = 0;
                 int_date++;
             }
             console.log("result", result);

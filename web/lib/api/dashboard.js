@@ -58,8 +58,8 @@ export const getEnqStateData = (enqState) =>
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
-export const getUserCount = (id) =>
-    sendRequest(`${BASE_PATH}/leads/dailyLeads/` + id, {
+export const getUserCount = (team,id,month,year) =>
+    sendRequest(`${BASE_PATH}/leads/dailyLeadsNew/` +team+'/'+ id+'/'+month+'/'+year, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

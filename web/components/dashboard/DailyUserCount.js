@@ -50,7 +50,9 @@ class DailyUserCount extends Component {
 
     async componentDidUpdate(prevProps) {
         console.log("the componentDidUpdate props are ", this.props.dailyLeadsUser, this.props.showDailyLeads);
-        if (this.props.dailyLeadsUser && prevProps.dailyLeadsUser && this.props.dailyLeadsUser != prevProps.dailyLeadsUser) {
+        let filters = this.props.filters;
+        let old_filters = prevProps.filters;
+        if (this.props.dailyLeadsUser && (this.props.dailyLeadsUser != prevProps.dailyLeadsUser|| filters.month != old_filters.month || filters.year != old_filters.year)){
             console.log("changing state ----");
             this.setState({ userLeads: await this.getDailyUserCount() });
         }
@@ -59,8 +61,9 @@ class DailyUserCount extends Component {
     async getDailyUserCount() {
         console.log("Inside  getUserLeads");
         try {
-            if (!this.props.dailyLeadsUser) return [];
-            const data = await getUserCount(this.props.dailyLeadsUser[0]);
+            if (!this.props.dailyLeadsUser || ! this.props.filters) return [];
+            let filters = this.props.filters;
+            const data = await getUserCount(this.props.dailyLeadsUser[0],filters.team[1],filters.month, filters.year);
             console.log("The result is ", data);
             if (data == null) {
                 return [];
@@ -127,7 +130,7 @@ class DailyUserCount extends Component {
 }
 const mapStateToProps = state => {
     console.log("state in mapping", state);
-    return { dailyLeadsUser: state.dailyleads_userIndex };
+    return { filters: state.performanceFilters,dailyLeadsUser: state.dailyleads_userIndex };
 }
 const mapDispatchToProps = { showDailyLeads };
 

@@ -23,6 +23,7 @@ class DMSDashboard extends React.Component {
         this.props = props;
         this.state = {
             teams: [],
+            showComponents: false,
         };
     }
     async componentDidUpdate(prevProps) {
@@ -47,46 +48,53 @@ class DMSDashboard extends React.Component {
                 })
                 console.log("The resultttttttt teams is ", result);
                 this.props.userTeam(result);
+                this.setState({ showComponents: true });
             }
         } catch (err) {
+            this.props.isLoggedIn(false);
             console.log(err); // eslint-disable-line
         }
     }
 
     render() {
-        return (
-            <GridContainer direction="column">
-                <Grid container>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <EnquiryCardComponent {... this.props} />
+        let showComponents = this.state.showComponents;
+        if (showComponents) {
+            return (
+                <GridContainer direction="column">
+                    <Grid container>
+                        <GridItem xs={12} sm={6} md={3}>
+                            <EnquiryCardComponent {... this.props} />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={3}>
+                            <FollowupsCardComponent {... this.props} />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={3}>
+                            <SalesCardComponent {... this.props} />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={3}>
+                            <InventoryCardComponent {... this.props} />
+                        </GridItem>
+                    </Grid>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <StageCount {... this.props} />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <FollowupsCardComponent {... this.props} />
+                    <GridItem xs={12}>
+                        <PerfToolbar {...this.props} />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <SalesCardComponent {... this.props} />
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <InventoryCardComponent {... this.props} />
-                    </GridItem>
-                </Grid>
-                <GridItem xs={12} sm={12} md={12}>
-                    <StageCount {... this.props} />
-                </GridItem>
-                <GridItem xs={12}>
-                    <PerfToolbar {...this.props} />
-                </GridItem>
-                <Grid container direction="column">
-                    {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
-                        (<GridItem xs={12} sm={12} md={12}>
-                            <DailyLeads {... this.props} />
-                        </GridItem>) : (<GridItem xs={12} sm={12} md={12}>
-                            <DailyUserCount {... this.props} />
-                        </GridItem>)}
+                    <Grid container direction="column">
+                        {(this.props.showDailyLeads == null || this.props.showDailyLeads == false) ?
+                            (<GridItem xs={12} sm={12} md={12}>
+                                <DailyLeads {... this.props} />
+                            </GridItem>) : (<GridItem xs={12} sm={12} md={12}>
+                                <DailyUserCount {... this.props} />
+                            </GridItem>)}
 
-                </Grid>
-            </GridContainer>
-        );
+                    </Grid>
+                </GridContainer>
+            );
+        } else {
+            return "Hello World";
+        }
     }
 }
 
