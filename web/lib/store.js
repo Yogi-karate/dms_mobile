@@ -15,7 +15,8 @@ const exampleInitialState = {
     month: null,
     year: null,
     team: null,
-  }
+  },
+  usrTeam: []
 }
 
 export const actionTypes = {
@@ -26,6 +27,7 @@ export const actionTypes = {
   DAILYLEADS_USERINDEX: 'DAILYLEADS_USERINDEX',
   SHOWDAILYLEADS: 'SHOWDAILYLEADS',
   LOGGEDIN: 'LOGGEDIN',
+  USERTEAM: 'USERTEAM'
 }
 
 // REDUCERS
@@ -58,6 +60,10 @@ export const reducer = (state = exampleInitialState, action) => {
     case actionTypes.LOGGEDIN:
       return Object.assign({}, state, {
         loggedIn: action.loggedIn
+      })
+    case actionTypes.USERTEAM:
+      return Object.assign({}, state, {
+        usrTeam: action.usrTeam
       })
 
     default:
@@ -93,6 +99,10 @@ export const changePerformanceFilters = (filters) => {
 export const isLoggedIn = (loggedIn) => {
   console.log("checking logged in user");
   return { type: actionTypes.LOGGEDIN, loggedIn: loggedIn }
+}
+export const userTeam = (usrTeam) => {
+  console.log("inside userteam action ");
+  return { type: actionTypes.USERTEAM, usrTeam: usrTeam }
 }
 
 
