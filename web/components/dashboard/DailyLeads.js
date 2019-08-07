@@ -58,8 +58,8 @@ class DailyLeads extends Component {
   }
 
   leadTableRowClick(rowsSelected, allRows) {
-    console.log("the onRowSelect dataaaaaaaaaaaaa", allRows, this.state.leads[allRows[0].index]);
-    this.props.dailyleads_userIndex(this.state.leads[allRows[0].index]);
+    console.log("the onRowSelect dataaaaaaaaaaaaa", rowsSelected,allRows, this.state.leads,this.state.leads[allRows[0].dataIndex]);
+    this.props.dailyleads_userIndex(this.state.leads[allRows[0].dataIndex]);
     this.props.showDailyLeads(true);
   }
 
