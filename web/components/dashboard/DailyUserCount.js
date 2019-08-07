@@ -121,6 +121,7 @@ class DailyUserCount extends Component {
                     title={this.props.dailyLeadsUser[1]}
                     data={userLeads}
                     columns={["date", "count"]}
+                    options={this.state}
                 />
             </MuiThemeProvider>
 

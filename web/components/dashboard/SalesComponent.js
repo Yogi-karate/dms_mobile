@@ -18,7 +18,8 @@ class SalesCardComponent extends React.Component {
             graphColors: [
                 '#AFEEEE',
                 '#48D1CC',
-                '#00CED1'
+                '#00CED1',
+                '#1EFFFF'
             ],
             renderDropdown: false,
         };

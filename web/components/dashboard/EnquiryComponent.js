@@ -20,7 +20,8 @@ class EnquiryCardComponent extends React.Component {
             graphColors: [
                 '#DA70D6',
                 '#EE82EE',
-                '#BA55D3'
+                '#BA55D3',
+                '#F548F0'
             ],
             renderDropdown: true,
         };
