@@ -9,7 +9,7 @@ const options = {
   search: true,
   print: false,
   download: false,
-  selectableRows: false,
+  selectableRows: 'none',
   filterType: 'dropdown',
   responsive: 'stacked',
   rowsPerPage: 10,

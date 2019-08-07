@@ -34,7 +34,7 @@ class DailyUserCount extends Component {
             search: true,
             print: false,
             download: false,
-            selectableRows: false,
+            selectableRows: "none",
             selectableRowsOnClick: false,
             filterType: 'dropdown',
             responsive: 'stacked',
