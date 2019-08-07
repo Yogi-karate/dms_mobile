@@ -26,39 +26,38 @@ class DMSDashboard extends React.Component {
             showComponents: false,
         };
     }
-    async componentDidUpdate(prevProps) {
-        console.log("the componentDidUpdate props are ", this.props.loggedIn, prevProps.loggedIn);
-        if (this.props.loggedIn && this.props.loggedIn != prevProps.loggedIn) {
-            console.log("changing state ----");
-            this.setState({ loggedIn: this.props.loggedIn });
-        }
-    }
+    // async componentDidUpdate(prevProps) {
+    //     console.log("the componentDidUpdate props are ", this.props.loggedIn, prevProps.loggedIn);
+    //     if (this.props.loggedIn && this.props.loggedIn != prevProps.loggedIn) {
+    //         console.log("changing state ----");
+    //         this.setState({ loggedIn: this.props.loggedIn });
+    //     }
+    // }
 
-    async componentWillMount() {
-        console.log("Inside componentWillMount ");
-        try {
-            const data = await getTeams();
-            console.log("The result is ", data);
-            console.log("The result teams is ", data.result.teams.records);
-            if (data == null || data == [] || data.result.teams.records == []) {
-                this.props.userTeam(data);
-            } else {
-                let result = data.result.teams.records.map(team => {
-                    return [team.name, team.id];
-                })
-                console.log("The resultttttttt teams is ", result);
-                this.props.userTeam(result);
-                this.setState({ showComponents: true });
-            }
-        } catch (err) {
-            this.props.isLoggedIn(false);
-            console.log(err); // eslint-disable-line
-        }
-    }
+    // async componentWillMount() {
+    //     console.log("Inside componentWillMount ");
+    //     try {
+    //         const data = await getTeams();
+    //         console.log("The result is - ", data);
+    //         console.log("The result teams is ", data.result.teams.records);
+    //         if (data == null || data == [] || data.result.teams.records == []) {
+    //             this.props.userTeam(data);
+    //         } else {
+    //             let result = data.result.teams.records.map(team => {
+    //                 return [team.name, team.id];
+    //             })
+    //             console.log("The resultttttttt teams is ", result);
+    //             this.props.userTeam(result);
+    //             this.setState({ showComponents: true });
+    //         }
+    //     } catch (err) {
+    //         this.props.isLoggedIn(false);
+    //         console.log(err); // eslint-disable-line
+    //     }
+    // }
 
     render() {
         let showComponents = this.state.showComponents;
-        if (showComponents) {
             return (
                 <GridContainer direction="column">
                     <Grid container>
@@ -92,9 +91,6 @@ class DMSDashboard extends React.Component {
                     </Grid>
                 </GridContainer>
             );
-        } else {
-            return "Hello World";
-        }
     }
 }
 

@@ -97,19 +97,21 @@ class PerformanceToolbar extends Component {
         }
     };
     async componentDidUpdate(prevProps) {
-        console.log("Inside getting teams componentDidMount perfToolbar");
-        try {
-            console.log("Old props and new props perfToolbar", this.props.userTeam, prevProps.userTeam);
+            console.log("Old props and new props perfToolbar", this.props, prevProps);
             let new_userTeam = this.props.userTeam;
             let old_userTeam = prevProps.userTeam;
             let today = new Date();
-            console.log("The result componentDidMounttttttttttttttttttttttttttttttttttt ", new_userTeam);
             if (new_userTeam != old_userTeam) {
                 this.setState({ teams: new_userTeam, team: new_userTeam[0], month: today.getMonth(), year: today.getFullYear() });
-                this.props.changePerformanceFilters({ team: this.state.team, month: this.state.month, year: this.state.year });
+                this.props.changePerformanceFilters({ team: new_userTeam[0], month: this.state.month, year: this.state.year });
             }
-        } catch (err) {
-            console.log(err); // eslint-disable-line
+    }
+    async componentDidMount() {
+        let userTeam = this.props.userTeam;
+        let today = new Date();
+        if(userTeam){
+        this.setState({ teams: userTeam, team: userTeam[0], month: today.getMonth(), year: today.getFullYear() });
+        this.props.changePerformanceFilters({ team:userTeam[0], month: this.state.month, year: this.state.year });
         }
     }
     render() {
@@ -177,7 +179,7 @@ class PerformanceToolbar extends Component {
 
 const mapStateToProps = state => {
     console.log("inside mapStateToProps perfToolbar state in mappingggggggg", state);
-    return { userTeam: state.usrTeam, user: state.user };
+    return { userTeam: state.usrTeam};
 }
 const mapDispatchToProps = { changePerformanceFilters }
 export default connect(

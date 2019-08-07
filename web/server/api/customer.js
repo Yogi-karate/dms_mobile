@@ -8,9 +8,14 @@ const base = require('../models/base');
 const User = require('../models/MUser');
 
 router.use((req, res, next) => {
-  console.log("service api authenication ");
+  console.log("service api authenication  ",req);
   if (req.user) {
-      next();
+    server = odoo.getOdoo(req.user.email);
+    if (server.sid == null) {
+      console.error("Not connected to backend !!!!!");
+      res.status(401).send("Unauthorized Access");
+      return;
+    } else next();
   } else {
       passport.authenticate('jwt', { session: false }, (err, user, info) => {
           if (err) {
@@ -19,7 +24,6 @@ router.use((req, res, next) => {
               return;
           }
           if (info !== undefined) {
-              console.log(req);
               console.log(info.message);
               res.status(403).send({ "error": info.message });
               return;

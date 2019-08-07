@@ -24,7 +24,6 @@ router.use((req, res, next) => {
         return;
       }
       if (info !== undefined) {
-        console.log(req);
         console.log(info.message);
         res.status(403).send({ "error": info.message });
         return;
