@@ -13,7 +13,7 @@ const columns = [
         name: "Date",
         options: {
             filter: true,
-            sortDirection: 'asc'
+            sortDirection: 'desc'
         }
     },
     {
@@ -63,7 +63,7 @@ class DailyUserCount extends Component {
         try {
             if (!this.props.dailyLeadsUser || ! this.props.filters) return [];
             let filters = this.props.filters;
-            const data = await getUserCount(this.props.dailyLeadsUser[0],filters.team[1],filters.month, filters.year);
+            const data = await getUserCount(filters.team[1],this.props.dailyLeadsUser[0],filters.month, filters.year);
             console.log("The result is ", data);
             if (data == null) {
                 return [];
