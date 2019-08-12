@@ -54,7 +54,7 @@ class MUserClass {
             .sort({ createdAt: -1 });
         return { users };
     }
-    static async add({ name, email, mobile, partner_id, pin, address }) {
+    static async add({ name, email, mobile, partner_id, pin, address, isAdmin }) {
         console.log(mobile);
         console.log(name);
         if (mobile) {
@@ -69,6 +69,7 @@ class MUserClass {
                 partner_id,
                 pin,
                 address,
+                isAdmin
             });
         } else {
             console.log("ERROR in request - no mobile");

@@ -44,12 +44,18 @@ class Odoo_Server {
                 let mobile = user.phone;
                 let name = user.partner_id[1];
                 let partner_id = user.partner_id[0];
+                let isAdmin = true;
                 if (user.login === "admin") {
                     mobile = '1111111111';
                 }
                 let localUser = await User.findOne({ mobile: mobile });
-                if (localUser === null && mobile != null && mobile !=false) {
+                if (localUser === null && mobile != null && mobile !=false && mobile != '1111111111') {
+                    console.log("This is new user");
                     let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234" });
+                    self.users[mobile] = new_user;
+                }else if(localUser === null && mobile != null && mobile !=false && mobile === '1111111111'){
+                    console.log("This is new admin");
+                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234", isAdmin: isAdmin});
                     self.users[mobile] = new_user;
                 }
                

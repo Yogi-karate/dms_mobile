@@ -67,4 +67,16 @@ router.post('/sendapk', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+
+router.get('/loadNewUsers', async (req, res) => {
+  try {
+    let result = {};
+    let server = odoo.getOdoo(req.user.email);
+    console.log("The server is ----- ", server);
+    let users = await odoo.initDatabase(server);
+    res.json({users});
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
