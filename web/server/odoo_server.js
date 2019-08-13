@@ -13,95 +13,70 @@ class Odoo_Server {
         this.init();
     };
     init() {
-        console.log("Hello from server init");
-        const odoo = new Odoo({
-            host: this.host,
-            port: this.port,
-            database: this.database,
-            username: this.admin_user,
-            password: this.admin_password
-        });
-        let self = this;
-        odoo.connect(function (err, result) {
-            if (err) {
-                console.log("Error in connecting to Odoo");
+        try {
+            console.log("Hello from server init");
+            const odoo = new Odoo({
+                host: this.host,
+                port: this.port,
+                database: this.database,
+                username: this.admin_user,
+                password: this.admin_password
+            });
+            let self = this;
+            odoo.connect(function (err, result) {
+                if (err) {
+                    console.log("Error in connecting to Odoo");
+                }
+                self.initDatabase(odoo);
+                console.log("Result:", odoo);
+            });
+            this.connections['admin'] = odoo;
+        } catch (err) {
+            console.log("Error", err);
+        }
+    }
+    async createUsers(server) {
+        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
+        let userList = result.records;
+        let newUserArray = [];
+        for (const user of userList) {
+            console.log("User: ", user);
+            try {
+                let mobile = user.phone;
+                let name = user.partner_id[1];
+                let partner_id = user.partner_id[0];
+                let isAdmin = true;
+                if (user.login === "admin") {
+                    mobile = '1111111111';
+                }
+                let localUser = await User.findOne({ mobile: mobile });
+                if (localUser === null && mobile != null && mobile != false) {
+                    console.log("This is new user and localuser is", user);
+                    let newUser = { name: name, partner_id: partner_id, email: user.login, mobile: mobile}
+                    if (user.login == 'admin') {
+                        console.log("Admin user is added");
+                        newUser.isAdmin = true;
+                    }
+                    let newUsers = await User.add(newUser);
+                    newUserArray.push(newUsers);
+                    console.log("The new_user are ", newUserArray);
+                }
+            } catch (error) {
+                console.log(error);
             }
-            self.initDatabase(odoo);
-            console.log("Result:", odoo);
-        });
-        this.connections['admin'] = odoo;
+        }
+        return newUserArray;
     }
     async initDatabase(server) {
         console.log("Database Check ...Hang on");
-        //create admin user in db if not exists
-        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
-        let userList = result.records;
-        this.users = {};
-        let self = this;
-        userList.forEach(async function (user) {
-            try {
-                //   console.log("The user in loop : ", user);
-                let mobile = user.phone;
-                let name = user.partner_id[1];
-                let partner_id = user.partner_id[0];
-                let isAdmin = true;
-                if (user.login === "admin") {
-                    mobile = '1111111111';
-                }
-                let localUser = await User.findOne({ mobile: mobile });
-                if (localUser === null && mobile != null && mobile !=false && mobile != '1111111111') {
-                    console.log("This is new user");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile});
-                    self.users[mobile] = new_user;
-                }else if(localUser === null && mobile != null && mobile !=false && mobile === '1111111111'){
-                    console.log("This is new admin");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, isAdmin: isAdmin});
-                    self.users[mobile] = new_user;
-                }
-               
-            } catch (error) {
-                console.log(error);
-            }
-        });
+        let newUsers = await this.createUsers(server);
+        console.log("New Users Added - ", newUsers);
         console.log("Successfully Initiated the User Database");
     }
 
-    async initNewUsers(server) {
-        console.log("Database Check ...Hang on");
-        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
-        let userList = result.records;
-        this.users = {};
-        let self = this;
-        let newUserArray = [];
-        userList.forEach(async function (user) {
-            try {
-                //   console.log("The user in loop : ", user);
-                let mobile = user.phone;
-                let name = user.partner_id[1];
-                let partner_id = user.partner_id[0];
-                let isAdmin = true;
-                if (user.login === "admin") {
-                    mobile = '1111111111';
-                }
-                let localUser = await User.findOne({ mobile: mobile });
-                if (localUser === null && mobile != null && mobile !=false && mobile != '1111111111') {
-                    console.log("This is new user and localuser is",user);
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile });
-                    newUserArray.push(new_user);
-                    self.users[mobile] = new_user;
-                    console.log("The new_user are ",newUserArray);
-                }else if(localUser === null && mobile != null && mobile !=false && mobile === '1111111111'){
-                    console.log("This is new admin");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, isAdmin: isAdmin});
-                    self.users[mobile] = new_user;
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        });
-        console.log("The new user array is ",newUserArray);
-        console.log("Successfully Initiated the User Database");
-        return newUserArray;
+    async refreshUsers(server) {
+        let newUsers = await this.createUsers(server);
+        return newUsers.length;
     }
 
     getOdoo(user, password) {

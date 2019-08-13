@@ -8,7 +8,6 @@ router.use((req, res, next) => {
 router.get('/send', async (req, res) => {
   try {
     let result = {};
-    console.log("THE PUBLIC Request Send ---> ",req);
     res.json(result);
   } catch (err) {
     res.status(200).send({ message: "thanks for reaching out !!!"});
