@@ -164,7 +164,7 @@ class Lead {
             domain.push(["team_id", "=", parseInt(id)]);
             domain.push(["create_date", ">", firstDay]);
             domain.push(["create_date", "<=", lastDay]);
-
+            console.log(domain);
             //domain1.push(["stage_id.name", "ilike","booked"]);
             domain1.push(["team_id", "=", parseInt(id)]);
             domain1.push(["stage_id", "=", 4]);
@@ -189,11 +189,12 @@ class Lead {
     }
     async getLeadDashboard(user, { id }) {
         var today = new Date();
-        return this.getLeadDashboards(user, id, today.getMonth(), today.getFullYear());
+        console.log(today.getMonth(),today.getFullYear());
+        return this.getLeadDashboards(user, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
     }
     async getDailyLeads(user, { id }) {
         var today = new Date();
-        return this.getLeadDashboards(user, id, today.getMonth(), today.getFullYear());
+        return this.getDailyLeadsNew(user,{team:null}, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
     }
     async getDailyLeadsNew(user,{team}, { id }, { month }, { year }) {
         let result = {};
@@ -209,7 +210,9 @@ class Lead {
             var firstDay = new Date(current_year, current_month, 1);
             var lastDay = new Date(current_year, current_month+1, 0);
             domain.push(["user_id", "=", parseInt(id)]);
+            if(team){
             domain.push(["team_id", "=", parseInt(team)]);
+            }
             domain.push(["create_date", ">", firstDay])
             domain.push(["create_date", "<=", lastDay])
             let self = this;
