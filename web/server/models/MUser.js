@@ -14,10 +14,6 @@ const muserSchema = new Schema({
         type: String,
         required: true,
     },
-    pin: {
-        type: String,
-        required: true,
-    },
     email: {
         type: String,
     },
@@ -47,14 +43,14 @@ const muserSchema = new Schema({
 class MUserClass {
     // User's public fields
     static publicFields() {
-        return ['id', 'displayName', 'mobile', 'isAdmin', 'pin'];
+        return ['id', 'displayName', 'mobile', 'isAdmin'];
     }
     static async list() {
         const users = await this.find({})
             .sort({ createdAt: -1 });
         return { users };
     }
-    static async add({ name, email, mobile, partner_id, pin, address, isAdmin }) {
+    static async add({ name, email, mobile, partner_id, address, isAdmin }) {
         console.log(mobile);
         console.log(name);
         if (mobile) {
@@ -67,7 +63,6 @@ class MUserClass {
                 email,
                 mobile,
                 partner_id,
-                pin,
                 address,
                 isAdmin
             });

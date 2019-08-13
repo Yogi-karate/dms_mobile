@@ -51,11 +51,11 @@ class Odoo_Server {
                 let localUser = await User.findOne({ mobile: mobile });
                 if (localUser === null && mobile != null && mobile !=false && mobile != '1111111111') {
                     console.log("This is new user");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234" });
+                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile});
                     self.users[mobile] = new_user;
                 }else if(localUser === null && mobile != null && mobile !=false && mobile === '1111111111'){
                     console.log("This is new admin");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234", isAdmin: isAdmin});
+                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, isAdmin: isAdmin});
                     self.users[mobile] = new_user;
                 }
                
@@ -86,13 +86,13 @@ class Odoo_Server {
                 let localUser = await User.findOne({ mobile: mobile });
                 if (localUser === null && mobile != null && mobile !=false && mobile != '1111111111') {
                     console.log("This is new user and localuser is",user);
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234" });
+                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile });
                     newUserArray.push(new_user);
                     self.users[mobile] = new_user;
                     console.log("The new_user are ",newUserArray);
                 }else if(localUser === null && mobile != null && mobile !=false && mobile === '1111111111'){
                     console.log("This is new admin");
-                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, pin: "1234", isAdmin: isAdmin});
+                    let new_user = await User.add({ name: name, partner_id: partner_id, email: user.login, mobile: mobile, isAdmin: isAdmin});
                     self.users[mobile] = new_user;
                 }
             } catch (error) {

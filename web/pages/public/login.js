@@ -68,7 +68,7 @@ class Login extends React.Component {
             }
         } catch (err) {
             console.log(err); // eslint-disable-line
-            this.setState({mobile:"",pin:"",error:"Invalid Username or Password"});
+            this.setState({mobile:"",error:"Invalid Username or Password"});
         }
         this.setState({isLoading:false});
     }
