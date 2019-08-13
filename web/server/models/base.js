@@ -16,7 +16,6 @@ class Base {
     async searchModels(user, { model, domain = [] }) {
         let server = odoo.getOdoo(user.email);
         let result = await server.search(model, { domain: domain }, true);
-        console.log("the result for searchModels", result)
         return result;
     }
     cleanModels(models) {
@@ -25,10 +24,8 @@ class Base {
                 let keys = Object.keys(model);
                 keys.forEach(key => {
                     if (Array.isArray(model[key]) && model[key].length == 0) {
-                        console.log("Key of array type", key, model[key]);
                         model[key] = [];
                     } else if (model[key] === false) {
-                        console.log("Key of false type", key, model[key]);
                         model[key] = "";
                     }
                 });
@@ -41,7 +38,6 @@ class Base {
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.team';
-            console.log("inside getUserRole user email is", user.email);
             let domain = [];
             domain.push(["manager_user_ids", "in", [server.uid]]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
@@ -54,7 +50,6 @@ class Base {
                     return { role: "Team_Lead", teams: result }
                 }
             }
-            console.log("The model and result is ", model + '', result);
             return { role: "user",teams:{records:[]}};
         } catch (err) {
             return { error: err.message || err.toString() };

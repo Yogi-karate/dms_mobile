@@ -7,7 +7,7 @@ const base = require('../models/base');
 const sale = require('../models/sale');
 
 router.use((req, res, next) => {
-  console.log("service api authenication ");
+  console.log("dashboard api authenication ");
   if (req.user) {
       next();
   } else {
@@ -33,13 +33,10 @@ router.use((req, res, next) => {
 router.get('/inventory', async (req, res) => {
   try {
     model = 'stock.picking';
-    console.log("Hello from inventory dashboard api");
-    //fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"]
     let domain = [];
     domain.push(["state", "=", 'confirmed']);
     domain.push(["picking_type_id.code", "=", 'outgoing']);
     let result = await base.searchModels(req.user, {model, domain: domain});
-    console.log(model + '', result);
     res.json({ "length": result});
   } catch (err) {
     console.log(err);
@@ -50,11 +47,9 @@ router.get('/inventory', async (req, res) => {
 router.get('/inventory/stock', async (req, res) => {
   try {
     model = 'stock.picking';
-    console.log("Hello from inventory stock api");
     let domain = [];
     let fields = ["name","origin","state"];
     let result = await sale.getInventoryStock(req.user, {model, domain: domain, fields: fields});
-    console.log(model + '', result);
     res.json({result});
   } catch (err) {
     console.log(err);
@@ -69,7 +64,6 @@ router.get('/invoice', async (req, res) => {
     let domain = [];
     domain.push(["invoice_status", "ilike", 'to invoice']);
     result = await base.searchModels(req.user, {model, domain: domain });
-    console.log("The searchModels return result ", model + '', result);
     res.json({ "length": result});
   } catch (err) {
     res.json({ error: err.message || err.toString() });

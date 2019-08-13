@@ -40,7 +40,6 @@ class Odoo_Server {
         let userList = result.records;
         let newUserArray = [];
         for (const user of userList) {
-            console.log("User: ", user);
             try {
                 let mobile = user.phone;
                 let name = user.partner_id[1];

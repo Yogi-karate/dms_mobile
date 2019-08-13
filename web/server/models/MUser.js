@@ -48,7 +48,7 @@ class MUserClass {
     static async list() {
         const users = await this.find({})
             .sort({ createdAt: -1 });
-        return { users };
+        return users ;
     }
     static async add({ name, email, mobile, partner_id, address, isAdmin }) {
         console.log(mobile);
@@ -73,8 +73,6 @@ class MUserClass {
         }
     };
     static async updateDeviceToken(user, { device_token }) {
-        console.log(user);
-        console.log(device_token);
         if (user) {
             user.device_token = device_token;
             return (await user.save());

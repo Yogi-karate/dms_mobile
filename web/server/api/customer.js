@@ -36,9 +36,7 @@ router.use((req, res, next) => {
 });
 router.get('/roles', async (req, res) => {
   try {
-    console.log(req.user);
     let result = await base.getUserRole(req.user);
-    console.log(result);
     res.json({result});
   } catch (err) {
   res.json({ error: err.message || err.toString() });
@@ -46,13 +44,9 @@ router.get('/roles', async (req, res) => {
 });
 router.post('/odoo/:model', async (req, res) => {
   try {
-    console.log(req.user);
     let server = odoo.getOdoo(req.user.email);
-    console.log("Server: ", server);
     model = req.params.model;
     let result = await server.create(model, req.body);
-    console.log(model, result);
-    console.log(model + '...', result[0]);
     res.json({ "id": result, "Message": "Success" });
   } catch (err) {
   res.json({ error: err.message || err.toString() });
@@ -60,13 +54,9 @@ router.post('/odoo/:model', async (req, res) => {
 });
 router.get('/odoo/:model', async (req, res) => {
   try {
-    console.log("user list >>>>", odoo.users);
     let server = odoo.getOdoo(req.user.email);
-    console.log("Server: ", server);
     model = req.params.model;
     let result = await server.search_read(model, { domain: [], fields: ["name", "id", "date_follow_up", "date_deadline", "partner_mobile", "mobile", "partner_name", "user_id", "team_id", "activity_state", "stage_id"], sort: "id desc" });
-    console.log(model + '', result);
-    console.log(model + '...', result[0]);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -89,8 +79,6 @@ router.post('/odoo/:model/:id', async (req, res) => {
     // Get a partner
     server.update(model, id, req.body, function (err, result) {
       if (err) { return console.log(err); }
-      console.log(model, result);
-      console.log(model, result[0]);
       let model_new = result[0];
       res.json({ "success": result });
     });
@@ -111,7 +99,6 @@ router.get('/search/products', async (req, res) => {
 });
 
 router.post('/search/colors', async (req, res) => {
-  console.log(req.user);
   try {
     let server = odoo.getOdoo(req.user.email);
     product_id = parseInt(req.body.product_id);
@@ -132,7 +119,6 @@ router.post('/search/colors', async (req, res) => {
   }
 });
 router.post('/search/variants', async (req, res) => {
-  console.log(req.user);
   try {
     let server = odoo.getOdoo(req.user.email);
     product_id = parseInt(req.body.product_id);
@@ -154,27 +140,21 @@ router.post('/search/variants', async (req, res) => {
   }
 });
 router.post('/search/variants_old', async (req, res) => {
-  console.log(req);
   try {
     let server = odoo.getOdoo(req.user.email);
     variant_ids = req.body.variant_ids;
     console.log(variant_ids);
     model = 'product.attribute.value';
     let result = await server.search_read(model, { domain: [["id", "in", variant_ids]], fields: ["id", "name"] });
-    console.log(model + '', result);
-    console.log(model + '...', result[0]);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
 router.post('/register_token', async (req, res) => {
-  console.log(req.body);
   try {
     let user = req.user;
-    console.log(user);
     let result = await User.updateDeviceToken(user,req.body);
-    console.log( user.name + '', result);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

@@ -22,7 +22,6 @@ router.use((req, res, next) => {
                 res.status(403).send({ "error": info.message });
                 return;
             }
-            console.log(user);
             req.user = user;
             next();
         })(req, res, next);
@@ -33,7 +32,6 @@ router.use((req, res, next) => {
 router.get('/dashboard', async (req, res) => {
     try {
         let result = await sale.getDashboardCounts(req.user);
-        console.log("Result ->" + '', result);
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });

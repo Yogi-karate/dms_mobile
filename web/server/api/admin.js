@@ -22,12 +22,10 @@ router.use((req, res, next) => {
               return;
           }
           if (info !== undefined) {
-              console.log(req);
               console.log(info.message);
               res.status(403).send({ "error": info.message });
               return;
           }
-          console.log(user);
           req.user = user;
           next();
       })(req, res, next);
@@ -38,12 +36,10 @@ router.get('/notifications', async (req, res) => {
   try {
     let result = {};
     let users = await User.list();
-    // console.log("users ",users);
     users.users.forEach(async function (user) {
       result[user.email] = await task.sendTaskNotification(req.user, user);
       console.log("Result ->" + '', result[user.email]);
     });
-    //  console.log("Result ->" + '', result);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -68,18 +64,6 @@ router.post('/sendapk', async (req, res) => {
   }
 });
 
-router.get('/loadNewUsers', async (req, res) => {
-  try {
-    let result = {};
-    let server = odoo.getOdoo(req.user.email);
-    console.log("The server is ----- ", server);
-    let users = await odoo.initNewUsers(server);
-    res.json({users});
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-
 router.get('/users', async (req, res) => {
   try {
     let action = req.query.action;
@@ -88,7 +72,7 @@ router.get('/users', async (req, res) => {
        new_users = await odoo.refreshUsers(odoo.getOdoo(req.user.email));
     }
     let users = await User.list();
-    res.json({new_user_count:new_users,users:users});
+    res.json({new_user_count:new_users,users});
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
