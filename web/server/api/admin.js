@@ -73,7 +73,7 @@ router.get('/loadNewUsers', async (req, res) => {
     let result = {};
     let server = odoo.getOdoo(req.user.email);
     console.log("The server is ----- ", server);
-    let users = await odoo.initDatabase(server);
+    let users = await odoo.initNewUsers(server);
     res.json({users});
   } catch (err) {
     res.json({ error: err.message || err.toString() });

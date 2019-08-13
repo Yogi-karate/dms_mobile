@@ -150,6 +150,7 @@ function auth_pass({ server }) {
           image: user.image,
           auth: true,
           role: user.role,
+          isAdmin: user.isAdmin,
           teams: user.teams,
           token,
           message: 'user found & logged in',

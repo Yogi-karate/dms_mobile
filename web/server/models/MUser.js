@@ -71,6 +71,7 @@ class MUserClass {
                 address,
                 isAdmin
             });
+            return newUser;
         } else {
             console.log("ERROR in request - no mobile");
             throw new Error('User cannot be created without mobile number');
