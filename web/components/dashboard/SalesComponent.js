@@ -19,7 +19,6 @@ class SalesCardComponent extends React.Component {
                 '#AFEEEE',
                 '#48D1CC',
                 '#00CED1',
-                '#1EFFFF'
             ],
             renderDropdown: false,
         };
@@ -34,8 +33,23 @@ class SalesCardComponent extends React.Component {
             let graphLabel = [];
             const salesArray = resp[0].result.map((sales) => {
                 //console.log("The sales are ",sales);
-                graphData.push(sales.state_count);
-                graphLabel.push(sales.state + " - " + sales.state_count);
+                switch (sales.state) {
+                    case "draft":
+                        graphData.push(sales.state_count);
+                        graphLabel.push("Quotations" + " - " + sales.state_count);
+                        break;
+                    case "sale":
+                        graphData.push(sales.state_count);
+                        graphLabel.push("Sale Orders" + " - " + sales.state_count);
+                        break;
+                    case "cancel":
+                        graphData.push(sales.state_count);
+                        graphLabel.push("cancel" + " - " + sales.state_count);
+                        break;
+                    default:
+                        break;
+                }
+                //graphLabel.push(sales.state + " - " + sales.state_count);
                 return [sales.state, sales.state_count]
             });
             console.log("The data sales", salesArray);
