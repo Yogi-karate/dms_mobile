@@ -79,4 +79,13 @@ router.get('/loadNewUsers', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+
+router.get('/users', async (req, res) => {
+  try {
+    let users = await User.list();
+    res.json(users);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
