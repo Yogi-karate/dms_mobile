@@ -61,7 +61,7 @@ router.get('/stageCount', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, stage: req.query.stage });
+    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -69,7 +69,7 @@ router.get('/search', async (req, res) => {
 });
 router.get('/activity/:id', async (req, res) => {
   try {
-    let result = await lead.getActivities(req.user, { id: req.params.id });
+    let result = await vehicleLead.getActivities(req.user, { id: req.params.id });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -78,7 +78,7 @@ router.get('/activity/:id', async (req, res) => {
 router.post('/activity/complete', async (req, res) => {
   try {
     let id = parseInt(req.body.id);
-    let result = await lead.setActivities(req.user, { id: id, feedback: req.body.feedback });
+    let result = await vehicleLead.setActivities(req.user, { id: id, feedback: req.body.feedback });
     res.json({ message: "success", id: result });
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -86,7 +86,7 @@ router.post('/activity/complete', async (req, res) => {
 });
 router.post('/activity/create', async (req, res) => {
   try {
-    let result = await lead.createActivity(req.user, req.body);
+    let result = await vehicleLead.createActivity(req.user, req.body);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

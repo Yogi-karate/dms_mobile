@@ -127,7 +127,7 @@ class VehicleLead {
             let server = odoo.getOdoo(user.email);
             let model = 'mail.activity';
             let domain = [];
-            domain.push(["res_model", "=", "crm.lead"]);
+            domain.push(["res_model", "=", "dms.vehicle.lead"]);
             domain.push(["res_id", "=", id]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
         } catch (err) {
