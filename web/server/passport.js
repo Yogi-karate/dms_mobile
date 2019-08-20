@@ -152,6 +152,7 @@ function auth_pass({ server }) {
           role: user.role,
           isAdmin: user.isAdmin,
           teams: user.teams,
+          module: "service_lead",
           token,
           message: 'user found & logged in',
         });
