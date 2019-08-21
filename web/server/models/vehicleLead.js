@@ -11,7 +11,7 @@ class VehicleLead {
             let states = ["overdue", "today", "planned"];
             let self = this;
             for (let i = 0; i < states.length; i++) {
-                let group = await server.read_group(model, { domain: this.getActivityDomain(states[i]), groupby: ["stage_id"] }, true);
+                let group = await server.search(model, { domain: this.getActivityDomain(states[i]) }, true);
                 result.push({ state: states[i], result: group });
             };
             return result;
