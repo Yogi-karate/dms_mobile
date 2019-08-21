@@ -92,6 +92,14 @@ router.post('/activity/create', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/serBookingCount', async (req, res) => {
+  try {
+    let result = await vehicleLead.serviceBookingCount(req.user);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
   try {
     let result = await lead.getLeadDashboards(req.user, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });

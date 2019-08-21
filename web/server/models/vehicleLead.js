@@ -20,6 +20,20 @@ class VehicleLead {
         }
 
     }
+    async serviceBookingCount(user) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'service.booking';
+            let self = this;
+            let count = await server.search(model, { domain: [] }, true);
+            result.push({ result: count });
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
     async getStageCounts(user) {
         let result = [];
         try {
@@ -112,7 +126,7 @@ class VehicleLead {
             } else {
                 throw new Error("Cannot create Activity");
             }
-            console.log("The model and reqqqqqq ",model , req);
+            console.log("The model and reqqqqqq ", model, req);
             let result = await server.create(model, req);
             console.log("The resultttttttttt is ", result);
             if (result == null) {
@@ -159,7 +173,7 @@ class VehicleLead {
             let current_month = parseInt(month);
             let fields = ["user_id", "user_id_count", "user_booked_id"];
             var firstDay = new Date(current_year, current_month, 1);
-            var lastDay = new Date(current_year, current_month+1, 0);
+            var lastDay = new Date(current_year, current_month + 1, 0);
             domain.push(["team_id", "=", parseInt(id)]);
             domain.push(["create_date", ">", firstDay]);
             domain.push(["create_date", "<=", lastDay]);
@@ -188,14 +202,14 @@ class VehicleLead {
     }
     async getLeadDashboard(user, { id }) {
         var today = new Date();
-        console.log(today.getMonth(),today.getFullYear());
-        return this.getLeadDashboards(user, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
+        console.log(today.getMonth(), today.getFullYear());
+        return this.getLeadDashboards(user, { id: id }, { month: today.getMonth() }, { year: today.getFullYear() });
     }
     async getDailyLeads(user, { id }) {
         var today = new Date();
-        return this.getDailyLeadsNew(user,{team:null}, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
+        return this.getDailyLeadsNew(user, { team: null }, { id: id }, { month: today.getMonth() }, { year: today.getFullYear() });
     }
-    async getDailyLeadsNew(user,{team}, { id }, { month }, { year }) {
+    async getDailyLeadsNew(user, { team }, { id }, { month }, { year }) {
         let result = {};
         try {
             let server = odoo.getOdoo(user.email);
@@ -207,10 +221,10 @@ class VehicleLead {
             let current_year = parseInt(year);
             let current_month = parseInt(month);
             var firstDay = new Date(current_year, current_month, 1);
-            var lastDay = new Date(current_year, current_month+1, 0);
+            var lastDay = new Date(current_year, current_month + 1, 0);
             domain.push(["user_id", "=", parseInt(id)]);
-            if(team){
-            domain.push(["team_id", "=", parseInt(team)]);
+            if (team) {
+                domain.push(["team_id", "=", parseInt(team)]);
             }
             domain.push(["create_date", ">", firstDay])
             domain.push(["create_date", "<=", lastDay])
