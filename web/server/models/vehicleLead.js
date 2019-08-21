@@ -34,6 +34,20 @@ class VehicleLead {
         }
 
     }
+    async serviceBookingDetails(user) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'service.booking';
+            let self = this;
+            let bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name","booking_type", "dop", "vehicle_model", "location_id","service_type", "user_id"], sort: "id desc" });
+            result.push({ result: bookingDetails });
+            return result;
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
     async getStageCounts(user) {
         let result = [];
         try {
@@ -126,9 +140,7 @@ class VehicleLead {
             } else {
                 throw new Error("Cannot create Activity");
             }
-            console.log("The model and reqqqqqq ", model, req);
             let result = await server.create(model, req);
-            console.log("The resultttttttttt is ", result);
             if (result == null) {
                 throw new Error("Cannot create Activity");
             }

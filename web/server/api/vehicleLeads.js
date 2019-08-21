@@ -100,6 +100,14 @@ router.get('/serviceBookingCount', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/serviceBookingDetails', async (req, res) => {
+  try {
+    let result = await vehicleLead.serviceBookingDetails(req.user);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
   try {
     let result = await lead.getLeadDashboards(req.user, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
@@ -118,7 +126,7 @@ router.get('/leadDashboard/:id', async (req, res) => {
 });
 router.get('/dailyLeadsNew/:team/:id/:month/:year', async (req, res) => {
   try {
-    let result = await lead.getDailyLeadsNew(req.user, { team: req.params.team},{ id: req.params.id }, { month: req.params.month }, { year: req.params.year });
+    let result = await lead.getDailyLeadsNew(req.user, { team: req.params.team }, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
