@@ -35,14 +35,13 @@ class VehicleLead {
 
     }
     async serviceBookingDetails(user) {
-        let result = [];
+        let bookingDetails = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'service.booking';
             let self = this;
-            let bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name","booking_type", "dop", "vehicle_model", "location_id","service_type", "user_id"], sort: "id desc" });
-            result.push({ result: bookingDetails });
-            return result;
+            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name","booking_type", "dop", "vehicle_model", "location_id","service_type", "user_id"], sort: "id desc" });
+            return { result : bookingDetails };
         } catch (err) {
             return { error: err.message || err.toString() };
         }
