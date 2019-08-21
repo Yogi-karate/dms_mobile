@@ -92,7 +92,7 @@ router.post('/activity/create', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.get('/serBookingCount', async (req, res) => {
+router.get('/serviceBookingCount', async (req, res) => {
   try {
     let result = await vehicleLead.serviceBookingCount(req.user);
     res.json(result);
