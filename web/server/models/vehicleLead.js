@@ -105,14 +105,16 @@ class VehicleLead {
             let ir_model = 'ir.model';
             let model = 'mail.activity';
             let domain = [];
-            domain.push(["model", "=", "crm.lead"]);
+            domain.push(["model", "=", "dms.vehicle.lead"]);
             let ir_models = await server.search_read(ir_model, { domain: domain, fields: ["name", "model", "id"] });
             if (ir_models.records.length > 0) {
                 req['res_model_id'] = ir_models.records[0].id;
             } else {
                 throw new Error("Cannot create Activity");
             }
+            console.log("The model and reqqqqqq ",model , req);
             let result = await server.create(model, req);
+            console.log("The resultttttttttt is ", result);
             if (result == null) {
                 throw new Error("Cannot create Activity");
             }
