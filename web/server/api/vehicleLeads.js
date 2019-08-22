@@ -33,26 +33,9 @@ router.use((req, res, next) => {
     })(req, res, next);
   }
 });
-
-router.get('/enquiry/:id', async (req, res) => {
-  try {
-    let result = await lead.getEnquiry(req.user, { id: req.params.id });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
 router.get('/dashboard', async (req, res) => {
   try {
-    let result = await vehicleLead.getDashboardCounts(req.user);
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/stageCount', async (req, res) => {
-  try {
-    let result = await lead.getStageCounts(req.user);
+    let result = await vehicleLead.getDashboardCounts(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -61,7 +44,7 @@ router.get('/stageCount', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state });
+    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType});
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -108,52 +91,5 @@ router.get('/serviceBookingDetails', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
-router.get('/leadDashboards/:id/:month/:year', async (req, res) => {
-  try {
-    let result = await lead.getLeadDashboards(req.user, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/leadDashboard/:id', async (req, res) => {
-  try {
-    let result = await lead.getLeadDashboard(req.user, { id: req.params.id });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/dailyLeadsNew/:team/:id/:month/:year', async (req, res) => {
-  try {
-    let result = await lead.getDailyLeadsNew(req.user, { team: req.params.team }, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/dailyLeads/:id', async (req, res) => {
-  try {
-    let result = await lead.getDailyLeads(req.user, { id: req.params.id });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/dailyBookedLeads/:id', async (req, res) => {
-  try {
-    let result = await lead.getDailyBookedLeads(req.user, { id: req.params.id });
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
-router.get('/paymentAccDetails', async (req, res) => {
-  try {
-    let result = await lead.getPaymentAccount(req.user);
-    res.json(result);
-  } catch (err) {
-    res.json({ error: err.message || err.toString() });
-  }
-});
+
 module.exports = router;
