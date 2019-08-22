@@ -41,19 +41,39 @@ class Base {
             let domain = [];
             domain.push(["manager_user_ids", "in", [server.uid]]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
-            if (result.length !=0) {
-                return { role: "Manager", teams: result }
+            if (result.length != 0) {
+                let moduleType = this.checkForTeamType(result.records);
+                console.log("The moduleType isss ",moduleType);
+                return { role: "Manager", teams: result , module: moduleType};
             } else {
-                domain = [["user_id", "=",server.uid]];
+                domain = [["user_id", "=", server.uid]];
                 result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
                 if (result.length != 0) {
-                    return { role: "Team_Lead", teams: result }
+                    let moduleType = this.checkForTeamType(result.records);
+                    return { role: "Team_Lead", teams: result , module: moduleType};
+                } else {
+                    domain = [["member_ids", "=", server.uid]];
+                    result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
+                    if (result.length != 0) {
+                        let moduleType = this.checkForTeamType(result.records);
+                        return { role: "user", teams: { records: [] }, module: moduleType};
+                    }
                 }
             }
-            return { role: "user",teams:{records:[]}};
         } catch (err) {
             return { error: err.message || err.toString() };
         }
     }
+
+    checkForTeamType(data) {
+        console.log("inside checkType ",data);
+        let modules = [];
+        data.forEach(record => {
+            if (!(modules.includes(record.team_type))) {
+                modules.push(record.team_type);
+            }
+        });
+        return modules;
+    };
 }
 module.exports = new Base();

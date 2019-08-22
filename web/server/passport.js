@@ -59,6 +59,7 @@ function auth_pass({ server }) {
               console.log("User role result", role_result);
               user.role = role_result.role;
               user.teams = role_result.teams;
+              user.module = role_result.module;
               return done(null, user);
             });
           });
@@ -135,30 +136,30 @@ function auth_pass({ server }) {
     (req, res, next) => {
       let user = req.user;
       const token = jwt.sign({ id: req.user.id }, jwtSecret.secret);
-        if (user.image == false) {
-          console.log("No User Avatar Found !!!!");
-          user.image = "";
-        }
-        /* firebase(user,{
-          title: 'Welcome to DMS',
-          message: 'Thanks for Logging In !!!!',
-          timestamp: '2019-05-27 8:15:01'
-      }); */
-        res.status(200).send({
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          auth: true,
-          role: user.role,
-          isAdmin: user.isAdmin,
-          teams: user.teams,
-          module: "service_lead",
-          token,
-          message: 'user found & logged in',
-        });
-        console.log("Successful Login");
+      if (user.image == false) {
+        console.log("No User Avatar Found !!!!");
+        user.image = "";
+      }
+      /* firebase(user,{
+        title: 'Welcome to DMS',
+        message: 'Thanks for Logging In !!!!',
+        timestamp: '2019-05-27 8:15:01'
+    }); */
+      res.status(200).send({
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        auth: true,
+        role: user.role,
+        module: user.module,
+        isAdmin: user.isAdmin,
+        teams: user.teams,
+        token,
+        message: 'user found & logged in',
+      });
+      console.log("Successful Login");
     });
- 
+
   server.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
