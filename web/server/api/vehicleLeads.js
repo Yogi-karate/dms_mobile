@@ -44,7 +44,7 @@ router.get('/dashboard', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType});
+    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -77,7 +77,7 @@ router.post('/activity/create', async (req, res) => {
 });
 router.get('/serviceBookingCount', async (req, res) => {
   try {
-    let result = await vehicleLead.serviceBookingCount(req.user);
+    let result = await vehicleLead.serviceBookingCount(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -85,7 +85,7 @@ router.get('/serviceBookingCount', async (req, res) => {
 });
 router.get('/serviceBookingDetails', async (req, res) => {
   try {
-    let result = await vehicleLead.serviceBookingDetails(req.user);
+    let result = await vehicleLead.serviceBookingDetails(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

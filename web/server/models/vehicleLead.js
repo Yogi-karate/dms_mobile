@@ -11,7 +11,7 @@ class VehicleLead {
             let states = ["overdue", "today", "planned"];
             let self = this;
             for (let i = 0; i < states.length; i++) {
-                let group = await server.search(model, { domain: this.getActivityDomain(states[i] , callType) }, true);
+                let group = await server.search(model, { domain: this.getActivityDomain(states[i], callType) }, true);
                 result.push({ state: states[i], result: group });
             };
             return result;
@@ -20,11 +20,16 @@ class VehicleLead {
         }
 
     }
-    async serviceBookingCount(user) {
+    async serviceBookingCount(user, { callType }) {
         let result = [];
         try {
             let server = odoo.getOdoo(user.email);
-            let model = 'service.booking';
+            let model = '';
+            if (callType === 'Service') {
+                model = 'service.booking';
+            } else {
+                model = 'insurance.booking';
+            }
             let self = this;
             let count = await server.search(model, { domain: [] }, true);
             result.push({ result: count });
@@ -34,20 +39,25 @@ class VehicleLead {
         }
 
     }
-    async serviceBookingDetails(user) {
+    async serviceBookingDetails(user, { callType }) {
         let bookingDetails = null;
         try {
             let server = odoo.getOdoo(user.email);
-            let model = 'service.booking';
+            let model = '';
+            if (callType === 'Service') {
+                model = 'service.booking';
+            } else {
+                model = 'insurance.booking';
+            }
             let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name","booking_type", "dop", "vehicle_model", "location_id","service_type", "user_id"], sort: "id desc" });
-            return { result : bookingDetails };
+            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
+            return { result: bookingDetails };
         } catch (err) {
             return { error: err.message || err.toString() };
         }
 
     }
-    
+
     getActivityDomain(state, callType) {
         let domain = [];
         var today = new Date().toISOString().slice(0, 10);
@@ -67,7 +77,7 @@ class VehicleLead {
         }
         return domain;
     };
-    async searchLeadsByState(user, { state, create_date, callType}) {
+    async searchLeadsByState(user, { state, create_date, callType }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
