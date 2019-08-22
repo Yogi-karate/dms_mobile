@@ -39,24 +39,30 @@ class Base {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.team';
             let domain = [];
-            domain.push(["manager_user_ids", "in", [server.uid]]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
-            if (result.length != 0) {
+            if (user.email === "admin") {
+                result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
                 let moduleType = this.checkForTeamType(result.records);
-                console.log("The moduleType isss ",moduleType);
-                return { role: "Manager", teams: result , module: moduleType};
+                return { role: "Admin", teams: result, module: moduleType };
             } else {
-                domain = [["user_id", "=", server.uid]];
+                domain.push(["manager_user_ids", "in", [server.uid]]);
                 result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
                 if (result.length != 0) {
                     let moduleType = this.checkForTeamType(result.records);
-                    return { role: "Team_Lead", teams: result , module: moduleType};
+                    console.log("The moduleType isss ", moduleType);
+                    return { role: "Manager", teams: result, module: moduleType };
                 } else {
-                    domain = [["member_ids", "=", server.uid]];
+                    domain = [["user_id", "=", server.uid]];
                     result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
                     if (result.length != 0) {
                         let moduleType = this.checkForTeamType(result.records);
-                        return { role: "user", teams: { records: [] }, module: moduleType};
+                        return { role: "Team_Lead", teams: result, module: moduleType };
+                    } else {
+                        domain = [["member_ids", "=", server.uid]];
+                        result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
+                        if (result.length != 0) {
+                            let moduleType = this.checkForTeamType(result.records);
+                            return { role: "user", teams: { records: [] }, module: moduleType };
+                        }
                     }
                 }
             }
@@ -66,7 +72,7 @@ class Base {
     }
 
     checkForTeamType(data) {
-        console.log("inside checkType ",data);
+        console.log("inside checkType ", data);
         let modules = [];
         data.forEach(record => {
             if (!(modules.includes(record.team_type))) {
