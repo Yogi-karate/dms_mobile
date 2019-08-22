@@ -46,11 +46,13 @@ class VehicleLead {
             let model = '';
             if (callType === 'Service') {
                 model = 'service.booking';
+                let self = this;
+                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });    
             } else {
                 model = 'insurance.booking';
-            }
-            let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
+                let self = this;
+                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no"], sort: "id desc" });    
+            } 
             return { result: bookingDetails };
         } catch (err) {
             return { error: err.message || err.toString() };
