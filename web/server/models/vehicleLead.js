@@ -91,7 +91,7 @@ class VehicleLead {
             if (state != null) {
                 domain = this.getActivityDomain(state, callType);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
