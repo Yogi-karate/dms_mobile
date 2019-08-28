@@ -51,7 +51,7 @@ class VehicleLead {
             } else {
                 model = 'insurance.booking';
                 let self = this;
-                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no","cur_final_premium","cur_ncb","cur_dip_or_comp","pick_up_address"], sort: "id desc" });    
+                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no","cur_final_premium","cur_ncb","cur_dip_or_comp","pick_up_address","rollover_company"], sort: "id desc" });    
             } 
             return { result: bookingDetails };
         } catch (err) {
