@@ -47,11 +47,11 @@ class VehicleLead {
             if (callType === 'Service') {
                 model = 'service.booking';
                 let self = this;
-                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });    
+                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" }); 
             } else {
                 model = 'insurance.booking';
                 let self = this;
-                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no"], sort: "id desc" });    
+                bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no","cur_final_premium","cur_ncb","cur_dip_or_comp","pick_up_address"], sort: "id desc" });    
             } 
             return { result: bookingDetails };
         } catch (err) {
@@ -91,7 +91,7 @@ class VehicleLead {
             if (state != null) {
                 domain = this.getActivityDomain(state, callType);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
