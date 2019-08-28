@@ -48,10 +48,12 @@ class VehicleLead {
                 model = 'service.booking';
                 let self = this;
                 bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" }); 
+                bookingDetails.records = base.cleanModels(bookingDetails.records);
             } else {
                 model = 'insurance.booking';
                 let self = this;
                 bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no","cur_final_premium","cur_ncb","cur_dip_or_comp","pick_up_address","rollover_company"], sort: "id desc" });    
+                bookingDetails.records = base.cleanModels(bookingDetails.records);
             } 
             return { result: bookingDetails };
         } catch (err) {
