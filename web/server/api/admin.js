@@ -7,7 +7,8 @@ const odoo = require('../odoo_server');
 const base = require('../models/base');
 const User = require('../models/MUser');
 const task = require('../models/tasks');
-const vehicleLead = require('../models/vehicleLead');
+const lead = require('../models/lead');
+const MsgLog = require('../models/MsgLog');
 
 const sms = require('../ext/sms');
 
@@ -82,19 +83,23 @@ router.get('/users', async (req, res) => {
 
 router.get('/sendSms', async (req, res) => {
   try {
-    let state = "overdue";
-    let callType = "Insurance";
-    let result = await vehicleLead.searchLeadsByState(req.user, { state: state, callType: callType });
+    let result = await lead.getLeadDetails(req.user, { callType: req.query.callType });
+    console.log("The result for sendSms is ", result);
     let message = {};
-    result.records.forEach(async function (record) {
-      let mobile = record.mobile;
-      if (mobile === "9849022722") {
-        let mobile = "7795659269";
-        console.log("The mobile isssss ", mobile);
-        let ret = await sms(mobile, "you have got the lead");
-        message[user.name] = "Sent Message to " + mobile + ret;
-      }
-    });
+    if (result.records != null) {
+      result.records.forEach(async function (record) {
+        let mobile = record.mobile;
+        if (mobile === "9849927027") {
+          let mobile = "7795659269";
+          console.log("The mobile isssss ", mobile);
+          let ret = await sms(mobile, "Dear customer your vehicle is due for service on date");
+          console.log("The ret is ",ret);
+          message = "Sent Message to " + mobile +" "+ret;
+          let NewMsgLog = { name: record.name, mobile: record.partner_name, date_deadline: record.date_deadline, call_type: record.call_type, message: message, response: ret }
+          let newUsers = await MsgLog.add(NewMsgLog);
+        }
+      });
+    }
     res.json(message);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

@@ -160,7 +160,7 @@ class Lead {
             let current_month = parseInt(month);
             let fields = ["user_id", "user_id_count", "user_booked_id"];
             var firstDay = new Date(current_year, current_month, 1);
-            var lastDay = new Date(current_year, current_month+1, 0);
+            var lastDay = new Date(current_year, current_month + 1, 0);
             domain.push(["team_id", "=", parseInt(id)]);
             domain.push(["create_date", ">", firstDay]);
             domain.push(["create_date", "<=", lastDay]);
@@ -189,14 +189,14 @@ class Lead {
     }
     async getLeadDashboard(user, { id }) {
         var today = new Date();
-        console.log(today.getMonth(),today.getFullYear());
-        return this.getLeadDashboards(user, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
+        console.log(today.getMonth(), today.getFullYear());
+        return this.getLeadDashboards(user, { id: id }, { month: today.getMonth() }, { year: today.getFullYear() });
     }
     async getDailyLeads(user, { id }) {
         var today = new Date();
-        return this.getDailyLeadsNew(user,{team:null}, {id:id}, {month:today.getMonth()}, {year:today.getFullYear()});
+        return this.getDailyLeadsNew(user, { team: null }, { id: id }, { month: today.getMonth() }, { year: today.getFullYear() });
     }
-    async getDailyLeadsNew(user,{team}, { id }, { month }, { year }) {
+    async getDailyLeadsNew(user, { team }, { id }, { month }, { year }) {
         let result = {};
         try {
             let server = odoo.getOdoo(user.email);
@@ -208,10 +208,10 @@ class Lead {
             let current_year = parseInt(year);
             let current_month = parseInt(month);
             var firstDay = new Date(current_year, current_month, 1);
-            var lastDay = new Date(current_year, current_month+1, 0);
+            var lastDay = new Date(current_year, current_month + 1, 0);
             domain.push(["user_id", "=", parseInt(id)]);
-            if(team){
-            domain.push(["team_id", "=", parseInt(team)]);
+            if (team) {
+                domain.push(["team_id", "=", parseInt(team)]);
             }
             domain.push(["create_date", ">", firstDay])
             domain.push(["create_date", "<=", lastDay])
@@ -276,6 +276,48 @@ class Lead {
         } catch (err) {
             return { error: err.message || err.toString() };
         }
+    }
+
+    async lostReasons(user) {
+        let result = [];
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'crm.lost.reason';
+            let domain = [];
+            let self = this;
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "type"] });
+            if (result == null) {
+                return [];
+            } else {
+                return result;
+            }
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+
+    }
+
+    async getLeadDetails(user, { callType }) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'dms.vehicle.lead';
+            let domain = [];
+            let today = new Date();
+            console.log("The todayyy is ", today);
+            var checkDay = new Date(2019, 7, 1);
+            console.log("The checkDay is ", checkDay);
+            domain.push(["create_date", ">=", checkDay]);
+            if (callType === 'Service') {
+                domain.push(["call_type", "=", "Service"]);
+            } else {
+                domain.push(["call_type", "=", "Insurance"]);
+            }
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "call_type"] });
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+        return result;
     }
 }
 

@@ -140,4 +140,12 @@ router.get('/paymentAccDetails', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/lostReasons', async (req, res) => {
+  try {
+    let result = await lead.lostReasons(req.user);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
