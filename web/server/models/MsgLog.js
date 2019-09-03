@@ -9,13 +9,7 @@ const msgLogSchema = new Schema({
     mobile: {
         type: String,
     },
-    date_deadline: {
-        type: Date,
-    },
-    partner_name: {
-        type: String,
-    },
-    call_type: {
+    sms_type: {
         type: String,
     },
     message: {
@@ -29,23 +23,21 @@ const msgLogSchema = new Schema({
 class MsgLogClass {
     // User's public fields
     static publicFields() {
-        return ['id', 'name', 'mobile', 'partner_name'];
+        return ['id', 'name', 'mobile'];
     }
     static async list() {
         const msgLogs = await this.find({})
             .sort({ createdAt: -1 });
         return msgLogs ;
     }
-    static async add({ name, mobile, date_deadline, partner_name, call_type, message, response }) {
+    static async add({ name, mobile, sms_type, message, response }) {
         if (mobile) {
             const msgLog = await this.findOne({ mobile });
             if (msgLog) return msgLog;
             const newMsgLog = await this.create({
                 name,
                 mobile,
-                date_deadline,
-                partner_name,
-                call_type,
+                sms_type,
                 message,
                 response
             });

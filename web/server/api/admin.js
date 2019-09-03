@@ -8,7 +8,9 @@ const base = require('../models/base');
 const User = require('../models/MUser');
 const task = require('../models/tasks');
 const lead = require('../models/lead');
+const vehicleLead = require('../models/vehicleLead');
 const MsgLog = require('../models/MsgLog');
+const JobLog = require('../models/JobLog');
 
 const sms = require('../ext/sms');
 
@@ -81,26 +83,75 @@ router.get('/users', async (req, res) => {
   }
 });
 
-router.get('/sendSms', async (req, res) => {
+router.get('/sendLeadSms', async (req, res) => {
   try {
     let result = await lead.getLeadDetails(req.user, { callType: req.query.callType });
-    console.log("The result for sendSms is ", result);
     let message = {};
-    if (result.records != null) {
+    let smsCount = 0;
+    let messageStatus = "";
+    if (result.records !== null) {
       result.records.forEach(async function (record) {
         let mobile = record.mobile;
         if (mobile === "9849927027") {
           let mobile = "7795659269";
           console.log("The mobile isssss ", mobile);
           let ret = await sms(mobile, "Dear customer your vehicle is due for service on date");
-          console.log("The ret is ",ret);
-          message = "Sent Message to " + mobile +" "+ret;
-          let NewMsgLog = { name: record.name, mobile: record.partner_name, date_deadline: record.date_deadline, call_type: record.call_type, message: message, response: ret }
-          let newUsers = await MsgLog.add(NewMsgLog);
+          console.log("The ret is ", ret);
+          message = "Sent Message to " + mobile + " " + ret;
+          if (ret === 'failure') {
+            messageStatus = 'failure';
+          }
+          let NewMsgLog = { name: record.partner_name, mobile: record.mobile, sms_type: 'leadSms', message: message, response: ret }
+          let newMsgLogs = await MsgLog.add(NewMsgLog);
         }
+        smsCount += 1;
       });
     }
-    res.json(message);
+    if (smsCount !== 0 && messageStatus !== "failure") {
+      let NewJobLog = { smsCount: smsCount, status: "completed" };
+      let newJobLogs = await JobLog.add(NewJobLog);
+    } else if (messageStatus === 'failure') {
+      let NewJobLog = { smsCount: smsCount, status: "failure" };
+      let newJobLogs = await JobLog.add(NewJobLog);
+    }
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/sendBookingSms', async (req, res) => {
+  try {
+    let message = {};
+    let smsCount = 0;
+    let messageStatus = "";
+    let result = await vehicleLead.serviceBookingDetails(req.user, { callType: req.query.callType });
+    if (result.result.records !== null) {
+      result.result.records.forEach(async function (record) {
+        let mobile = record.mobile;
+        if (mobile === '9866058087') {
+          mobile = '7795659269';
+          console.log("The mobile sendBookingSms ", mobile);
+          let messageResponse = await sms(mobile, "Your booking is confirmed, Thanks for booking with us!!!");
+          message = "Sent Message to " + mobile + " " + messageResponse;
+          if (messageResponse === 'failure') {
+            messageStatus = 'failure';
+          }
+          let NewMsgLog = { name: record.partner_name, mobile: record.mobile, sms_type: 'bookingSms', message: message, response: messageResponse }
+          let newMsgLogs = await MsgLog.add(NewMsgLog);
+          console.log("The newMsgLogs ",newMsgLogs);
+        }
+        smsCount += 1;
+      });
+    }
+    if (smsCount !== 0 && messageStatus !== "failure") {
+      let NewJobLog = { smsCount: smsCount, status: "completed" };
+      let newJobLogs = await JobLog.add(NewJobLog);
+    } else if (messageStatus === 'failure') {
+      let NewJobLog = { smsCount: smsCount, status: "failure" };
+      let newJobLogs = await JobLog.add(NewJobLog);
+    }
+    res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }

@@ -309,9 +309,9 @@ class Lead {
             console.log("The checkDay is ", checkDay);
             domain.push(["create_date", ">=", checkDay]);
             if (callType === 'Service') {
-                domain.push(["call_type", "=", "Service"]);
+                domain.push(["opportunity_type", "=", "Service"]);
             } else {
-                domain.push(["call_type", "=", "Insurance"]);
+                domain.push(["opportunity_type", "=", "Insurance"]);
             }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "call_type"] });
         } catch (err) {

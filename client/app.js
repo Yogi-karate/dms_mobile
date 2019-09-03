@@ -1,5 +1,7 @@
 const notificationApi = require('./notification');
-const smsApi = require('./sms');
+const serviceLeadSmsApi = require('./serviceLeadSms');
+const insuranceLeadSmsApi = require('./insuranceLeadSms');
 
 notificationApi();
-smsApi();
+serviceLeadSmsApi();
+insuranceLeadSmsApi();
