@@ -1,8 +1,8 @@
-const sendRequest = require('./http');
+const sendRequest = require('.//http');
 
 const BASE_PATH = '/api/v1/admin';
 
-const sms = async () => {
+exports.handler = async () => {
     try {
         let user = await sendRequest(`/login`, {
             method: 'POST',
@@ -13,7 +13,7 @@ const sms = async () => {
         });
         let token = user.token;
         console.log("Login Details",user);
-        let res = await sendRequest(`${BASE_PATH}/sendLeadSms?callType=Service`, {
+        let res = await sendRequest(`${BASE_PATH}/sendBookingSms?callType=Service`, {
             method: 'GET',
             headers:{
                 'Content-type': 'application/json; charset=UTF-8',
