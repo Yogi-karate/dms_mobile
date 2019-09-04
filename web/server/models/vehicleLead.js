@@ -68,15 +68,15 @@ class VehicleLead {
         switch (state) {
             case "planned":
                 domain.push(["activity_date_deadline", ">", today]);
-                domain.push(["call_type", "ilike", callType]);
+                domain.push(["opportunity_type", "ilike", callType]);
                 break;
             case "today":
                 domain.push(["activity_date_deadline", "=", today]);
-                domain.push(["call_type", "ilike", callType]);
+                domain.push(["opportunity_type", "ilike", callType]);
                 break;
             case "overdue":
                 domain.push(["activity_date_deadline", "<", today]);
-                domain.push(["call_type", "ilike", callType]);
+                domain.push(["opportunity_type", "ilike", callType]);
                 break;
         }
         return domain;

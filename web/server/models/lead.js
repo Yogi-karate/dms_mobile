@@ -278,13 +278,26 @@ class Lead {
         }
     }
 
-    async lostReasons(user) {
+    async lostReasons(user, { type }) {
         let result = [];
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lost.reason';
             let domain = [];
             let self = this;
+            switch (type) {
+                case 'Service':
+                    domain.push(["type", "=", "Service"]);
+                    break;
+                case 'Insurance':
+                    domain.push(["type", "=", "Insurance"]);
+                    break;
+                case 'Sales':
+                    domain.push(["type", "=", "Vehicle"]);
+                    break;
+                default:
+                    break;
+            }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "type"] });
             if (result == null) {
                 return [];
@@ -313,7 +326,7 @@ class Lead {
             } else {
                 domain.push(["opportunity_type", "=", "Insurance"]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "call_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }

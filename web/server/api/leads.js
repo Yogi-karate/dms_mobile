@@ -142,7 +142,7 @@ router.get('/paymentAccDetails', async (req, res) => {
 });
 router.get('/lostReasons', async (req, res) => {
   try {
-    let result = await lead.lostReasons(req.user);
+    let result = await lead.lostReasons(req.user, { type: req.query.type });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
