@@ -80,22 +80,19 @@ class Lead {
         }
         return result;
     }
-    async searchLeadsByState(user, { state, stage, create_date }) {
+    async searchLeadsByState(user, { state, stage }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.lead';
             let domain = [];
-            if (create_date != null) {
-                domain.push(["create_date", ">=", create_date]);
-            }
             if (state != null) {
                 domain = this.getActivityDomain(state);
             }
             if (stage != null || stage != undefined) {
                 domain.push(["stage_id.name", "ilike", stage]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"], sort: "id desc" });
         } catch (err) {
             return { error: err.message || err.toString() };
         }

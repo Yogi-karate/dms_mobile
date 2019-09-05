@@ -81,19 +81,16 @@ class VehicleLead {
         }
         return domain;
     };
-    async searchLeadsByState(user, { state, create_date, callType }) {
+    async searchLeadsByState(user, { state, callType }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            if (create_date != null) {
-                domain.push(["create_date", ">=", create_date]);
-            }
             if (state != null) {
                 domain = this.getActivityDomain(state, callType);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"], sort: "id asc"});
         } catch (err) {
             return { error: err.message || err.toString() };
         }
