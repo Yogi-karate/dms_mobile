@@ -92,7 +92,11 @@ class Lead {
             if (stage != null || stage != undefined) {
                 domain.push(["stage_id.name", "ilike", stage]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"], sort: "id desc" });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"]});
+            result.records.sort(function(record1, record2){
+                var dateA=new Date(record1.activity_date_deadline), dateB=new Date(record2.activity_date_deadline)
+                return dateA-dateB //sort by date ascending
+            });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
