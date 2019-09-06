@@ -41,7 +41,7 @@ class Odoo_Server {
         let newUserArray = [];
         for (const user of userList) {
             try {
-                let mobile = user.phone;
+                let mobile = user.phone != false ? user.phone.trim():null;
                 let name = user.partner_id[1];
                 let partner_id = user.partner_id[0];
                 let isAdmin = true;
