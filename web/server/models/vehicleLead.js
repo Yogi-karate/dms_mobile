@@ -69,14 +69,17 @@ class VehicleLead {
             case "planned":
                 domain.push(["activity_date_deadline", ">", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
+                domain.push(["type","=","lead"]);
                 break;
             case "today":
                 domain.push(["activity_date_deadline", "=", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
+                domain.push(["type","=","lead"]);
                 break;
             case "overdue":
                 domain.push(["activity_date_deadline", "<", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
+                domain.push(["type","=","lead"]);
                 break;
         }
         return domain;
@@ -90,7 +93,7 @@ class VehicleLead {
             if (state != null) {
                 domain = this.getActivityDomain(state, callType);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"]});
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id","call_state"]});
             result.records.sort(function(record1, record2){
                 var dateA=new Date(record1.activity_date_deadline), dateB=new Date(record2.activity_date_deadline)
                 return dateA-dateB //sort by date ascending
