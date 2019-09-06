@@ -11,8 +11,9 @@ const lead = require('../models/lead');
 const vehicleLead = require('../models/vehicleLead');
 const MsgLog = require('../models/MsgLog');
 const JobLog = require('../models/JobLog');
+const MsgTemplate = require('../models/MsgTemplate');
 
-const sms = require('../ext/sms');
+const sms = require('../ext/sms_new');
 
 
 router.use((req, res, next) => {
@@ -129,7 +130,7 @@ router.get('/sendBookingSms', async (req, res) => {
     if (result.result.records !== null) {
       result.result.records.forEach(async function (record) {
         let mobile = record.mobile;
-        if (mobile === '9866058087') {
+        if (mobile === '9885008580') {
           mobile = '7795659269';
           console.log("The mobile sendBookingSms ", mobile);
           let messageResponse = await sms(mobile, "Your booking is confirmed, Thanks for booking with us!!!");
@@ -139,7 +140,7 @@ router.get('/sendBookingSms', async (req, res) => {
           }
           let NewMsgLog = { name: record.partner_name, mobile: record.mobile, sms_type: 'bookingSms', message: message, response: messageResponse }
           let newMsgLogs = await MsgLog.add(NewMsgLog);
-          console.log("The newMsgLogs ",newMsgLogs);
+          console.log("The newMsgLogs ", newMsgLogs);
         }
         smsCount += 1;
       });
@@ -151,6 +152,15 @@ router.get('/sendBookingSms', async (req, res) => {
       let NewJobLog = { smsCount: smsCount, status: "failure" };
       let newJobLogs = await JobLog.add(NewJobLog);
     }
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/createMsgTemplate', async (req, res) => {
+  try {
+    let result = await MsgTemplate.add(req.user, req.body);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
