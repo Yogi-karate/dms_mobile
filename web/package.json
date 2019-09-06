@@ -27,6 +27,7 @@
     "googleapis": "34.0.0",
     "isomorphic-unfetch": "3.0.0",
     "jayson": "^3.0.1",
+    "loadtest": "^3.0.7",
     "lodash": "^4.17.15",
     "mongoose": "5.3.4",
     "mui-datatables": "^2.7.0",
