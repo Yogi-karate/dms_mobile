@@ -7,7 +7,8 @@ const odoo = require('../odoo_server');
 const base = require('../models/base');
 const User = require('../models/MUser');
 const task = require('../models/tasks');
-const lead = require('../models/lead');
+const MsgTemplate = require('../models/MsgTemplate');
+
 const sms = require('../ext/sms_new');
 
 router.use((req, res, next) => {
@@ -73,6 +74,33 @@ router.get('/users', async (req, res) => {
     }
     let users = await User.list();
     res.json({ new_user_count: new_users, users });
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/sendLeadSms', async (req, res) => {
+  try {
+    let result = await task.sendLeadSms(req.user, { callType: req.query.callType });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/sendBookingSms', async (req, res) => {
+  try {
+    let result = await task.sendBookingSms(req.user, { callType: req.query.callType });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/createMsgTemplate', async (req, res) => {
+  try {
+    let result = await MsgTemplate.add(req.user, req.body);
+    res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }

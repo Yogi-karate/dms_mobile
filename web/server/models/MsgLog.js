@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 
 const { Schema } = mongoose;
+
 const msgLogSchema = new Schema({
     name: {
         type: String,
@@ -13,10 +14,10 @@ const msgLogSchema = new Schema({
         type: String,
     },
     message: {
-        type: Object,
+        type: String,
     },
     response: {
-        type: String,
+        type: Object,
     }
 });
 
