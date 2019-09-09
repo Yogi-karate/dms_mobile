@@ -93,7 +93,11 @@ class VehicleLead {
             if (state != null) {
                 domain = this.getActivityDomain(state, callType);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id","call_state"]});
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "current_due_date", "mobile", "partner_name", "user_id", "team_id", "stage_id","call_state"]});
+            result.records.forEach(record => {
+                record.activity_date_deadline = record.current_due_date;
+                delete record.current_due_date;
+            });
             result.records.sort(function(record1, record2){
                 var dateA=new Date(record1.activity_date_deadline), dateB=new Date(record2.activity_date_deadline)
                 return dateA-dateB //sort by date ascending
