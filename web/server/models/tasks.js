@@ -155,8 +155,14 @@ class Task {
                             templateVars[prop] = '';
                         }
                     }
-                    if (mobile === '9848549939' || mobile === '9550594904') {
-                        mobile = '7795659269';
+                    if (mobile === '9848549939' || mobile === '9848328970' || mobile === '9949900996') {
+                        if(mobile === '9848549939'){
+                            mobile = '7795659269';
+                        }else if(mobile === '9848328970'){
+                            mobile = '9739792292';
+                        }else{
+                            mobile = '9901711551'
+                        }
                         console.log("The mobile sendBookingSms ", mobile);
                         let messageLog = await MsgTemplate.list(result.smsType);
                         let templateString = messageLog[0].value;
