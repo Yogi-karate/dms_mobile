@@ -5,6 +5,7 @@ const firebase = require('../ext/firebase');
 const lead = require('../models/lead');
 const MsgLog = require('../models/MsgLog');
 const JobLog = require('../models/JobLog');
+const JobMaster = require('../models/JobMaster');
 const MsgTemplate = require('../models/MsgTemplate');
 const sms = require('../ext/sms_new');
 
@@ -86,6 +87,8 @@ class Task {
             let failedSmsCount = 0;
             let smsCount = 0;
             let failedContacts = [];
+            let jobMasterMsgLogs = [];
+            let jobMasterJobLogs = [];
             let result = await lead.getBookingDetails(user, callType);
             if (result.records !== null) {
                 result.records.forEach(async function (record) {
@@ -117,15 +120,22 @@ class Task {
                         }
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, sms_type: result.smsType, message: message, response: messageResponse }
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
+                        jobMasterMsgLogs.push(newMsgLogs._id);
                         console.log("The newMsgLogs ", newMsgLogs);
                         if (smsCount === result.length) {
                             console.log("The countttt ", smsCount, result.length);
                             if (failedSmsCount === smsCount) {
                                 let NewJobLog = { successSmsCount: successSmsCount, failedSmsCount: failedSmsCount, status: 'failed', job_name: result.smsType, failedSms: failedContacts };
                                 let newJobLogs = await JobLog.add(NewJobLog);
+                                jobMasterJobLogs.push(newJobLogs._id);
+                                let NewJobMaster = { msgLogId: jobMasterMsgLogs, jobLogId: jobMasterJobLogs };
+                                let newJobMasters = await JobMaster.add(NewJobMaster);
                             } else {
                                 let NewJobLog = { successSmsCount: successSmsCount, failedSmsCount: failedSmsCount, status: 'completed', job_name: result.smsType, failedSms: failedContacts };
                                 let newJobLogs = await JobLog.add(NewJobLog);
+                                jobMasterJobLogs.push(newJobLogs._id);
+                                let NewJobMaster = { msgLogId: jobMasterMsgLogs, jobLogId: jobMasterJobLogs };
+                                let newJobMasters = await JobMaster.add(NewJobMaster);
                             }
                         }
                     }
@@ -144,6 +154,8 @@ class Task {
             let failedSmsCount = 0;
             let smsCount = 0;
             let failedContacts = [];
+            let jobMasterMsgLogs = [];
+            let jobMasterJobLogs = [];
             let result = await lead.getLeadDetails(user, callType);
             if (result.records !== null) {
                 result.records.forEach(async function (record) {
@@ -181,15 +193,22 @@ class Task {
                         }
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, sms_type: result.smsType, message: message, response: messageResponse };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
+                        jobMasterMsgLogs.push(newMsgLogs._id);
                         console.log("The newMsgLogs ", newMsgLogs);
                         if (smsCount === result.length) {
                             console.log("The countttt ", smsCount, result.length);
                             if (failedSmsCount === smsCount) {
                                 let NewJobLog = { successSmsCount: successSmsCount, failedSmsCount: failedSmsCount, status: 'failed', job_name: result.smsType, failedSms: failedContacts };
                                 let newJobLogs = await JobLog.add(NewJobLog);
+                                jobMasterJobLogs.push(newJobLogs._id);
+                                let NewJobMaster = { msgLogId: jobMasterMsgLogs, jobLogId: jobMasterJobLogs };
+                                let newJobMasters = await JobMaster.add(NewJobMaster);
                             } else {
                                 let NewJobLog = { successSmsCount: successSmsCount, failedSmsCount: failedSmsCount, status: 'completed', job_name: result.smsType, failedSms: failedContacts };
                                 let newJobLogs = await JobLog.add(NewJobLog);
+                                jobMasterJobLogs.push(newJobLogs._id);
+                                let NewJobMaster = { msgLogId: jobMasterMsgLogs, jobLogId: jobMasterJobLogs };
+                                let newJobMasters = await JobMaster.add(NewJobMaster);
                             }
                         }
                     }
@@ -223,14 +242,14 @@ function templateType(type, record) {
         case 'Service_Lead':
             return {
                 name: record.partner_name,
-                vehicleModel: record.name,
+                vehicleModel: record.name.split('-')[1],
                 registrationNum: record.registrationNum,
                 service: record.service
             }
         case 'Insurance_Lead':
             return {
                 name: record.partner_name,
-                vehicleModel: record.name,
+                vehicleModel: record.name.split('-')[1],
                 registrationNum: record.registrationNum,
                 service: record.service
             }

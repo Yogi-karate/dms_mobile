@@ -8,6 +8,7 @@ const base = require('../models/base');
 const User = require('../models/MUser');
 const task = require('../models/tasks');
 const MsgTemplate = require('../models/MsgTemplate');
+const JobMaster = require('../models/JobMaster');
 
 const sms = require('../ext/sms_new');
 
@@ -100,6 +101,15 @@ router.get('/sendBookingSms', async (req, res) => {
 router.post('/createMsgTemplate', async (req, res) => {
   try {
     let result = await MsgTemplate.add(req.user, req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/listJobMaster', async (req, res) => {
+  try {
+    let result = await JobMaster.list();
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
