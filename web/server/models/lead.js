@@ -310,63 +310,6 @@ class Lead {
         }
 
     }
-
-    async getLeadDetails(user, callType) {
-        let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'dms.vehicle.lead';
-            let domain = [];
-            let smsType = '';
-            let today = new Date();
-            console.log("The todayyy is ", today);
-            var checkDay = new Date(2019, 7, 1);
-            console.log("The checkDay is ", checkDay);
-            domain.push(["create_date", ">=", checkDay]);
-            if (callType === 'Service') {
-                domain.push(["opportunity_type", "=", "Service"]);
-                domain.push(["type", "=", "lead"]);
-                smsType = 'Service_Lead';
-            } else {
-                domain.push(["opportunity_type", "=", "Insurance"]);
-                domain.push(["type", "=", "lead"]);
-                smsType = 'Insurance_Lead';
-            }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type"] });
-            result.smsType = smsType;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
-        return result;
-    }
-
-    /*method to get serviceBookingDetails for insurance and service and send sms*/
-    async getBookingDetails(user, callType) {
-        let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = '';
-            let smsType = '';
-            if (callType === 'Service') {
-                model = 'service.booking';
-                let self = this;
-                result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
-                result.records = base.cleanModels(result.records);
-                smsType = "Service_Booking";
-            } else {
-                model = 'insurance.booking';
-                let self = this;
-                result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no", "cur_final_premium", "cur_ncb", "cur_dip_or_comp", "pick_up_address", "rollover_company"], sort: "id desc" });
-                result.records = base.cleanModels(result.records);
-                smsType = "Insurance_Booking";
-            }
-            result.smsType = smsType;
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
-
-    }
 }
 
 module.exports = new Lead();

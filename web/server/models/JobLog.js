@@ -7,44 +7,52 @@ const jobLogSchema = new Schema({
     createdAt: {
         type: Date,
     },
-    successSmsCount: {
+    successCount: {
         type: Number,
+        default: 0,
     },
-    failedSmsCount: {
+    failedCount: {
         type: Number,
+        default: 0,
     },
     status: {
         type: String,
+        default: 'Pending',
     },
-    job_name: {
+    name: {
         type: String,
     },
-    failedSms: {
-        type: Array,
-    }
+    jobMaster: {
+        type: Schema.ObjectId, ref: 'JobMaster',
+    },
 });
 
 class JobLogClass {
     // User's public fields
     static publicFields() {
-        return ['id', 'createdAt', 'successSmsCount', 'status'];
+        return ['id', 'createdAt', 'successCount', 'status'];
     }
     static async list() {
         const jobLogs = await this.find({})
             .sort({ createdAt: -1 });
         return jobLogs;
     }
-    static async add({ successSmsCount, failedSmsCount, status, job_name, failedSms }) {
+    static async add({ successCount, failedCount, status, name, jobMaster }) {
         const newJobLog = await this.create({
             createdAt: new Date(),
-            successSmsCount,
-            failedSmsCount,
+            successCount,
+            failedCount,
             status,
-            job_name,
-            failedSms
+            name,
+            jobMaster
         });
         return newJobLog;
     };
+    static async update(id, req) {
+        const updJobLog = await this.findByIdAndUpdate(id, { $set: req }, { new: true});
+        console.log(updJobLog);
+        return updJobLog;
+    }
 }
 jobLogSchema.loadClass(JobLogClass);
 const JobLog = mongoose.model('JobLog', jobLogSchema);

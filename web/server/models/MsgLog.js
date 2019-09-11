@@ -10,7 +10,7 @@ const msgLogSchema = new Schema({
     mobile: {
         type: String,
     },
-    sms_type: {
+    templateName: {
         type: String,
     },
     message: {
@@ -18,6 +18,9 @@ const msgLogSchema = new Schema({
     },
     response: {
         type: Object,
+    },
+    jobLog: {
+        type: Schema.ObjectId, ref: 'JobLog'
     }
 });
 
@@ -29,24 +32,18 @@ class MsgLogClass {
     static async list() {
         const msgLogs = await this.find({})
             .sort({ createdAt: -1 });
-        return msgLogs ;
+        return msgLogs;
     }
-    static async add({ name, mobile, sms_type, message, response }) {
-        if (mobile) {
-            const msgLog = await this.findOne({ mobile });
-            if (msgLog) return msgLog;
-            const newMsgLog = await this.create({
-                name,
-                mobile,
-                sms_type,
-                message,
-                response
-            });
-            return newMsgLog;
-        } else {
-            console.log("ERROR in request - no MsgLog");
-            throw new Error('MsgLog cannot be created');
-        }
+    static async add({ name, mobile, templateName, message, response, jobLog }) {
+        const newMsgLog = await this.create({
+            name,
+            mobile,
+            templateName,
+            message,
+            response,
+            jobLog
+        });
+        return newMsgLog;
     };
 }
 msgLogSchema.loadClass(MsgLogClass);

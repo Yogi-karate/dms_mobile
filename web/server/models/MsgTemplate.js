@@ -3,8 +3,9 @@ const _ = require('lodash');
 
 const { Schema } = mongoose;
 const msgTemplateSchema = new Schema({
-    type: {
+    name: {
         type: String,
+        unique: true,
     },
     value: {
         type: String,
@@ -18,20 +19,20 @@ const msgTemplateSchema = new Schema({
 class msgTemplateClass {
     // User's public fields
     static publicFields() {
-        return ['id', 'type', 'value'];
+        return ['id', 'name', 'value'];
     }
-    static async list(type) {
-        const msgTemplates = await this.find({'type':type})
+    static async list(name) {
+        const msgTemplates = await this.find({'name':name})
             .sort({ createdAt: -1 });
         return msgTemplates ;
     }
-    static async add(user,{ type, value }) {
-        console.log("The values are ",type , value);
-        if (type) {
-            const msgTemplate = await this.findOne({ type });
+    static async add(user,{ name, value }) {
+        console.log("The values are ",name , value);
+        if (name) {
+            const msgTemplate = await this.findOne({ name });
             if (msgTemplate) return msgTemplate;
             const newMsgTemplate = await this.create({
-                type,
+                name,
                 value,
             });
             return newMsgTemplate;

@@ -3,16 +3,22 @@ const _ = require('lodash');
 
 const { Schema } = mongoose;
 
+const MsgTemplate = require('./MsgTemplate');
+
 const jobLMasterSchema = new Schema({
     createdAt: {
         type: Date,
     },
-    msgLogId: [{
-        type: Schema.ObjectId, ref: 'MsgLog'
-    }],
-    jobLogId: [{
-        type: Schema.ObjectId, ref: 'JobLog'
-    }],
+    name: {
+        type: String,
+        unique: true,
+    },
+    msgTemplate: {
+        type: Schema.ObjectId, ref: 'MsgTemplate'
+    },
+    action: {
+        type: String,
+    },
     active: {
         type: Boolean,
         default: true,
@@ -22,20 +28,21 @@ const jobLMasterSchema = new Schema({
 class JobMasterClass {
     // User's public fields
     static publicFields() {
-        return ['id', 'msgLogId', 'jobLogId'];
+        return ['id', 'name', 'msgTemplate'];
     }
-    static async list() {
-        const populateMUserVehicle = [{ path: "msgLogId" }, { path: "jobLogId" }];
-        const jobMasters = await this.find({})
-            .populate(populateMUserVehicle)
+    static async list(name) {
+        const populateJobMaster = [{ path: "msgTemplate" }];
+        const jobMasters = await this.find({'name': name})
+            .populate(populateJobMaster)
             .sort({ createdAt: -1 });
         return jobMasters;
     }
-    static async add({ msgLogId, jobLogId }) {
+    static async add(user,{ name, msgTemplate, action }) {
         const newJobMaster = await this.create({
             createdAt: new Date(),
-            msgLogId,
-            jobLogId
+            name,
+            msgTemplate,
+            action
         });
         return newJobMaster;
     };
