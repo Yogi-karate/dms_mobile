@@ -23,4 +23,13 @@ router.get('/appVersion', async (req, res) => {
   }
 });
 
+router.post('/createAppVersion', async (req, res) => {
+  try {
+    let result = await appVersion.add(req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;
