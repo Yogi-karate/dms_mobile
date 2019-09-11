@@ -14,9 +14,9 @@ router.get('/send', async (req, res) => {
   }
 });
 
-router.post('/appVersion', async (req, res) => {
+router.get('/appVersion', async (req, res) => {
   try {
-    let result = await appVersion.add(req.body);
+    let [result] = await appVersion.list();
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
