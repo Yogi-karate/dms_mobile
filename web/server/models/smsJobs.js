@@ -17,15 +17,13 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            let smsType = '';
-            let today = new Date();
+            let date = new Date();
+            let today = date.toISOString().split('T')[0];
             console.log("The todayyy is ", today);
-            var checkDay = new Date(2019, 7, 1);
-            console.log("The checkDay is ", checkDay);
-            domain.push(["create_date", ">=", checkDay]);
+            domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -39,15 +37,13 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            let smsType = '';
-            let today = new Date();
+            let date = new Date();
+            let today = date.toISOString().split('T')[0];
             console.log("The todayyy is ", today);
-            var checkDay = new Date(2019, 7, 1);
-            console.log("The checkDay is ", checkDay);
-            domain.push(["create_date", ">=", checkDay]);
+            domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -78,7 +74,7 @@ class Jobs {
             let model = 'insurance.booking';
             let smsType = '';
             let self = this;
-            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no", "cur_final_premium", "cur_ncb", "cur_dip_or_comp", "pick_up_address", "rollover_company"], sort: "id desc" });
+            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "pick_up_address", "vehicle_model", "dop"], sort: "id desc" });
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
@@ -89,50 +85,49 @@ class Jobs {
     async leadBookingSms(user, { callType }) {
         try {
             let smsCount = 0;
-            let message = '';
             let successSmsCount = 0;
             let failedSmsCount = 0;
             let jobMaster = await JobMaster.list(callType);
-            console.log("First Fetched jobMaster ", jobMaster);
             let NewJobLog = { name: callType, jobMaster: jobMaster[0]._id };
             let newJobLogs = await JobLog.add(NewJobLog);
-            console.log("Second Created jobLog ", newJobLogs);
             let templateString = jobMaster[0].msgTemplate.value;
-            console.log("Third fetched msgTemplate ", templateString);
             let result = await this[`execute${jobMaster[0].action}`](user);
-            console.log("Fourth fetched result to loop over ", result);
             if (result.records !== null) {
                 result.records.forEach(async function (record) {
+                    let message = '';
                     smsCount++;
-                    let mobile = record.mobile;
+                    let mobile = record.mobile.trim().substring(0, 10);
                     let templateVars = templateType(callType, record);
                     for (var prop in templateVars) {
                         if (templateVars[prop] === undefined) {
                             templateVars[prop] = '';
                         }
                     }
-                    if (mobile === '9885008580' || mobile === '9701688777' || mobile === '9949512007') {
-                        mobile = '7795659269';
-                        console.log("The mobile sendBookingSms ", mobile);
+                    if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile) && mobile === '9849448180')) {
+                        mobile = '9840021822';
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
                         message = messageTemplate(templateString, templateVars);
-                        console.log("The message is ", message);
-                        let messageResponse = await sms("", message);
-                        console.log("The messageLogs are ", messageResponse);
+                        let messageResponse = await sms(mobile, message);
+                        let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
+                        let newMsgLogs = await MsgLog.add(NewMsgLog);
                         if (messageResponse.status === 'success') {
                             successSmsCount++;
                         } else {
                             failedSmsCount++;
                         }
+                        if (smsCount === result.length) {
+                            let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
+                        }
+                    } else {
+                        failedSmsCount++;
+                        let message = "Name/vehicleModel/Mobile is empty";
+                        let messageResponse = { status: 'error', message: 'Enter Mobile No' };
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
-                        console.log("fifth created msgLog ", newMsgLogs);
                         if (smsCount === result.length) {
-                            console.log("The countttt ", smsCount, result.length);
                             let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
-                            console.log("The final updated joblog is ", jobUpdate);
                         }
                     }
                 });
@@ -155,26 +150,25 @@ function templateType(type, record) {
                 time: record.dop
             };
         case 'Insurance_Booking':
-            console.log("insideeeee service");
             return {
                 name: record.partner_name,
                 vehicleModel: record.vehicle_model,
                 registrationNum: record.registrationNum,
                 address: record.pick_up_address,
+                time: record.dop
             };
         case 'Service_Lead':
             return {
                 name: record.partner_name,
                 vehicleModel: record.name.split('-')[1],
                 registrationNum: record.registrationNum,
-                service: record.service
+                service: record.service_type
             }
         case 'Insurance_Lead':
             return {
                 name: record.partner_name,
                 vehicleModel: record.name.split('-')[1],
                 registrationNum: record.registrationNum,
-                service: record.service
             }
         default:
             return {

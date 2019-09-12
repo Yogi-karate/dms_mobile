@@ -9,8 +9,7 @@ const User = require('../models/MUser');
 const task = require('../models/tasks');
 const MsgTemplate = require('../models/MsgTemplate');
 const JobMaster = require('../models/JobMaster');
-const jobs = require('../models/jobs');
-
+const smsJobs = require('../models/smsJobs');
 const sms = require('../ext/sms_new');
 
 router.use((req, res, next) => {
@@ -83,7 +82,7 @@ router.get('/users', async (req, res) => {
 
 router.get('/sendServiceLeadSms', async (req, res) => {
   try {
-    let result = await jobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -92,7 +91,7 @@ router.get('/sendServiceLeadSms', async (req, res) => {
 
 router.get('/sendInsuranceLeadSms', async (req, res) => {
   try {
-    let result = await jobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -101,7 +100,7 @@ router.get('/sendInsuranceLeadSms', async (req, res) => {
 
 router.get('/sendServiceBookingSms', async (req, res) => {
   try {
-    let result = await jobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -110,7 +109,7 @@ router.get('/sendServiceBookingSms', async (req, res) => {
 
 router.get('/sendInsuranceBookingSms', async (req, res) => {
   try {
-    let result = await jobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
