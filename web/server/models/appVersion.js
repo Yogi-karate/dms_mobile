@@ -19,6 +19,9 @@ const appVersionSchema = new Schema({
     url: {
         type: String,
     },
+    description: {
+        type: String,
+    }
 });
 
 class AppVersionClass {
@@ -31,13 +34,14 @@ class AppVersionClass {
             .sort({ createdAt: -1 });
         return appVersion ;
     }
-    static async add({ versionCode, cancellable, versionName, url}) {
+    static async add({ versionCode, cancellable, versionName, url, description}) {
             const newAppVersion = await this.create({
                 createdAt : new Date(),
                 versionCode, 
                 cancellable, 
                 versionName, 
-                url
+                url,
+                description
             });
             return newAppVersion;
     };

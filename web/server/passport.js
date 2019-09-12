@@ -60,6 +60,7 @@ function auth_pass({ server }) {
               user.role = role_result.role;
               user.teams = role_result.teams;
               user.module = role_result.module;
+              user.uid = oserver.uid;
               return done(null, user);
             });
           });
@@ -148,6 +149,7 @@ function auth_pass({ server }) {
       res.status(200).send({
         name: user.name,
         email: user.email,
+        userId: user.uid,
         image: user.image,
         auth: true,
         role: user.role,
