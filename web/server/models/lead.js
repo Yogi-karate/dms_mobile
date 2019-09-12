@@ -80,7 +80,7 @@ class Lead {
         }
         return result;
     }
-    async searchLeadsByState(user, { state, stage }) {
+    async searchLeadsByState(user, { state, stage, userId}) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
@@ -92,10 +92,13 @@ class Lead {
             if (stage != null || stage != undefined) {
                 domain.push(["stage_id.name", "ilike", stage]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"]});
-            result.records.sort(function(record1, record2){
-                var dateA=new Date(record1.activity_date_deadline), dateB=new Date(record2.activity_date_deadline)
-                return dateA-dateB //sort by date ascending
+            if (userId != null && !isNaN(userId) && userId != '') {
+                domain.push(["user_id", "=", parseInt(userId)]);
+            }
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result.records.sort(function (record1, record2) {
+                var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
+                return dateA - dateB //sort by date ascending
             });
         } catch (err) {
             return { error: err.message || err.toString() };

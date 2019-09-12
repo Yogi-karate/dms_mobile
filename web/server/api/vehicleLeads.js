@@ -44,7 +44,7 @@ router.get('/dashboard', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType });
+    let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType, userId: req.query.userId });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
