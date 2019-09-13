@@ -61,7 +61,7 @@ router.get('/stageCount', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    let result = await lead.searchLeadsByState(req.user, { state: req.query.state, stage: req.query.stage });
+    let result = await lead.searchLeadsByState(req.user, { state: req.query.state, stage: req.query.stage, userId: req.query.userId });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -110,7 +110,7 @@ router.get('/leadDashboard/:id', async (req, res) => {
 });
 router.get('/dailyLeadsNew/:team/:id/:month/:year', async (req, res) => {
   try {
-    let result = await lead.getDailyLeadsNew(req.user, { team: req.params.team},{ id: req.params.id }, { month: req.params.month }, { year: req.params.year });
+    let result = await lead.getDailyLeadsNew(req.user, { team: req.params.team }, { id: req.params.id }, { month: req.params.month }, { year: req.params.year });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

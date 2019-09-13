@@ -5,20 +5,15 @@ const base = require('./base');
 class Lead {
     async getDashboardCounts(user) {
         let result = [];
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'crm.lead';
-            let states = ["overdue", "today", "planned"];
-            let self = this;
-            for (let i = 0; i < states.length; i++) {
-                let group = await server.read_group(model, { domain: this.getActivityDomain(states[i]), groupby: ["stage_id"] }, true);
-                result.push({ state: states[i], result: group });
-            };
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
-
+        let server = odoo.getOdoo(user.email);
+        let model = 'crm.lead';
+        let states = ["overdue", "today", "planned"];
+        let self = this;
+        for (let i = 0; i < states.length; i++) {
+            let group = await server.read_group(model, { domain: this.getActivityDomain(states[i]), groupby: ["stage_id"] }, true);
+            result.push({ state: states[i], result: group });
+        };
+        return result;
     }
     async getStageCounts(user) {
         let result = [];
@@ -80,7 +75,7 @@ class Lead {
         }
         return result;
     }
-    async searchLeadsByState(user, { state, stage }) {
+    async searchLeadsByState(user, { state, stage, userId }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
@@ -92,11 +87,15 @@ class Lead {
             if (stage != null || stage != undefined) {
                 domain.push(["stage_id.name", "ilike", stage]);
             }
+            if (userId != null && !isNaN(userId) && userId != '') {
+                domain.push(["user_id", "=", parseInt(userId)]);
+            }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
             result.records.sort(function (record1, record2) {
                 var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
                 return dateA - dateB //sort by date ascending
             });
+            result.records = base.cleanModels(result.records);
         } catch (err) {
             return { error: err.message || err.toString() };
         }
