@@ -17,14 +17,15 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            let date = new Date();
-            let today = date.toISOString().split('T')[0];
+            let date = new Date('2019', '8', '6');
+            let today = date.toISOString().slice(0, 10);
             console.log("The todayyy is ", today);
-            domain.push(["create_date", ">", "today"]);
+            // domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"], limit: 10 });
         } catch (err) {
+            console.log("Error in service leads", err.stack);
             return { error: err.message || err.toString() };
         }
         return result;
@@ -40,10 +41,10 @@ class Jobs {
             let date = new Date();
             let today = date.toISOString().split('T')[0];
             console.log("The todayyy is ", today);
-            domain.push(["create_date", ">", "today"]);
+           // domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"],limit:10 });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -62,6 +63,7 @@ class Jobs {
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
+            console.log(err.stack);
             return { error: err.message || err.toString() };
         }
     }
@@ -92,8 +94,9 @@ class Jobs {
             let newJobLogs = await JobLog.add(NewJobLog);
             let templateString = jobMaster[0].msgTemplate.value;
             let result = await this[`execute${jobMaster[0].action}`](user);
-            if (result.records !== null) {
-                result.records.forEach(async function (record) {
+            if (result && result.records) {
+                for (let i = 0; i < result.records.length; i++) {
+                    let record = result.records[i];
                     let message = '';
                     smsCount++;
                     let mobile = record.mobile.trim().substring(0, 10);
@@ -103,13 +106,15 @@ class Jobs {
                             templateVars[prop] = '';
                         }
                     }
-                    if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile) && mobile === '9849448180')) {
+                    console.log("the count is ", smsCount);
+                    if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile))) {
                         mobile = '9840021822';
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
                         message = messageTemplate(templateString, templateVars);
                         let messageResponse = await sms(mobile, message);
+                        console.log("the count after is ", smsCount);
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
                         if (messageResponse.status === 'success') {
@@ -117,23 +122,26 @@ class Jobs {
                         } else {
                             failedSmsCount++;
                         }
-                        if (smsCount === result.length) {
-                            let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
-                        }
                     } else {
                         failedSmsCount++;
                         let message = "Name/vehicleModel/Mobile is empty";
-                        let messageResponse = { status: 'error', message: 'Enter Mobile No' };
+                        let messageResponse = { status: 'error', message: record };
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
-                        if (smsCount === result.length) {
-                            let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
-                        }
                     }
-                });
+                }
+                if (failedSmsCount > 0) {
+                    let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
+                } else {
+                    let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
+                }
+                return result;
+            } else {
+                throw new Error(" No Records to process");
             }
-            return result;
+
         } catch (err) {
+            console.log(err.stack);
             return ({ error: err.message || err.toString() });
         }
     }
