@@ -105,6 +105,7 @@ class VehicleLead {
                 var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
                 return dateA - dateB //sort by date ascending
             });
+            result.records = base.cleanModels(result.records);
         } catch (err) {
             return { error: err.message || err.toString() };
         }
