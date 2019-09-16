@@ -21,7 +21,7 @@ class msgTemplateClass {
     static publicFields() {
         return ['id', 'name', 'value'];
     }
-    static async list(name) {
+    static async list({name}) {
         const msgTemplates = await this.find({'name':name})
             .sort({ createdAt: -1 });
         return msgTemplates ;

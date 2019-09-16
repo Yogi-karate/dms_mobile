@@ -48,8 +48,15 @@ class MUserClass {
     static async list() {
         const users = await this.find({})
             .sort({ createdAt: -1 });
-        return users ;
+        return users;
     }
+
+    static async listByAdmin() {
+        const adminUsers = await this.find({"isAdmin": true})
+            .sort({ createdAt: -1 });
+        return adminUsers;
+    }
+
     static async add({ name, email, mobile, partner_id, address, isAdmin }) {
         console.log(mobile);
         console.log(name);

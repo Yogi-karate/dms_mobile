@@ -134,4 +134,22 @@ router.post('/createJobMaster', async (req, res) => {
   }
 });
 
+router.get('/listAdminUsers', async (req, res) => {
+  try {
+    let result = await User.listByAdmin();
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/listMsgTemplates/:name', async (req, res) => {
+  try {
+    let result = await MsgTemplate.list({ name: req.params.name });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;

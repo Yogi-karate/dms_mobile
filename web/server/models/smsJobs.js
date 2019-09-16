@@ -7,6 +7,7 @@ const JobLog = require('../models/JobLog');
 const JobMaster = require('../models/JobMaster');
 const MsgTemplate = require('../models/MsgTemplate');
 const sms = require('../ext/sms_new');
+const muser = require('../models/MUser');
 
 class Jobs {
 
@@ -17,10 +18,11 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            let date = new Date('2019', '8', '6');
+            //let date = new Date('2019', '8', '6');
+            let date = new Date();
             let today = date.toISOString().slice(0, 10);
             console.log("The todayyy is ", today);
-            // domain.push(["create_date", ">", today]);
+            domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"], limit: 10 });
@@ -39,12 +41,12 @@ class Jobs {
             let model = 'dms.vehicle.lead';
             let domain = [];
             let date = new Date();
-            let today = date.toISOString().split('T')[0];
+            let today = date.toISOString().slice(0, 10);
             console.log("The todayyy is ", today);
-           // domain.push(["create_date", ">", "today"]);
+            domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"],limit:10 });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"], limit: 10 });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -59,7 +61,7 @@ class Jobs {
             let model = 'service.booking';;
             let smsType = '';
             let self = this;
-            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "pick_up_address", "service_type", "user_id"], sort: "id desc", limit:10});
+            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "pick_up_address", "service_type", "user_id"], sort: "id desc", limit: 10 });
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
@@ -76,12 +78,31 @@ class Jobs {
             let model = 'insurance.booking';
             let smsType = '';
             let self = this;
-            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "pick_up_address", "vehicle_model", "dop"], sort: "id desc", limit:10});
+            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "pick_up_address", "vehicle_model", "dop"], sort: "id desc", limit: 10 });
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
             return { error: err.message || err.toString() };
         }
+    }
+
+    async executeAdminSMS(jobLog) {
+        let messageResponse = null;
+        let adminTemplateVars = templateType("adminNotify", jobLog);
+        let adminMsgTemplate = await MsgTemplate.list({ name: "adminNotify" });
+        let template = adminMsgTemplate[0].value;
+        console.log("The adminMSGTemplate is ", template);
+        let messageTemplate = function (template, adminTemplateVars) {
+            return new Function("return `" + template + "`;").call(adminTemplateVars);
+        }
+        let message = messageTemplate(template, adminTemplateVars);
+        let admins = await muser.listByAdmin();
+        console.log("The admins are ", admins, admins.length);
+        for (let i = 0; i < admins.length; i++) {
+            let adminMobile = admins[i].mobile;
+            messageResponse = await sms("8660187787", encodeURIComponent(message));
+        }
+        return messageResponse;
     }
 
     async executeSMS(user, { callType }) {
@@ -108,7 +129,7 @@ class Jobs {
                     }
                     console.log("the count is ", smsCount);
                     if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile))) {
-                        mobile = '7795659269';
+                        mobile = '8660187787';
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
@@ -132,8 +153,12 @@ class Jobs {
                 }
                 if (failedSmsCount > 0) {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
+                    let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
+                    console.log("The adminMsgResponse is",adminMsgResponse);
                 } else {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
+                    let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
+                    console.log("The adminMsgResponse is",adminMsgResponse);
                 }
                 return result;
             } else {
@@ -177,6 +202,14 @@ function templateType(type, record) {
                 name: record.partner_name,
                 vehicleModel: record.name.split('-')[1],
                 registrationNum: record.registrationNum,
+            }
+        case 'adminNotify':
+            return {
+                id: record._id,
+                name: record.name,
+                status: record.status,
+                failedCount: record.failedCount,
+                successCount: record.successCount
             }
         default:
             return {
