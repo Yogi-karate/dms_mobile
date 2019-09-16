@@ -25,7 +25,7 @@ class Jobs {
             domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"], limit: 10 });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
         } catch (err) {
             console.log("Error in service leads", err.stack);
             return { error: err.message || err.toString() };
@@ -43,10 +43,10 @@ class Jobs {
             let date = new Date();
             let today = date.toISOString().slice(0, 10);
             console.log("The todayyy is ", today);
-            domain.push(["create_date", ">", today]);
+            domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"], limit: 10 });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -100,7 +100,7 @@ class Jobs {
         console.log("The admins are ", admins, admins.length);
         for (let i = 0; i < admins.length; i++) {
             let adminMobile = admins[i].mobile;
-            messageResponse = await sms("8660187787", encodeURIComponent(message));
+            messageResponse = await sms("9840021822", encodeURIComponent(message));
         }
         return messageResponse;
     }
@@ -129,7 +129,6 @@ class Jobs {
                     }
                     console.log("the count is ", smsCount);
                     if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile))) {
-                        mobile = '8660187787';
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
