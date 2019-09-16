@@ -25,7 +25,7 @@ class Jobs {
             domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
         } catch (err) {
             console.log("Error in service leads", err.stack);
             return { error: err.message || err.toString() };
@@ -46,7 +46,7 @@ class Jobs {
             domain.push(["create_date", ">", "today"]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -192,14 +192,14 @@ function templateType(type, record) {
         case 'Service_Lead':
             return {
                 name: record.partner_name,
-                vehicleModel: record.name.split('-')[1],
+                vehicleModel: record.model,
                 registrationNum: record.registrationNum,
                 service: record.service_type
             }
         case 'Insurance_Lead':
             return {
                 name: record.partner_name,
-                vehicleModel: record.name.split('-')[1],
+                vehicleModel: record.model,
                 registrationNum: record.registrationNum,
             }
         case 'adminNotify':
