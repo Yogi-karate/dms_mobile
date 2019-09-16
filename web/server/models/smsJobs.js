@@ -59,7 +59,7 @@ class Jobs {
             let model = 'service.booking';;
             let smsType = '';
             let self = this;
-            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
+            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "pick_up_address", "service_type", "user_id"], sort: "id desc", limit:10});
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
@@ -76,7 +76,7 @@ class Jobs {
             let model = 'insurance.booking';
             let smsType = '';
             let self = this;
-            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "pick_up_address", "vehicle_model", "dop"], sort: "id desc" });
+            result = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "pick_up_address", "vehicle_model", "dop"], sort: "id desc", limit:10});
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
@@ -84,7 +84,7 @@ class Jobs {
         }
     }
 
-    async leadBookingSms(user, { callType }) {
+    async executeSMS(user, { callType }) {
         try {
             let smsCount = 0;
             let successSmsCount = 0;
@@ -108,12 +108,12 @@ class Jobs {
                     }
                     console.log("the count is ", smsCount);
                     if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile))) {
-                        mobile = '9840021822';
+                        mobile = '7795659269';
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
                         message = messageTemplate(templateString, templateVars);
-                        let messageResponse = await sms(mobile, message);
+                        let messageResponse = await sms(mobile, encodeURIComponent(message));
                         console.log("the count after is ", smsCount);
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
@@ -154,7 +154,7 @@ function templateType(type, record) {
                 name: record.partner_name,
                 vehicleModel: record.vehicle_model,
                 registrationNum: record.registrationNum,
-                address: record.location_id[1],
+                address: record.pick_up_address,
                 time: record.dop
             };
         case 'Insurance_Booking':

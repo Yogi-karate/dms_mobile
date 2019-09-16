@@ -82,7 +82,7 @@ router.get('/users', async (req, res) => {
 
 router.get('/sendServiceLeadSms', async (req, res) => {
   try {
-    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.executeSMS(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -91,7 +91,7 @@ router.get('/sendServiceLeadSms', async (req, res) => {
 
 router.get('/sendInsuranceLeadSms', async (req, res) => {
   try {
-    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.executeSMS(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -100,7 +100,7 @@ router.get('/sendInsuranceLeadSms', async (req, res) => {
 
 router.get('/sendServiceBookingSms', async (req, res) => {
   try {
-    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.executeSMS(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -109,7 +109,7 @@ router.get('/sendServiceBookingSms', async (req, res) => {
 
 router.get('/sendInsuranceBookingSms', async (req, res) => {
   try {
-    let result = await smsJobs.leadBookingSms(req.user, { callType: req.query.callType });
+    let result = await smsJobs.executeSMS(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
