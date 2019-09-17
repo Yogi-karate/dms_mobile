@@ -148,12 +148,12 @@ class VehicleLead {
         }
         return base.cleanModels(result.records);
     }
-    async setActivities(user, { id, feedback }) {
+    async setActivities(user, { id, feedback, disposition_id}) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'mail.activity';
-            result = await server.action_feedback(model, { id: id, feedback: feedback });
+            result = await server.action_feedback_disposition(model, { id: id, feedback: feedback, disposition_id: disposition_id});
         } catch (err) {
             return { error: err.message || err.toString() };
         }

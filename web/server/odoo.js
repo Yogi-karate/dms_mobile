@@ -173,6 +173,19 @@ Odoo.prototype.action_feedback = async function (model, { id,feedback}, callback
     }, callback);
     return result
 };
+Odoo.prototype.action_feedback_disposition = async function (model, { id,feedback, disposition_id}, callback) {
+    let result = await this.request('/web/dataset/call_kw/'+model+'/activity_feedback_disposition', {
+        args: [[id]],
+        kwargs: {
+            context: this.context,
+            feedback: feedback,
+            disposition_id: disposition_id
+        },
+        model,
+        method: 'action_feedback_disposition',
+    }, callback);
+    return result
+};
 // Added fields_get method
 Odoo.prototype.fields_get = function (model, { fields = [], attributes = {} }, callback) {
     this._request('/web/dataset/call_kw', {
