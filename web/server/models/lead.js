@@ -7,7 +7,7 @@ class Lead {
         let result = [];
         let server = odoo.getOdoo(user.email);
         let model = 'crm.lead';
-        let states = ["overdue", "today", "planned"];
+        let states = ["overdue", "today", "planned", "completed"];
         let self = this;
         for (let i = 0; i < states.length; i++) {
             let group = await server.read_group(model, { domain: this.getActivityDomain(states[i]), groupby: ["stage_id"] }, true);
@@ -60,6 +60,9 @@ class Lead {
                 break;
             case "overdue":
                 domain.push(["activity_date_deadline", "<", today]);
+                break;
+            case "completed":
+                domain.push(["activity_ids", "=", false]);
                 break;
         }
         return domain;

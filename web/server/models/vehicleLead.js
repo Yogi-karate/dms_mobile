@@ -8,7 +8,7 @@ class VehicleLead {
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
-            let states = ["overdue", "today", "planned"];
+            let states = ["overdue", "today", "planned", "completed"];
             let self = this;
             for (let i = 0; i < states.length; i++) {
                 let group = await server.search(model, { domain: this.getActivityDomain(states[i], callType) }, true);
@@ -81,6 +81,11 @@ class VehicleLead {
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
+            case "completed":
+                domain.push(["opportunity_type", "ilike", callType]);
+                domain.push(["activity_ids", "=", false]);
+                domain.push(["type", "=", "lead"]);
+                break;
         }
         return domain;
     };
@@ -148,12 +153,12 @@ class VehicleLead {
         }
         return base.cleanModels(result.records);
     }
-    async setActivities(user, { id, feedback, disposition_id}) {
+    async setActivities(user, { id, feedback, disposition_id }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'mail.activity';
-            result = await server.action_feedback_disposition(model, { id: id, feedback: feedback, disposition_id: disposition_id});
+            result = await server.action_feedback_disposition(model, { id: id, feedback: feedback, disposition_id: disposition_id });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
