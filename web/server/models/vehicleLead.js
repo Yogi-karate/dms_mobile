@@ -101,7 +101,7 @@ class VehicleLead {
             if (userId != null && !isNaN(userId) && userId != '') {
                 domain.push(["user_id", "=", parseInt(userId)]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "current_due_date", "mobile", "partner_name", "user_id", "team_id", "stage_id", "call_state"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "current_due_date", "mobile", "partner_name", "user_id", "team_id", "stage_id", "call_state","disposition"] });
             result.records.forEach(record => {
                 record.activity_date_deadline = record.current_due_date;
                 delete record.current_due_date;
