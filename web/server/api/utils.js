@@ -41,7 +41,7 @@ router.get('/sendapk', async (req, res) => {
     let message={};
     users.forEach(async function(user) {
       let mobile = user.mobile;
-      let ret = await sms("9739792292", apk_message.replace(/ /g, "%20"));
+      let ret = await sms(mobile, apk_message.replace(/ /g, "%20"));
       message[user.name] = "Sent Message to "+user.mobile + ret;
     });
     console.log("Return from sms " ,message);
