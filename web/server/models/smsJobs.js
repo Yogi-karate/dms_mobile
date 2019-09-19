@@ -25,6 +25,7 @@ class Jobs {
             domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
+            domain.push(["mobile", "!=", false]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
         } catch (err) {
             console.log("Error in service leads", err.stack);
@@ -47,7 +48,8 @@ class Jobs {
             domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
+            domain.push(["mobile", "!=", false]);
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"]});
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -121,7 +123,11 @@ class Jobs {
                     let record = result.records[i];
                     let message = '';
                     smsCount++;
-                    let mobile = record.mobile.trim().substring(0, 10);
+                    let mobile = '';
+                    let checkMobile = parseInt(record.mobile);
+                    if (!isNaN(checkMobile) && checkMobile.toString().length == 10) {
+                        mobile = checkMobile;
+                    }
                     let templateVars = templateType(callType, record);
                     for (var prop in templateVars) {
                         if (templateVars[prop] === undefined) {
@@ -129,7 +135,7 @@ class Jobs {
                         }
                     }
                     console.log("the count is ", smsCount);
-                    if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && !isNaN(mobile))) {
+                    if ((templateVars.name !== '' && templateVars.vehicleModel !== '' && mobile !== '')) {
                         let messageTemplate = function (templateString, templateVars) {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
