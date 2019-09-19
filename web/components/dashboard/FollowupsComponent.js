@@ -24,7 +24,8 @@ class FollowupsCardComponent extends React.Component {
             graphColors: [
                 '#ec407a',
                 '#DE6695',
-                '#F54A90'
+                '#F54A90',
+                '#fd5298'
             ],
             renderDropdown: false,
             onClick: this.followupClick,

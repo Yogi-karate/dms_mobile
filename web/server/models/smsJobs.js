@@ -18,11 +18,11 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            //let date = new Date('2019', '8', '6');
             let date = new Date();
-            let today = date.toISOString().slice(0, 10);
+            date.setDate(date.getDate() - 1);
+            let today = date.toISOString().slice(0, 10) + " 18:30:00";
             console.log("The todayyy is ", today);
-            domain.push(["create_date", ">", "today"]);
+            domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Service"]);
             domain.push(["type", "=", "lead"]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
@@ -41,9 +41,10 @@ class Jobs {
             let model = 'dms.vehicle.lead';
             let domain = [];
             let date = new Date();
-            let today = date.toISOString().slice(0, 10);
+            date.setDate(date.getDate() - 1);
+            let today = date.toISOString().slice(0, 10) + " 18:30:00";
             console.log("The todayyy is ", today);
-            domain.push(["create_date", ">", "today"]);
+            domain.push(["create_date", ">", today]);
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"] });
@@ -153,11 +154,11 @@ class Jobs {
                 if (failedSmsCount > 0) {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
-                    console.log("The adminMsgResponse is",adminMsgResponse);
+                    console.log("The adminMsgResponse is", adminMsgResponse);
                 } else {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
-                    console.log("The adminMsgResponse is",adminMsgResponse);
+                    console.log("The adminMsgResponse is", adminMsgResponse);
                 }
                 return result;
             } else {
