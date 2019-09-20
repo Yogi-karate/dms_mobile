@@ -1,14 +1,23 @@
 package com.dealermanagmentsystem.constants;
 
+
+import com.dealermanagmentsystem.preference.DMSPreference;
+
+import static com.dealermanagmentsystem.constants.Constants.KEY_URL;
+
 public class ConstantsUrl {
 
     //private static String ROOT_URL = "http://prod-api.turnright.tech/";
 
-    private static String ROOT_URL = "http://dev.api.turnright.tech/";
+  // public static String ROOT_URL = "http://dev.api.turnright.tech/";
 
-    //private static String ROOT_URL = "http://10.10.10.215:8001/";
+   public static String ROOT_URL =  DMSPreference.getString(KEY_URL);
+
+   //public static String ROOT_URL = "http://192.168.0.45:8000/";
 
     private static String BASE_URL = ROOT_URL + "api/v1/customer/odoo/";
+
+    public static String END_POINT_URL = "https://290dupbwpk.execute-api.ap-south-1.amazonaws.com/stage/devapp";
 
     public static String ENQUIRY = BASE_URL + "dms.enquiry";
 
@@ -32,7 +41,8 @@ public class ConstantsUrl {
 
     public static String LEADS = ROOT_URL + "api/v1/leads/search";
 
-    public static String GET_LOST_REASON = ROOT_URL + "api/v1/customer/odoo/crm.lost.reason";
+    //public static String GET_LOST_REASON = ROOT_URL + "api/v1/customer/odoo/crm.lost.reason";
+    public static String GET_LOST_REASON = ROOT_URL + "api/v1/leads/lostReasons?type=Sales";
 
     public static String GET_STAGE = ROOT_URL + "api/v1/customer/odoo/crm.stage";
 
@@ -73,5 +83,49 @@ public class ConstantsUrl {
     public static String USER_DETAIL = ROOT_URL + "api/v1/leads/dailyLeads/";
 
     public static String USER_DETAIL_BOOKED = ROOT_URL + "api/v1/leads/dailyBookedLeads/";
-    //public static String USER_DETAIL_BOOKED = "http://dev.api.turnright.tech/api/v1/leads/dailyBookedLeads/144.0";
+
+    public static String PAYMENT_DETAIL = ROOT_URL + "api/v1/leads/paymentAccDetails";
+
+    public static String LOAD_USERS = ROOT_URL + "api/v1/admin/users";
+
+    public static String SERVICE_LEAD_OVERVIEW = ROOT_URL + "api/v1/vehicleLeads/dashboard?callType=Service";
+
+    public static String SERVICE_LEADS = ROOT_URL + "api/v1/vehicleLeads/search";
+
+    public static String MARK_SERVICE_LOST = ROOT_URL + "api/v1/customer/odoo/dms.vehicle.lead/";
+
+    public static String SERVICE_TASKS = ROOT_URL + "api/v1/vehicleLeads/activity/";
+
+    public static String ACTIVITY_COMPLETE_SERVICE_FEEDBACK = ROOT_URL + "api/v1/vehicleLeads/activity/complete";
+
+    public static String CREATE_SERVICE_ACTIVITY = ROOT_URL + "api/v1/vehicleLeads/activity/create";
+
+    public static String SERVICE_BOOKING_COUNT = ROOT_URL + "api/v1/vehicleLeads/serviceBookingCount?callType=Service";
+
+    public static String SERVICE_BOOKING = ROOT_URL + "api/v1/vehicleLeads/serviceBookingDetails?callType=Service";
+
+    public static String INSURANCE_LEAD_OVERVIEW = ROOT_URL + "api/v1/vehicleLeads/dashboard?callType=Insurance";
+
+    public static String INSURANCE_BOOKING_COUNT = ROOT_URL + "api/v1/vehicleLeads/serviceBookingCount?callType=Insurance";
+
+    public static String INSURANCE_BOOKING = ROOT_URL + "api/v1/vehicleLeads/serviceBookingDetails?callType=Insurance";
+
+    //public static String GET_INSURANCE_LOST_REASON = ROOT_URL + "api/v1/customer/odoo/dms.lost.reason.insurance";
+    public static String GET_INSURANCE_LOST_REASON = ROOT_URL + "api/v1/leads/lostReasons?type=Insurance";
+
+    //public static String GET_SERVICE_LOST_REASON = ROOT_URL + "api/v1/customer/odoo/dms.lost.reason";
+    public static String GET_SERVICE_LOST_REASON = ROOT_URL + "api/v1/leads/lostReasons?type=Service";
+
+    public static String CREATE_SERVICE_BOOKING = ROOT_URL + "api/v1/customer/odoo/service.booking";
+
+    public static String SERVICE_LOCATION = ROOT_URL + "api/v1/customer/odoo/stock.location";
+
+    public static String INSURANCE_BANK_LIST = ROOT_URL + "api/v1/customer/odoo/res.insurance.company";
+
+    public static String CREATE_INSURANCE_BOOKING = ROOT_URL + "api/v1/customer/odoo/insurance.booking";
+
+    public static String APP_UPDATE = ROOT_URL + "api/v1/public/appVersion";
+
+    public static String DISPOSITION = ROOT_URL + "api/v1/customer/odoo/dms.lead.disposition";
+
 }

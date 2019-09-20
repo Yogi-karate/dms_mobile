@@ -1,8 +1,10 @@
 
 package com.dealermanagmentsystem.data.model.login;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+        import com.google.gson.annotations.Expose;
+        import com.google.gson.annotations.SerializedName;
+
+        import java.util.List;
 
 public class LoginResponse {
 
@@ -12,6 +14,9 @@ public class LoginResponse {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("userId")
+    @Expose
+    private Integer userId;
     @SerializedName("image")
     @Expose
     private String image;
@@ -30,6 +35,15 @@ public class LoginResponse {
     @SerializedName("message")
     @Expose
     private String message;
+
+    @SerializedName("isAdmin")
+    @Expose
+    private Boolean isAdmin;
+
+    @SerializedName("module")
+    @Expose
+    private List<String> module;
+
 
     public String getName() {
         return name;
@@ -95,4 +109,27 @@ public class LoginResponse {
         this.message = message;
     }
 
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+   public List<String> getModule() {
+        return module;
+    }
+
+    public void setModule(List<String> module) {
+        this.module = module;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

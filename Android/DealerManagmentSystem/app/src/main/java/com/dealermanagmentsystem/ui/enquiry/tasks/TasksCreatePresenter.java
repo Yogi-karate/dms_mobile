@@ -25,6 +25,7 @@ import static com.dealermanagmentsystem.constants.Constants.SUMMARY;
 import static com.dealermanagmentsystem.constants.Constants.USER_ID;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.ACTIVITY_TYPE;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.CREATE_ACTIVITY;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.CREATE_SERVICE_ACTIVITY;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.EDIT_ACTIVITY;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.USERS;
 
@@ -68,6 +69,67 @@ public class TasksCreatePresenter implements ITasksCreatePresenter {
             }
 
             AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(CREATE_ACTIVITY, activity, json, POST, new IConnectionListener() {
+                @Override
+                public void onSuccess(Result result) {
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(result.getResponse());
+                        Gson gson = new Gson();
+                        CommonResponse response = gson.fromJson(jsonObject.toString(), CommonResponse.class);
+                        view.onSuccessCreateTasks(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFail(Result result) {
+                    if (result.getStatusCode() == BAD_AUTHENTICATION) {
+                        view.onError("Wrong username or password");
+                    } else {
+                        view.onError("Something went wrong, Please try after sometime");
+                    }
+                }
+
+                @Override
+                public void onNetworkFail(String message) {
+                    view.onError(message);
+                }
+            });
+            asyncTaskConnection.execute();
+        }
+    }
+
+    @Override
+    public void createServiceTask(Activity activity, String strSummary, String strNote, int userId, int activityTypeId, String strFollowUpDate, int leadId) {
+         /*if (userId == -1) {
+            view.onError("please select a assignee");
+        } else*/ if (activityTypeId == -1) {
+            view.onError("please select a activity type");
+        } else if (TextUtils.isEmpty(strSummary)) {
+            view.onError("please enter a summary");
+        } else if (TextUtils.isEmpty(strNote)) {
+            view.onError("please enter a note");
+        } else if (TextUtils.isEmpty(strFollowUpDate)) {
+            view.onError("please select a follow up date");
+        } else {
+            String json = "";
+            JSONObject postDataParams = new JSONObject();
+            try {
+                postDataParams.put(RES_ID, leadId);
+                postDataParams.put(DATE_DEADLINE, strFollowUpDate);
+                if (userId != -1){
+                    postDataParams.put(USER_ID, userId);
+                }
+                postDataParams.put(NOTE, strNote);
+                postDataParams.put(ACTIVITY_TYPE_ID, activityTypeId);
+                postDataParams.put(SUMMARY, strSummary);
+                json = postDataParams.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(CREATE_SERVICE_ACTIVITY, activity, json, POST, new IConnectionListener() {
                 @Override
                 public void onSuccess(Result result) {
                     JSONObject jsonObject;

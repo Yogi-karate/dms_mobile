@@ -9,10 +9,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.LeadAdapter;
@@ -32,6 +37,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
@@ -53,6 +59,11 @@ public class LeadActivity extends BaseActivity implements ILeadView {
     String strName;
     LeadAdapter leadAdapter;
     SearchView mSearchView;
+    @BindView(R.id.sw_filter)
+    SwitchCompat cbMyLeads;
+    @BindView(R.id.ll_filter)
+    LinearLayout llFilter;
+    boolean isCheckedMyLeads = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,58 +82,36 @@ public class LeadActivity extends BaseActivity implements ILeadView {
             if (strFrom.equalsIgnoreCase("home")) {
                 strState = intent.getStringExtra(EXTRA_STATE);
                 strStage = intent.getStringExtra(EXTRA_STAGE);
-            } else {
+            } else {//from team page
                 strId = intent.getStringExtra(EXTRA_USER_ID);
                 strName = intent.getStringExtra(EXTRA_USER_NAME);
                 strStage = STAGE_BOOKED;
+                llFilter.setVisibility(View.GONE);
             }
-
-
         }
         GridLayoutManager gridLayoutManagerCategories = new GridLayoutManager(this, 1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManagerCategories);
 
         presenter = new LeadsPresenter(this);
+        cbMyLeads.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                isCheckedMyLeads = isChecked;
+                presenter.getLeads(activity, strState, strStage, isCheckedMyLeads);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (strFrom.equalsIgnoreCase("home")) {
-            presenter.getLeads(activity, strState, strStage);
+            presenter.getLeads(activity, strState, strStage, isCheckedMyLeads);
         } else {
             presenter.getLeadsBooked(activity, strId);
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-
-        MenuItem mSearch = menu.findItem(R.id.action_search);
-
-        mSearchView = (SearchView) mSearch.getActionView();
-
-        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        //searchEditText.setBackgroundColor(ContextCompat.getColor(this, R.color.light_grey));
-        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
-        searchEditText.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary));
-
-        mSearchView.setQueryHint("Search by name and customer");
-
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                leadAdapter.filter(newText);
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
 
     @Override
     public void onSuccessLeads(EnquiryResponse enquiryResponse) {
@@ -142,7 +131,7 @@ public class LeadActivity extends BaseActivity implements ILeadView {
     @Override
     public void onSuccessWonLost(CommonResponse commonResponse) {
         if (commonResponse.getSuccess()) {
-            presenter.getLeads(activity, strState, strStage);
+            presenter.getLeads(activity, strState, strStage, isCheckedMyLeads);
         } else if (!TextUtils.isEmpty(commonResponse.getError())) {
             onError("Could not submit response");
         }
@@ -239,5 +228,36 @@ public class LeadActivity extends BaseActivity implements ILeadView {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        //searchEditText.setBackgroundColor(ContextCompat.getColor(this, R.color.light_grey));
+        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+        searchEditText.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary));
+
+        mSearchView.setQueryHint("Search by name and customer");
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                leadAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 }

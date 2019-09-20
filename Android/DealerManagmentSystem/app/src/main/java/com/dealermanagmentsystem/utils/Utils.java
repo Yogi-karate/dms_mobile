@@ -4,16 +4,23 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.provider.CallLog;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+
+import com.dealermanagmentsystem.preference.DMSPreference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,14 +29,16 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import static com.dealermanagmentsystem.constants.Constants.KEY_URL;
+
 public class Utils {
 
     public static boolean isValidEmail(String email) {
         return (!TextUtils.isEmpty(email) && email.contains("@"));
     }
 
-    public static String getAppVersionName(Activity activity){
-        String version="";
+    public static String getAppVersionName(Activity activity) {
+        String version = "";
         try {
             PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
             version = pInfo.versionName;
@@ -38,6 +47,18 @@ public class Utils {
         }
         return version;
     }
+
+    public static int getAppVersionCode(Activity activity) {
+        int version = 0;
+        try {
+            PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+            version = pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return version;
+    }
+
     /* public static void onAddEventClicked(Activity activity) {
      *//* Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
@@ -136,11 +157,38 @@ public class Utils {
             }
             Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
-           long eventId = Long.parseLong(uri.getLastPathSegment());
+            long eventId = Long.parseLong(uri.getLastPathSegment());
             Log.d("Ketan_Event_Id", String.valueOf(eventId));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getDeviceDensityString(Context context) {
+        switch (context.getResources().getDisplayMetrics().densityDpi) {
+            case DisplayMetrics.DENSITY_LOW:
+                return "ldpi";
+            case DisplayMetrics.DENSITY_MEDIUM:
+                return "mdpi";
+            case DisplayMetrics.DENSITY_TV:
+            case DisplayMetrics.DENSITY_HIGH:
+                return "hdpi";
+            case DisplayMetrics.DENSITY_260:
+            case DisplayMetrics.DENSITY_280:
+            case DisplayMetrics.DENSITY_300:
+            case DisplayMetrics.DENSITY_XHIGH:
+                return "xhdpi";
+            case DisplayMetrics.DENSITY_340:
+            case DisplayMetrics.DENSITY_360:
+            case DisplayMetrics.DENSITY_400:
+            case DisplayMetrics.DENSITY_420:
+            case DisplayMetrics.DENSITY_XXHIGH:
+                return "xxhdpi";
+            case DisplayMetrics.DENSITY_560:
+            case DisplayMetrics.DENSITY_XXXHIGH:
+                return "xxxhdpi";
+        }
+        return null;
     }
 }

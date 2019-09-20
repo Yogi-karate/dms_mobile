@@ -20,4 +20,15 @@ public interface IHomePresenter {
 
     public void getTeamDetailList(Activity activity, String teamId);
 
+    public void getPaymentDetails(Activity activity);
+
+    public void getServiceLeadsOverview(Activity activity);
+
+    public void getServiceBookingCount(Activity activity);
+
+    public void getInsuranceLeadsOverview(Activity activity);
+
+    public void getInsuranceBookingCount(Activity activity);
+
+    public void getAppUpdate(Activity activity);
 }

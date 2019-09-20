@@ -3,11 +3,15 @@ package com.dealermanagmentsystem.ui.home;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import com.dealermanagmentsystem.data.model.appupdate.AppUpdateResponse;
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.common.Response;
+import com.dealermanagmentsystem.data.model.enquiry.EnquiryResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.login.LoginResponse;
+import com.dealermanagmentsystem.data.model.payment.PaymentDetailResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
+import com.dealermanagmentsystem.data.model.serviceoverview.ServiceLeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.data.model.teamdetail.TeamDetailResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
@@ -34,12 +38,19 @@ import static com.dealermanagmentsystem.constants.Constants.MOBILE;
 import static com.dealermanagmentsystem.constants.Constants.PASSWORD;
 import static com.dealermanagmentsystem.constants.Constants.POST;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.ACTIVITY_COMPLETE_FEEDBACK;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.APP_UPDATE;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.DELIVERY_COUNT;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.ENQUIRY;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.INSURANCE_BOOKING_COUNT;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.INSURANCE_LEAD_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.INVOICE_COUNT;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LEAD_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.LOGIN;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.PAYMENT_DETAIL;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SALES_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.SEND_FCM_TOKEN;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.SERVICE_BOOKING_COUNT;
+import static com.dealermanagmentsystem.constants.ConstantsUrl.SERVICE_LEAD_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TASKS_OVERVIEW;
 import static com.dealermanagmentsystem.constants.ConstantsUrl.TEAM_DETAIL;
@@ -119,12 +130,17 @@ public class HomePresenter implements IHomePresenter {
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TASKS_OVERVIEW, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
-                Gson gson = new Gson();
-                String jsonOutput = result.getResponse();
-                Type listType = new TypeToken<List<TasksResponse>>() {
-                }.getType();
-                List<TasksResponse> tasks = gson.fromJson(jsonOutput, listType);
-                view.onSuccessTasks(tasks);
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<TasksResponse>>() {
+                    }.getType();
+                    List<TasksResponse> tasks = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessTasks(tasks);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -276,23 +292,18 @@ public class HomePresenter implements IHomePresenter {
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(TEAM_DETAIL + teamId, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
-
-                Gson gson = new Gson();
-                String jsonOutput = result.getResponse();
-                Type listType = new TypeToken<List<TeamDetailResponse>>() {
-                }.getType();
-                List<TeamDetailResponse> teams = gson.fromJson(jsonOutput, listType);
-                view.onSuccessTeamDetail(teams);
-
-               /* JSONObject jsonObject;
                 try {
-                    jsonObject = new JSONObject(result.getResponse());
                     Gson gson = new Gson();
-                    TeamDetailResponse response = gson.fromJson(jsonObject.toString(), TeamDetailResponse.class);
-                    view.onSuccessTeamDetail(response);
-                } catch (JSONException e) {
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<TeamDetailResponse>>() {
+                    }.getType();
+                    List<TeamDetailResponse> teams = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessTeamDetail(teams);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
                     e.printStackTrace();
-                }*/
+                }
+
             }
 
             @Override
@@ -308,4 +319,185 @@ public class HomePresenter implements IHomePresenter {
         asyncTaskConnection.execute();
     }
 
+    @Override
+    public void getPaymentDetails(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(PAYMENT_DETAIL, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    Gson gson = new Gson();
+                    PaymentDetailResponse paymentDetailResponse = gson.fromJson(jsonObject.toString(), PaymentDetailResponse.class);
+                    view.onSuccessPaymentDetail(paymentDetailResponse);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getServiceLeadsOverview(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(SERVICE_LEAD_OVERVIEW, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<ServiceLeadOverviewResponse>>() {
+                    }.getType();
+                    List<ServiceLeadOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessServiceLeadOverview(posts);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getServiceBookingCount(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(SERVICE_BOOKING_COUNT, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<ServiceLeadOverviewResponse>>() {
+                    }.getType();
+                    List<ServiceLeadOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessServiceBookingCount(posts);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getInsuranceLeadsOverview(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(INSURANCE_LEAD_OVERVIEW, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<ServiceLeadOverviewResponse>>() {
+                    }.getType();
+                    List<ServiceLeadOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessInsuranceLeadOverview(posts);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getInsuranceBookingCount(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(INSURANCE_BOOKING_COUNT, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                try {
+                    Gson gson = new Gson();
+                    String jsonOutput = result.getResponse();
+                    Type listType = new TypeToken<List<ServiceLeadOverviewResponse>>() {
+                    }.getType();
+                    List<ServiceLeadOverviewResponse> posts = gson.fromJson(jsonOutput, listType);
+                    view.onSuccessInsuranceBookingCount(posts);
+                } catch (Exception e) {
+                    view.onError("Something went wrong, Please try after sometime");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
+
+    @Override
+    public void getAppUpdate(Activity activity) {
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(APP_UPDATE, activity, GET, new IConnectionListener() {
+            @Override
+            public void onSuccess(Result result) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result.getResponse());
+                    Gson gson = new Gson();
+                    AppUpdateResponse appUpdateResponse = gson.fromJson(jsonObject.toString(), AppUpdateResponse.class);
+                    view.onSuccessAppUpdate(appUpdateResponse);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Result result) {
+                view.onError("Something went wrong, Please try after sometime");
+            }
+
+            @Override
+            public void onNetworkFail(String message) {
+                view.onError(message);
+            }
+        });
+        asyncTaskConnection.execute();
+    }
 }

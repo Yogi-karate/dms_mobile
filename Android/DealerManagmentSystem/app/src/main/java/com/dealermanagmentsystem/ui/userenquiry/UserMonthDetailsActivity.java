@@ -44,7 +44,6 @@ public class UserMonthDetailsActivity extends BaseActivity implements IUserDetai
         ButterKnife.bind(this);
         setStatusBarColor(getResources().getColor(R.color.bg));
 
-
         GridLayoutManager gridLayoutManagerCategories = new GridLayoutManager(this, 1);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManagerCategories);

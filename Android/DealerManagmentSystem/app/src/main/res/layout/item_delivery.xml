@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/snow"
+        android:background="@color/card_bg"
         android:orientation="vertical"
         android:padding="5dp">
 

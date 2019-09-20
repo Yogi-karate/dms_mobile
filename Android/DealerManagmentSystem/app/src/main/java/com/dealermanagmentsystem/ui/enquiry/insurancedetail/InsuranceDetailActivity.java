@@ -88,7 +88,6 @@ public class InsuranceDetailActivity extends BaseActivity implements IInsuranceV
         etPremiumAmount.setText(String.valueOf(detailResponse.getPremiumAmount()));
     }
 
-
     @OnClick(R.id.save_insurance) //ButterKnife uses.
     public void saveInsurance() {
 
@@ -127,7 +126,6 @@ public class InsuranceDetailActivity extends BaseActivity implements IInsuranceV
             detailResponse.setInsuranceValidTo(strInsuranceValidTo);
             enquiryDetailRequest.setInsuranceValidTo(strInsuranceValidTo);
         }
-
 
         if (!strInsuranceTypeId.equalsIgnoreCase(detailResponse.getInsuranceType())) {
             enquiryDetailRequest.setInsuranceType(strInsuranceTypeId);

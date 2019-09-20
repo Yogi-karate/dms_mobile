@@ -9,6 +9,15 @@ public class CommonResponse {
     @SerializedName("success")
     @Expose
     private Boolean success;
+    @SerializedName("error")
+    @Expose
+    private String error;
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
 
     public Boolean getSuccess() {
         return success;
@@ -17,15 +26,6 @@ public class CommonResponse {
     public void setSuccess(Boolean success) {
         this.success = success;
     }
-
-    @SerializedName("error")
-    @Expose
-    private String error;
-
-    @SerializedName("message")
-    @Expose
-    private String message;
-
 
     public String getError() {
         return error;
@@ -41,5 +41,13 @@ public class CommonResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

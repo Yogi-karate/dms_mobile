@@ -8,6 +8,7 @@ import com.dealermanagmentsystem.data.model.enquiry.EnquiryResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
 import com.dealermanagmentsystem.network.IConnectionListener;
 import com.dealermanagmentsystem.network.Result;
+import com.dealermanagmentsystem.preference.DMSPreference;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import static com.dealermanagmentsystem.constants.Constants.ACTIVE;
 import static com.dealermanagmentsystem.constants.Constants.BAD_AUTHENTICATION;
 import static com.dealermanagmentsystem.constants.Constants.GET;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USER_ID;
 import static com.dealermanagmentsystem.constants.Constants.LOST_REASON;
 import static com.dealermanagmentsystem.constants.Constants.POST;
 import static com.dealermanagmentsystem.constants.Constants.PROBABILITY;
@@ -35,8 +37,16 @@ public class LeadsPresenter implements ILeadPresenter {
     }
 
     @Override
-    public void getLeads(Activity activity, String strState, String strStage) {
-        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(LEADS + "?state=" + strState + "&stage=" + strStage, activity, GET, new IConnectionListener() {
+    public void getLeads(Activity activity, String strState, String strStage,
+                         boolean isCheckedMyLeads) {
+        String url;
+        if (isCheckedMyLeads) {
+            url = LEADS + "?state=" + strState + "&stage=" + strStage + "&userId=" + DMSPreference.getInt(KEY_USER_ID);
+        } else {
+            url = LEADS + "?state=" + strState + "&stage=" + strStage;
+        }
+
+        AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(url, activity, GET, new IConnectionListener() {
             @Override
             public void onSuccess(Result result) {
                 JSONObject jsonObject;

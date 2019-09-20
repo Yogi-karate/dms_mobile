@@ -1,6 +1,8 @@
 package com.dealermanagmentsystem.ui.base;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,13 +21,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.dealermanagmentsystem.BuildConfig;
 import com.dealermanagmentsystem.R;
+import com.dealermanagmentsystem.constants.Constants;
 import com.dealermanagmentsystem.dialog.DefaultAlertDialog;
 import com.dealermanagmentsystem.dialog.TwoButtonAlertDialogModel;
 import com.dealermanagmentsystem.preference.DMSPreference;
+import com.dealermanagmentsystem.receiver.TaskReminderReceiver;
 import com.dealermanagmentsystem.ui.home.HomeActivity;
 import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.utils.ui.CustomTypefaceSpan;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
@@ -38,12 +44,18 @@ import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = BaseActivity.this;
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        /*if (!BuildConfig.DEBUG) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }*/
+        // Obtain the FirebaseAnalytics instance.
+      //  mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
     }
 
     @Override
@@ -65,8 +77,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     public void showTile(String title) {
@@ -152,8 +162,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                         DMSPreference.setString(KEY_USERNAME, "");
                         DMSPreference.setString(KEY_USER_EMAIL_ID, "");
                         DMSPreference.setString(KEY_USER_IMAGE, "");
-                      //  DMSPreference.setString(KEY_FCM_TOKEN, "");
+                        //  DMSPreference.setString(KEY_FCM_TOKEN, "");
                         DMSPreference.setBoolean(KEY_FCM_TOKEN_SET, false);
+
+                        //Set it false so on next login again set it to true task reminder alarm
+                        DMSPreference.setBoolean(Constants.KEY_TASKS_REMINDER_ALARM, false);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        Intent myIntent = new Intent(getApplicationContext(),
+                                TaskReminderReceiver.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                getApplicationContext(), 234324243, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.cancel(pendingIntent);
 
                         Intent intent = new Intent(activity, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

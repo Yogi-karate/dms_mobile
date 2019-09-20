@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMIN
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_ID;
 import static com.dealermanagmentsystem.constants.Constants.LEAD_EDIT_ENQUIRY;
 
 public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemViewHolder> {
@@ -61,25 +63,32 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
     public void onBindViewHolder(@NonNull final LeadAdapter.AdapterItemViewHolder itemViewHolder, final int i) {
         itemViewHolder.mName.setText(mRecords.get(i).getName());
         itemViewHolder.mPartnerName.setText(mRecords.get(i).getPartnerName());
-        itemViewHolder.mUserName.setText(mRecords.get(i).getDateDeadLine());
+        itemViewHolder.mUserName.setText(mRecords.get(i).getActivityDateDeadLine());
         itemViewHolder.mTeamName.setText(mRecords.get(i).getMobile());
-
 
         itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Intent intent = new Intent(activity, CreateEnquiryActivity.class);
-                    intent.putExtra(EXTRA_ENQUIRY, LEAD_EDIT_ENQUIRY);
-                    intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(mRecords.get(i).getId()));
-                    activity.startActivityForResult(intent, 2);
+                Intent intent = new Intent(activity, CreateEnquiryActivity.class);
+                intent.putExtra(EXTRA_ENQUIRY, LEAD_EDIT_ENQUIRY);
+                intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(mRecords.get(i).getId()));
+                activity.startActivityForResult(intent, 2);
             }
         });
 
         itemViewHolder.llTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Object userId = mRecords.get(i).getUserId();
+                int strUserId = 0;
+                Double d;
+                if (userId instanceof List) {
+                    d = (Double) ((List) userId).get(0);
+                    strUserId = d.intValue();
+                }
                 Intent intent = new Intent(activity, TasksActivity.class);
                 intent.putExtra(EXTRA_LEAD_ID, String.valueOf(mRecords.get(i).getId()));
+                intent.putExtra(EXTRA_USER_ID, strUserId);
                 intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Leads");
                 activity.startActivity(intent);
             }
@@ -125,7 +134,18 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
             }
         });
 
-
+        itemViewHolder.mTxtActions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (itemViewHolder.llActions.getVisibility() == View.GONE) {
+                    itemViewHolder.llActions.setVisibility(View.VISIBLE);
+                    itemViewHolder.llActions.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.left_to_right));
+                } else {
+                    itemViewHolder.llActions.setVisibility(View.GONE);
+                    itemViewHolder.llActions.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.left_to_right));
+                }
+            }
+        });
 
     }
 
@@ -166,6 +186,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         LinearLayout llLost;
         LinearLayout llTasks;
         LinearLayout llMoveTo;
+        TextView mTxtActions;
+        LinearLayout llActions;
 
         public AdapterItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -179,6 +201,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
             llLost = (LinearLayout) itemView.findViewById(R.id.lost);
             llTasks = (LinearLayout) itemView.findViewById(R.id.tasks);
             llMoveTo = (LinearLayout) itemView.findViewById(R.id.move);
+            llActions = (LinearLayout) itemView.findViewById(R.id.ll_actions);
+            mTxtActions = (TextView) itemView.findViewById(R.id.txt_actions);
         }
     }
 }

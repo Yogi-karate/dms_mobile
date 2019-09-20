@@ -1,11 +1,15 @@
 package com.dealermanagmentsystem.ui.home;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,10 +21,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,26 +39,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dealermanagmentsystem.R;
-import com.dealermanagmentsystem.adapter.SaleOrderAdapter;
-import com.dealermanagmentsystem.adapter.TasksAdapter;
 import com.dealermanagmentsystem.adapter.TeamAdapter;
 import com.dealermanagmentsystem.constants.Constants;
+import com.dealermanagmentsystem.data.model.appupdate.AppUpdateResponse;
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.login.Record;
+import com.dealermanagmentsystem.data.model.payment.PaymentDetailResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
+import com.dealermanagmentsystem.data.model.serviceoverview.ServiceLeadOverviewResponse;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.data.model.teamdetail.Result;
 import com.dealermanagmentsystem.data.model.teamdetail.TeamDetailResponse;
 import com.dealermanagmentsystem.event.TasksCompleteEvent;
 import com.dealermanagmentsystem.preference.DMSPreference;
+import com.dealermanagmentsystem.receiver.TaskReminderReceiver;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
+import com.dealermanagmentsystem.ui.delivery.DeliveryActivity;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
-import com.dealermanagmentsystem.ui.enquiry.enquirysubenquirylist.EnquiryActivity;
 import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
+import com.dealermanagmentsystem.ui.insurance.booking.InsuranceBookingActivity;
+import com.dealermanagmentsystem.ui.insurance.lead.InsuranceLeadActivity;
 import com.dealermanagmentsystem.ui.saleorder.SaleOrderActivity;
+import com.dealermanagmentsystem.ui.service.booking.ServiceBookingActivity;
+import com.dealermanagmentsystem.ui.service.lead.ServiceLeadActivity;
+import com.dealermanagmentsystem.ui.users.UserActivity;
 import com.dealermanagmentsystem.utils.ImageLoad;
+import com.dealermanagmentsystem.utils.Utils;
 import com.dealermanagmentsystem.utils.ui.DMSToast;
 import com.dealermanagmentsystem.utils.ui.DMSTypeFace;
 import com.github.mikephil.charting.animation.Easing;
@@ -74,15 +86,16 @@ import com.squareup.otto.Subscribe;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
-import static com.dealermanagmentsystem.constants.Constants.ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_FROM;
@@ -92,21 +105,24 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
+import static com.dealermanagmentsystem.constants.Constants.KEY_IS_ADMIN;
+import static com.dealermanagmentsystem.constants.Constants.KEY_MODULES;
 import static com.dealermanagmentsystem.constants.Constants.KEY_NIGHT_MODE;
 import static com.dealermanagmentsystem.constants.Constants.KEY_ROLE;
+import static com.dealermanagmentsystem.constants.Constants.KEY_TASKS_REMINDER_ALARM;
 import static com.dealermanagmentsystem.constants.Constants.KEY_TEAMS;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
-import static com.dealermanagmentsystem.constants.Constants.QUOTATION;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_BOOKED;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_COLD;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_HOT;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_WARM;
+import static com.dealermanagmentsystem.constants.Constants.STATE_COMPLETED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_OVERDUE;
 import static com.dealermanagmentsystem.constants.Constants.STATE_PLANNED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_TODAY;
-import static com.dealermanagmentsystem.constants.Constants.SUB_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.TO_INVOICE;
 
 public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, IHomeView {
     Activity activity;
@@ -152,15 +168,17 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     TextView txtTasksMore;
     @BindView(R.id.cardView_tasks)
     CardView cardViewTasks;
-   /* @BindView(R.id.txt_delivery_count)
+    @BindView(R.id.txt_delivery_count)
     TextView txtDeliveryCount;
     @BindView(R.id.txt_invoice_count)
     TextView txtInvoiceCount;
     @BindView(R.id.cv_delivery_count)
     CardView cvDeliveryCount;
     @BindView(R.id.cv_invoice_count)
-    CardView cvInvoiceCount;*/
+    CardView cvInvoiceCount;
 
+    @BindView(R.id.no_activities)
+    TextView txtLegendNoActivities;
     @BindView(R.id.overdue)
     TextView txtLegendOverdue;
     @BindView(R.id.today)
@@ -177,9 +195,52 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     Integer overdueCold, overdueWarm, overdueHot, overdueBooked;
     Integer todayCold, todayWarm, todayHot, todayBooked;
     Integer plannedCold, plannedWarm, plannedHot, plannedBooked;
+    Integer noActivityCold, noActivityWarm, noActivityHot, noActivityBooked;
     List<Record> recordsTeamList;
-    String strRole;
+    String strRole, strModule;
     TeamAdapter teamAdapter;
+
+    /* @BindView(R.id.cardView_payment)
+     CardView cardViewPayments;*/
+    /*@BindView(R.id.txt_payment_amount)
+    TextView txtPaymentAmount;
+    @BindView(R.id.payment_title)
+    TextView txtPaymentAmountTitle;
+*/
+    @BindView(R.id.ll_sales)
+    LinearLayout llSales;
+
+    @BindView(R.id.ll_service)
+    LinearLayout llService;
+    @BindView(R.id.chart_service)
+    PieChart chartService;
+    @BindView(R.id.overdue_service)
+    TextView txtServiceLegendOverdue;
+    @BindView(R.id.today_service)
+    TextView txtServiceLegendToday;
+    @BindView(R.id.planned_service)
+    TextView txtServiceLegendPlanned;
+    @BindView(R.id.no_activities_service)
+    TextView txtServiceLegendNoActivities;
+    @BindView(R.id.txt_service_booking_count)
+    TextView txtServiceBookingCount;
+
+    @BindView(R.id.ll_insurance_leads)
+    LinearLayout llInsuranceLeads;
+    @BindView(R.id.chart_insurance_leads)
+    PieChart chartInsuranceLeads;
+    @BindView(R.id.overdue_insurance)
+    TextView txtInsuranceLegendOverdue;
+    @BindView(R.id.today_insurance)
+    TextView txtInsuranceLegendToday;
+    @BindView(R.id.planned_insurance)
+    TextView txtInsuranceLegendPlanned;
+    @BindView(R.id.no_activities_insurance)
+    TextView txtInsuranceLegendNoActivities;
+    @BindView(R.id.txt_insurance_booking_count)
+    TextView txtInsuranceBookingCount;
+
+    String strMenuSelected = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +256,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         activity = HomeActivity.this;
 
+       // float density = getResources().getDisplayMetrics().density;
+      //  DMSToast.showLong(activity, Utils.getDeviceDensityString(getApplicationContext()) + String.valueOf(density));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar mActionBar = getSupportActionBar();
@@ -209,22 +273,36 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        strRole = DMSPreference.getString(KEY_ROLE, "user");
-        if (!strRole.equalsIgnoreCase("user")) {
-            Gson gson = new Gson();
-            String json = DMSPreference.getString(KEY_TEAMS);
-            Type type = new TypeToken<List<Record>>() {
-            }.getType();
-            recordsTeamList = gson.fromJson(json, type);
-            cardViewTeams.setVisibility(View.VISIBLE);
-        } else {
-            cardViewTeams.setVisibility(View.GONE);
-        }
+        /*if (strModule.equalsIgnoreCase("service_lead")) {// if service person logs in
+            llSales.setVisibility(View.GONE);
+            llService.setVisibility(View.VISIBLE);
+            fabCreateEnquiry.setVisibility(View.GONE);
+        } else { // if sales person logs in
+            llSales.setVisibility(View.VISIBLE);
+            llService.setVisibility(View.GONE);
+            fabCreateEnquiry.setVisibility(View.VISIBLE);
+            strRole = DMSPreference.getString(KEY_ROLE, "user");
+            if (!strRole.equalsIgnoreCase("user")) {
+                Gson gson = new Gson();
+                String json = DMSPreference.getString(KEY_TEAMS);
+                Type type = new TypeToken<List<Record>>() {
+                }.getType();
+                recordsTeamList = gson.fromJson(json, type);
+                cardViewTeams.setVisibility(View.VISIBLE);
+                cardViewPayments.setVisibility(View.VISIBLE);
+            } else {
+                cardViewTeams.setVisibility(View.GONE);
+                cardViewPayments.setVisibility(View.GONE);
+            }
+        }*/
 
         setNavigationView();
         presenter = new HomePresenter(this);
         sendIdToServer();
+        setAlarmForTaskReminder();
+        presenter.getAppUpdate(activity);
     }
+
 
     private void setNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -234,6 +312,57 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             MenuItem mi = m.getItem(i);
             applyFontToMenuItem(mi);
         }
+
+        if (DMSPreference.getBoolean(KEY_IS_ADMIN)) {
+            m.findItem(R.id.users).setVisible(true);
+        } else {
+            m.findItem(R.id.users).setVisible(false);
+        }
+
+        Gson gson = new Gson();
+        String json = DMSPreference.getString(KEY_MODULES);
+        Type type = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> module = gson.fromJson(json, type);
+
+        final String strDefaultMenu = module.get(0);
+        if (strDefaultMenu.equalsIgnoreCase("sales")) {
+            strMenuSelected = "sales";
+            m.findItem(R.id.sales).setChecked(true);
+           /* initSalesInsuranceFinance();
+            showSalesInsuranceFinance();*/
+        } else if (strDefaultMenu.equalsIgnoreCase("finance")) {
+            strMenuSelected = "finance";
+            m.findItem(R.id.finance).setChecked(true);
+          /*  initSalesInsuranceFinance();
+            showSalesInsuranceFinance();*/
+        } else if (strDefaultMenu.equalsIgnoreCase("insurance")) {
+            strMenuSelected = "insurance";
+            m.findItem(R.id.insurance).setChecked(true);
+            /*initSalesInsuranceFinance();
+            showSalesInsuranceFinance();*/
+        } else if (strDefaultMenu.equalsIgnoreCase("business-center")) {
+            strMenuSelected = "service_leads";
+            m.findItem(R.id.service_leads).setChecked(true);
+          /*  initServiceLeads();
+            showServiceLeads();*/
+        } else if (strDefaultMenu.equalsIgnoreCase("business-center-insurance-renewal") || strDefaultMenu.equalsIgnoreCase("business-center-insurance-rollover")) {
+            strMenuSelected = "insurance_leads";
+            m.findItem(R.id.insurance_leads).setChecked(true);
+           /* initInsuranceLeads();
+            showInsuranceLeads();*/
+        } else if (strDefaultMenu.equalsIgnoreCase("service")) {
+            strMenuSelected = "service";
+            m.findItem(R.id.service).setChecked(true);
+            //initService();
+        }
+
+        m.findItem(R.id.sales).setVisible(module.contains("sales"));
+        m.findItem(R.id.finance).setVisible(module.contains("finance"));
+        m.findItem(R.id.insurance).setVisible(module.contains("insurance"));
+        m.findItem(R.id.service_leads).setVisible(module.contains("business-center"));
+        m.findItem(R.id.insurance_leads).setVisible(module.contains("business-center-insurance-renewal") || module.contains("business-center-insurance-rollover"));
+        m.findItem(R.id.service).setVisible(module.contains("service"));
 
         View headerView = navigationView.getHeaderView(0);
         TextView tvName = (TextView) headerView.findViewById(R.id.txt_name);
@@ -254,17 +383,153 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume() {
         super.onResume();
-        cardView.setVisibility(View.GONE);
-        presenter.getLeadsOverview(activity);
-        //  presenter.getSalesOverview(activity);
-        presenter.getTasksOverview(activity);
-        // presenter.getDeliveryCount(activity);
-        // presenter.getInvoiceCount(activity);
-        if (!strRole.equalsIgnoreCase("user")) {
-            txtTeamTitle.setText(recordsTeamList.get(0).getName());
-            presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
+       /* if (strModule.equalsIgnoreCase("service_lead")) {
+       // if service person logs in
+            showServiceLeads();
+        } else {
+            showSalesInsuranceFinance();
+        }*/
+
+        if ("sales".equalsIgnoreCase(strMenuSelected)) {
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if ("finance".equalsIgnoreCase(strMenuSelected)) {
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if ("insurance".equalsIgnoreCase(strMenuSelected)) {
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if ("service_leads".equalsIgnoreCase(strMenuSelected)) {
+            initServiceLeads();
+            showServiceLeads();
+        } else if ("insurance_leads".equalsIgnoreCase(strMenuSelected)) {
+            initInsuranceLeads();
+            showInsuranceLeads();
+        } else if ("service".equalsIgnoreCase(strMenuSelected)) {
+            initService();
         }
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.sales) {
+            strMenuSelected = "sales";
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if (id == R.id.finance) {
+            strMenuSelected = "finance";
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if (id == R.id.insurance) {
+            strMenuSelected = "insurance";
+            initSalesInsuranceFinance();
+            showSalesInsuranceFinance();
+        } else if (id == R.id.service_leads) {
+            strMenuSelected = "service_leads";
+            initServiceLeads();
+            showServiceLeads();
+        } else if (id == R.id.insurance_leads) {
+            strMenuSelected = "insurance_leads";
+            initInsuranceLeads();
+            showInsuranceLeads();
+        } else if (id == R.id.service) {
+            strMenuSelected = "service";
+            initService();
+        } else if (id == R.id.change_theme) {
+            strMenuSelected = "";
+            if (DMSPreference.getBoolean(KEY_NIGHT_MODE)) {
+                DMSPreference.setBoolean(KEY_NIGHT_MODE, false);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            } else {
+                DMSPreference.setBoolean(KEY_NIGHT_MODE, true);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                recreate();
+            }
+        } else if (id == R.id.users) {
+            strMenuSelected = "";
+            Intent intent = new Intent(this, UserActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.logout) {
+            strMenuSelected = "";
+            logOutDialog(activity);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void showServiceLeads() {
+        presenter.getServiceLeadsOverview(activity);
+        presenter.getServiceBookingCount(activity);
+    }
+
+    public void showInsuranceLeads() {
+        presenter.getInsuranceLeadsOverview(activity);
+        presenter.getInsuranceBookingCount(activity);
+    }
+
+    public void showSalesInsuranceFinance() {
+        cardView.setVisibility(View.GONE);
+        presenter.getLeadsOverview(activity);
+        presenter.getTasksOverview(activity);
+        presenter.getDeliveryCount(activity);
+        presenter.getInvoiceCount(activity);
+        if (!strRole.equalsIgnoreCase("user")) {
+            txtTeamTitle.setText(recordsTeamList.get(0).getName());
+            //get Team Details
+            presenter.getTeamDetailList(activity, String.valueOf(recordsTeamList.get(0).getId()));
+            //get payments details
+            // presenter.getPaymentDetails(activity);
+        }
+    }
+
+    public void initSalesInsuranceFinance() {
+        llInsuranceLeads.setVisibility(View.GONE);
+        llSales.setVisibility(View.VISIBLE);
+        llService.setVisibility(View.GONE);
+        fabCreateEnquiry.setVisibility(View.VISIBLE);
+        strRole = DMSPreference.getString(KEY_ROLE, "user");
+        if (!strRole.equalsIgnoreCase("user")) {
+            Gson gson = new Gson();
+            String json = DMSPreference.getString(KEY_TEAMS);
+            Type type = new TypeToken<List<Record>>() {
+            }.getType();
+            recordsTeamList = gson.fromJson(json, type);
+            cardViewTeams.setVisibility(View.VISIBLE);
+            //  cardViewPayments.setVisibility(View.VISIBLE);
+        } else {
+            cardViewTeams.setVisibility(View.GONE);
+            // cardViewPayments.setVisibility(View.GONE);
+        }
+    }
+
+    public void initServiceLeads() {
+        llInsuranceLeads.setVisibility(View.GONE);
+        llSales.setVisibility(View.GONE);
+        llService.setVisibility(View.VISIBLE);
+        fabCreateEnquiry.setVisibility(View.GONE);
+    }
+
+    public void initInsuranceLeads() {
+        llInsuranceLeads.setVisibility(View.VISIBLE);
+        llSales.setVisibility(View.GONE);
+        llService.setVisibility(View.GONE);
+        fabCreateEnquiry.setVisibility(View.GONE);
+    }
+
+    public void initService() {
+        llInsuranceLeads.setVisibility(View.GONE);
+        llSales.setVisibility(View.GONE);
+        llService.setVisibility(View.GONE);
+        fabCreateEnquiry.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onSuccessLeadOverview(List<LeadOverviewResponse> leadOverviewResponse) {
@@ -362,19 +627,19 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onSuccessDeliveryCount(String count) {
-       /* txtDeliveryCount.setText(count);
+        txtDeliveryCount.setText(count);
         cvDeliveryCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, DeliveryActivity.class);
                 startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override
     public void onSuccessInvoiceCount(String count) {
-      /*  txtInvoiceCount.setText(count);
+        txtInvoiceCount.setText(count);
         cvInvoiceCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -383,7 +648,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intent.putExtra(EXTRA_SALE_TYPE_ID, "to invoice");
                 startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override
@@ -415,7 +680,14 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         plannedBooked = leadOverviewResponse.get(2).getResult().get(3).getStageIdCount();
         int planned = plannedCold + plannedWarm + plannedHot + plannedBooked;
 
-        int total = overdue + today + planned;
+        noActivityCold = leadOverviewResponse.get(3).getResult().get(0).getStageIdCount();
+        noActivityWarm = leadOverviewResponse.get(3).getResult().get(1).getStageIdCount();
+        noActivityHot = leadOverviewResponse.get(3).getResult().get(2).getStageIdCount();
+        noActivityBooked = leadOverviewResponse.get(3).getResult().get(3).getStageIdCount();
+        int noActivity = noActivityCold + noActivityWarm + noActivityHot + noActivityBooked;
+
+
+        int total = overdue + today + planned + noActivity;
 
         chart.setUsePercentValues(false);
         chart.getDescription().setEnabled(false);
@@ -478,6 +750,11 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         colors.add(getResources().getColor(R.color.light_blue));
         //}
 
+        entries.add(new PieEntry(noActivity,
+                String.valueOf(noActivity) + " No Activity",
+                getResources().getDrawable(R.drawable.ic_no_acttivity)));
+        colors.add(getResources().getColor(R.color.slate));
+
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
@@ -500,6 +777,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         txtLegendOverdue.setText(String.valueOf(overdue) + " Overdue");
         txtLegendToday.setText(String.valueOf(today) + " Today");
         txtLegendPlanned.setText(String.valueOf(planned) + " Planned");
+        txtLegendNoActivities.setText(String.valueOf(noActivity) + " No Activities");
+
 
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -511,8 +790,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                     launchOverdue();
                 } else if (h.getX() == 1) {
                     launchToday();
-                } else {
+                } else if (h.getX() == 2) {
                     launchPlanned();
+                } else {
+                    launchNoActivities();
                 }
 
                 Log.i("VAL SELECTED",
@@ -585,6 +866,24 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         txtBooked.setText(String.valueOf(plannedBooked));
     }
 
+    @OnClick(R.id.legend_no_activities) //ButterKnife uses.
+    public void launchNoActivities() {
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(activity,
+                R.anim.move_left_in_activity);
+        if (cardView.getVisibility() != View.VISIBLE) {
+            cardView.setVisibility(View.VISIBLE);
+        }
+        cardView.setAnimation(animation);
+        llTitle.setBackgroundColor(getResources().getColor(R.color.slate));
+        title.setText("NO Activities");
+        imageTitle.setImageResource(R.drawable.ic_no_acttivity);
+        strState = STATE_COMPLETED;
+        txtCold.setText(String.valueOf(noActivityCold));
+        txtWarm.setText(String.valueOf(noActivityWarm));
+        txtHot.setText(String.valueOf(noActivityHot));
+        txtBooked.setText(String.valueOf(noActivityBooked));
+    }
 
   /*  public void setPieChartSalesData(List<SaleOverviewResponse> leadOverviewResponse) {
         final List<Result> result = leadOverviewResponse.get(0).getResult();
@@ -744,47 +1043,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(intent);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.enquiry) {
-            Intent intent = new Intent(this, EnquiryActivity.class);
-            intent.putExtra(EXTRA_ENQUIRY, ENQUIRY);
-            startActivity(intent);
-        } else if (id == R.id.sub_enquiry) {
-            Intent intent = new Intent(this, EnquiryActivity.class);
-            intent.putExtra(EXTRA_ENQUIRY, SUB_ENQUIRY);
-            startActivity(intent);
-        } else if (id == R.id.sales_order) {
-            Intent intent = new Intent(this, SaleOrderActivity.class);
-            intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
-            intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
-            startActivity(intent);
-        } /*else if (id == R.id.follow_up) {
-            DMSToast.showLong(activity, "Coming Soon..");
-        } */ else if (id == R.id.change_theme) {
-            if (DMSPreference.getBoolean(KEY_NIGHT_MODE)) {
-                DMSPreference.setBoolean(KEY_NIGHT_MODE, false);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                recreate();
-            } else {
-                DMSPreference.setBoolean(KEY_NIGHT_MODE, true);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                recreate();
-            }
-
-        } else if (id == R.id.logout) {
-            logOutDialog(activity);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -845,4 +1103,405 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         recyclerTeams.setAdapter(teamAdapter);
 
     }
+
+    @Override
+    public void onSuccessPaymentDetail(final PaymentDetailResponse paymentDetailResponse) {
+       /* List<com.dealermanagmentsystem.data.model.payment.Record> paymentRecords = paymentDetailResponse.getRecords();
+        if (paymentRecords.size() == 0) {
+            cardViewPayments.setVisibility(View.GONE);
+        } else {
+            cardViewPayments.setVisibility(View.VISIBLE);
+            txtPaymentAmount.setText("\u20B9 " + String.valueOf(paymentDetailResponse.getTotalAmount()));
+            txtPaymentAmountTitle.setText("Payments " + "(" + String.valueOf(paymentDetailResponse.getLength()) + ")");
+        }
+
+        cardViewPayments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, PaymentDetailActivity.class);
+                intent.putExtra("PaymentList", paymentDetailResponse);
+                startActivity(intent);
+            }
+        });*/
+    }
+
+    @Override
+    public void onSuccessServiceLeadOverview(List<ServiceLeadOverviewResponse> serviceLeadOverviewResponses) {
+        setServicePieChartLeadData(serviceLeadOverviewResponses);
+    }
+
+    @Override
+    public void onSuccessServiceBookingCount(List<ServiceLeadOverviewResponse> response) {
+        txtServiceBookingCount.setText(String.valueOf(response.get(0).getResult()));
+    }
+
+
+    @OnClick(R.id.cardView_service_bookings) //ButterKnife uses.
+    public void openServiceBooking() {
+        Intent intent = new Intent(activity, ServiceBookingActivity.class);
+        startActivity(intent);
+    }
+
+    public void setServicePieChartLeadData(List<ServiceLeadOverviewResponse> serviceLeadOverviewResponses) {
+
+        int overdue = serviceLeadOverviewResponses.get(0).getResult();
+
+        int today = serviceLeadOverviewResponses.get(1).getResult();
+
+        int planned = serviceLeadOverviewResponses.get(2).getResult();
+
+        int noActivities = serviceLeadOverviewResponses.get(3).getResult();
+
+        int total = overdue + today + planned + noActivities;
+
+        chartService.setUsePercentValues(false);
+        chartService.getDescription().setEnabled(false);
+        chartService.setExtraOffsets(5, 10, 5, 5);
+        chartService.setDragDecelerationFrictionCoef(0.95f);
+        chartService.setCenterTextTypeface(DMSTypeFace.getTypeface(activity));
+        chartService.setCenterTextSize(16f);//center size
+        chartService.setCenterText(String.valueOf(total));
+        chartService.setCenterTextColor(getResources().getColor(R.color.textPrimary));
+        chartService.setDrawHoleEnabled(true);
+        chartService.setHoleColor(getResources().getColor(R.color.card_bg));
+        chartService.setTransparentCircleColor(getResources().getColor(R.color.card_bg));
+        chartService.setTransparentCircleAlpha(110);
+        chartService.setHoleRadius(50f);
+        chartService.setTransparentCircleRadius(51f);
+        chartService.setDrawCenterText(true);
+        chartService.setRotationAngle(0);
+        chartService.setRotationEnabled(true);
+        chartService.setHighlightPerTapEnabled(true);
+
+        chartService.animateY(1400, Easing.EaseInOutQuad);
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+        l.setTypeface(DMSTypeFace.getTypeface(activity));
+
+        chartService.getLegend().setEnabled(false);
+        chartService.setEntryLabelColor(Color.WHITE);
+        chartService.setEntryLabelTypeface(DMSTypeFace.getTypeface(activity));
+        chartService.setEntryLabelTextSize(0f);//title size
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        // if (overdue > 0) {
+        entries.add(new PieEntry(overdue,
+                String.valueOf(overdue) + " Overdue",
+                getResources().getDrawable(R.drawable.ic_overdue)));
+        colors.add(getResources().getColor(R.color.light_orange));
+        //  }
+
+        //   if (today > 0) {
+        entries.add(new PieEntry(today,
+                String.valueOf(today) + " Today",
+                getResources().getDrawable(R.drawable.ic_today)));
+        colors.add(getResources().getColor(R.color.light_yellow));
+        //  }
+
+        //if (planned > 0) {
+        entries.add(new PieEntry(planned,
+                String.valueOf(planned) + " Planned",
+                getResources().getDrawable(R.drawable.ic_enquiry)));
+        colors.add(getResources().getColor(R.color.light_blue));
+
+        entries.add(new PieEntry(noActivities,
+                String.valueOf(noActivities) + " No Activities",
+                getResources().getDrawable(R.drawable.ic_no_acttivity)));
+        colors.add(getResources().getColor(R.color.slate));
+        //}
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        // add a lot of colors
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(chartService));
+        data.setValueTextSize(0f);//value size
+        data.setValueTextColor(Color.WHITE);
+        data.setValueTypeface(DMSTypeFace.getTypeface(activity));
+        chartService.setData(data);
+
+        // undo all highlights
+        chartService.highlightValues(null);
+        chartService.invalidate();
+
+        txtServiceLegendOverdue.setText(String.valueOf(overdue) + " Overdue");
+        txtServiceLegendToday.setText(String.valueOf(today) + " Today");
+        txtServiceLegendPlanned.setText(String.valueOf(planned) + " Planned");
+        txtServiceLegendNoActivities.setText(String.valueOf(noActivities) + " No Activities");
+
+        chartService.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null)
+                    return;
+                if (h.getX() == 0) {
+                    launchServiceOverdue();
+                } else if (h.getX() == 1) {
+                    launchServiceToday();
+                } else if (h.getX() == 2) {
+                    launchServicePlanned();
+                } else {
+                    launchServiceNoActivities();
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+    }
+
+    @OnClick(R.id.legend_overdue_service) //ButterKnife uses.
+    public void launchServiceOverdue() {
+        Intent intent = new Intent(activity, ServiceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_OVERDUE);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_today_service) //ButterKnife uses.
+    public void launchServiceToday() {
+        Intent intent = new Intent(activity, ServiceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_TODAY);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_planned_service) //ButterKnife uses.
+    public void launchServicePlanned() {
+        Intent intent = new Intent(activity, ServiceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_PLANNED);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_no_activities_service) //ButterKnife uses.
+    public void launchServiceNoActivities() {
+        Intent intent = new Intent(activity, ServiceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_COMPLETED);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSuccessAppUpdate(final AppUpdateResponse response) {
+        if (Utils.getAppVersionCode(activity) < response.getVersionCode()) {
+            new AlertDialog.Builder(activity)
+                    .setTitle("App update is available " + response.getVersionName())
+                    .setMessage("New features: " + response.getDescription())
+                    .setCancelable(response.getCancellable())
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(response.getUrl()));
+                            startActivity(browserIntent);
+                            finish();
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    ////////////////////////////////////////Insurance/////////////////////////
+    @Override
+    public void onSuccessInsuranceLeadOverview(List<ServiceLeadOverviewResponse> response) {
+        setInsurancePieChartLeadData(response);
+    }
+
+    @Override
+    public void onSuccessInsuranceBookingCount(List<ServiceLeadOverviewResponse> response) {
+        txtInsuranceBookingCount.setText(String.valueOf(response.get(0).getResult()));
+    }
+
+
+    @OnClick(R.id.cardView_insurance_bookings) //ButterKnife uses.
+    public void openInsuranceBooking() {
+        Intent intent = new Intent(activity, InsuranceBookingActivity.class);
+        startActivity(intent);
+    }
+
+    public void setInsurancePieChartLeadData(List<ServiceLeadOverviewResponse> insuranceLeadOverviewResponses) {
+
+        int overdue = insuranceLeadOverviewResponses.get(0).getResult();
+
+        int today = insuranceLeadOverviewResponses.get(1).getResult();
+
+        int planned = insuranceLeadOverviewResponses.get(2).getResult();
+
+        int noActivities = insuranceLeadOverviewResponses.get(3).getResult();
+
+        int total = overdue + today + planned + noActivities;
+
+        chartInsuranceLeads.setUsePercentValues(false);
+        chartInsuranceLeads.getDescription().setEnabled(false);
+        chartInsuranceLeads.setExtraOffsets(5, 10, 5, 5);
+        chartInsuranceLeads.setDragDecelerationFrictionCoef(0.95f);
+        chartInsuranceLeads.setCenterTextTypeface(DMSTypeFace.getTypeface(activity));
+        chartInsuranceLeads.setCenterTextSize(16f);//center size
+        chartInsuranceLeads.setCenterText(String.valueOf(total));
+        chartInsuranceLeads.setCenterTextColor(getResources().getColor(R.color.textPrimary));
+        chartInsuranceLeads.setDrawHoleEnabled(true);
+        chartInsuranceLeads.setHoleColor(getResources().getColor(R.color.card_bg));
+        chartInsuranceLeads.setTransparentCircleColor(getResources().getColor(R.color.card_bg));
+        chartInsuranceLeads.setTransparentCircleAlpha(110);
+        chartInsuranceLeads.setHoleRadius(50f);
+        chartInsuranceLeads.setTransparentCircleRadius(51f);
+        chartInsuranceLeads.setDrawCenterText(true);
+        chartInsuranceLeads.setRotationAngle(0);
+        chartInsuranceLeads.setRotationEnabled(true);
+        chartInsuranceLeads.setHighlightPerTapEnabled(true);
+
+        chartInsuranceLeads.animateY(1400, Easing.EaseInOutQuad);
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+        l.setTypeface(DMSTypeFace.getTypeface(activity));
+
+        chartInsuranceLeads.getLegend().setEnabled(false);
+        chartInsuranceLeads.setEntryLabelColor(Color.WHITE);
+        chartInsuranceLeads.setEntryLabelTypeface(DMSTypeFace.getTypeface(activity));
+        chartInsuranceLeads.setEntryLabelTextSize(0f);//title size
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        // if (overdue > 0) {
+        entries.add(new PieEntry(overdue,
+                String.valueOf(overdue) + " Overdue",
+                getResources().getDrawable(R.drawable.ic_overdue)));
+        colors.add(getResources().getColor(R.color.light_orange));
+        //  }
+
+        //   if (today > 0) {
+        entries.add(new PieEntry(today,
+                String.valueOf(today) + " Today",
+                getResources().getDrawable(R.drawable.ic_today)));
+        colors.add(getResources().getColor(R.color.light_yellow));
+        //  }
+
+        //if (planned > 0) {
+        entries.add(new PieEntry(planned,
+                String.valueOf(planned) + " Planned",
+                getResources().getDrawable(R.drawable.ic_enquiry)));
+        colors.add(getResources().getColor(R.color.light_blue));
+
+        entries.add(new PieEntry(noActivities,
+                String.valueOf(noActivities) + " No Activities",
+                getResources().getDrawable(R.drawable.ic_no_acttivity)));
+        colors.add(getResources().getColor(R.color.slate));
+        //}
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        // add a lot of colors
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(chartInsuranceLeads));
+        data.setValueTextSize(0f);//value size
+        data.setValueTextColor(Color.WHITE);
+        data.setValueTypeface(DMSTypeFace.getTypeface(activity));
+        chartInsuranceLeads.setData(data);
+
+        // undo all highlights
+        chartInsuranceLeads.highlightValues(null);
+        chartInsuranceLeads.invalidate();
+
+        txtInsuranceLegendOverdue.setText(String.valueOf(overdue) + " Overdue");
+        txtInsuranceLegendToday.setText(String.valueOf(today) + " Today");
+        txtInsuranceLegendPlanned.setText(String.valueOf(planned) + " Planned");
+        txtInsuranceLegendNoActivities.setText(String.valueOf(noActivities) + " No Activities");
+
+        chartInsuranceLeads.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null)
+                    return;
+                if (h.getX() == 0) {
+                    launchInsuranceOverdue();
+                } else if (h.getX() == 1) {
+                    launchInsuranceToday();
+                } else if (h.getX() == 2) {
+                    launchInsurancePlanned();
+                } else {
+                    launchInsuranceNoActivities();
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+    }
+
+    @OnClick(R.id.legend_overdue_insurance) //ButterKnife uses.
+    public void launchInsuranceOverdue() {
+        Intent intent = new Intent(activity, InsuranceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_OVERDUE);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_today_insurance) //ButterKnife uses.
+    public void launchInsuranceToday() {
+        Intent intent = new Intent(activity, InsuranceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_TODAY);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_planned_insurance) //ButterKnife uses.
+    public void launchInsurancePlanned() {
+        Intent intent = new Intent(activity, InsuranceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_PLANNED);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.legend_no_activities_insurance) //ButterKnife uses.
+    public void launchInsuranceNoActivities() {
+        Intent intent = new Intent(activity, InsuranceLeadActivity.class);
+        intent.putExtra(EXTRA_STATE, STATE_COMPLETED);
+        startActivity(intent);
+    }
+
+    //Set Alarm for to fetch daily/Today tasks
+    public void setAlarmForTaskReminder() {
+        if (!DMSPreference.getBoolean(KEY_TASKS_REMINDER_ALARM)) {
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 9);
+            calendar.set(Calendar.MINUTE, 0);
+            if (calendar.getTime().compareTo(new Date()) < 0)
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            Intent intent = new Intent(getApplicationContext(), TaskReminderReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            if (alarmManager != null) {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            }
+
+            DMSPreference.setBoolean(KEY_TASKS_REMINDER_ALARM, true);
+        }
+    }
+
+
 }

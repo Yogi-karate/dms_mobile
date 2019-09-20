@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:id="@+id/ll_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/textPrimary"
+        android:gravity="center|right"
+        android:orientation="horizontal">
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextView
+            android:id="@+id/txt_my_leads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="My Leads"
+            android:textColor="@color/header_title" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sw_filter"
+            style="@style/ColorSwitchStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            app:theme="@style/ColorSwitchStyle" />
+      <!--  <com.dealermanagmentsystem.utils.ui.DMSCheckBox
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Leads"
+            android:textColor="@color/textPrimary" />
+
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextView
+            android:id="@+id/txt_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/btn_insurance"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Apply"
+            android:textColor="@color/white" />-->
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_View"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

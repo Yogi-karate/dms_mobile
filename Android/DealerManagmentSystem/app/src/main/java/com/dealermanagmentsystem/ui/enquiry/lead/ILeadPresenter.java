@@ -4,7 +4,7 @@ import android.app.Activity;
 
 public interface ILeadPresenter {
 
-    public void getLeads(Activity activity, String strState, String strStage);
+    public void getLeads(Activity activity, String strState, String strStage, boolean isCheckedMyLeads);
 
     public void getLeadsBooked(Activity activity, String strId);
 

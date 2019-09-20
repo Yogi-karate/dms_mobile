@@ -21,6 +21,7 @@ import com.dealermanagmentsystem.ui.enquiry.tasks.TaskCreateActivity;
 import java.util.List;
 
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM_MODULE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_DATE_DEADLINE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_SUMMARY;
@@ -30,10 +31,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
 
     private Activity activity;
     List<TasksResponse> mRecords;
+    String mStrFrom;
 
-    public TasksAdapter(Activity activity, List<TasksResponse> records) {
+    public TasksAdapter(Activity activity, List<TasksResponse> records, String strFrom) {
         this.activity = activity;
         this.mRecords = records;
+        this.mStrFrom = strFrom;
     }
 
     @NonNull
@@ -85,6 +88,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
                 intent.putExtra(EXTRA_ACTIVITY_SUMMARY, mRecords.get(i).getSummary());
                 intent.putExtra(EXTRA_ACTIVITY_DATE_DEADLINE, mRecords.get(i).getDateDeadline());
                 intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_EDIT_ACTIVITY);
+                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM_MODULE, mStrFrom);
                 activity.startActivity(intent);
             }
         });

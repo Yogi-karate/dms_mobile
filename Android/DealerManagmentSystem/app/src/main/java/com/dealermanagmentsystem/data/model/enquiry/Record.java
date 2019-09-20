@@ -36,9 +36,25 @@ public class Record {
     @Expose
     private String dateDeadLine;
 
+    @SerializedName("activity_date_deadline")
+    @Expose
+    private String activityDateDeadLine;
+
+    @SerializedName("call_state")
+    @Expose
+    private String callState;
+
     @SerializedName("enquiry_id")
     @Expose
     private Object enquiryId = null;
+
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
+
+    @SerializedName("disposition")
+    @Expose
+    private Object disposition;
 
     public String getPartnerMobile() {
         return partnerMobile;
@@ -72,9 +88,7 @@ public class Record {
         this.mobile = mobile;
     }
 
-    @SerializedName("mobile")
-    @Expose
-    private String mobile;
+
 
     public Object getUserId() {
         return userId;
@@ -122,5 +136,29 @@ public class Record {
 
     public void setEnquiryId(Object enquiryId) {
         this.enquiryId = enquiryId;
+    }
+
+    public String getActivityDateDeadLine() {
+        return activityDateDeadLine;
+    }
+
+    public void setActivityDateDeadLine(String activityDateDeadLine) {
+        this.activityDateDeadLine = activityDateDeadLine;
+    }
+
+    public String getCallState() {
+        return callState;
+    }
+
+    public void setCallState(String callState) {
+        this.callState = callState;
+    }
+
+    public Object getDisposition() {
+        return disposition;
+    }
+
+    public void setDisposition(Object disposition) {
+        this.disposition = disposition;
     }
 }

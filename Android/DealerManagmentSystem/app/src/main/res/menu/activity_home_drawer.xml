@@ -4,23 +4,60 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/enquiry"
-            android:checked="true"
-            android:icon="@drawable/ic_enquiry"
-            android:title="Enquiry" />
-        <item
-            android:id="@+id/sub_enquiry"
-            android:icon="@drawable/ic_sub_enquiry"
-            android:title="Sub Enquiry" />
-        <item
-            android:id="@+id/sales_order"
-            android:icon="@drawable/ic_sale_order"
-            android:title="Sales Order" />
+        <!-- <item
+             android:id="@+id/enquiry"
+             android:checked="true"
+             android:icon="@drawable/ic_enquiry"
+             android:title="Enquiry" />-->
+        <!-- <item
+             android:id="@+id/sub_enquiry"
+             android:icon="@drawable/ic_sub_enquiry"
+             android:title="Sub Enquiry" />
+         <item
+             android:id="@+id/sales_order"
+             android:icon="@drawable/ic_sale_order"
+             android:title="Sales Order" />-->
         <!--<item
             android:id="@+id/follow_up"
             android:icon="@drawable/ic_followup"
             android:title="Follow Up" />-->
+
+        <item
+            android:id="@+id/sales"
+            android:icon="@drawable/ic_sale_order"
+            android:visible="false"
+            android:title="Sales" />
+        <item
+            android:id="@+id/finance"
+            android:icon="@drawable/ic_finance"
+            android:visible="false"
+            android:title="Finance" />
+        <item
+            android:id="@+id/insurance"
+            android:icon="@drawable/ic_insurance"
+            android:visible="false"
+            android:title="Insurance" />
+        <item
+            android:id="@+id/service_leads"
+            android:icon="@drawable/ic_service_leads"
+            android:visible="false"
+            android:title="Service Leads" />
+
+        <item
+            android:id="@+id/insurance_leads"
+            android:icon="@drawable/ic_insurance_leads"
+            android:visible="false"
+            android:title="Insurance Leads" />
+        <item
+            android:id="@+id/service"
+            android:icon="@drawable/ic_service"
+            android:visible="false"
+            android:title="Service" />
+
+        <item
+            android:id="@+id/users"
+            android:icon="@drawable/ic_user_admin"
+            android:title="Users" />
         <item
             android:id="@+id/change_theme"
             android:icon="@drawable/ic_theme"

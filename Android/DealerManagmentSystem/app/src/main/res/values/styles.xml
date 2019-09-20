@@ -55,4 +55,10 @@
         <item name="color">@color/textPrimary</item>
     </style>
 
+    <style name="ColorSwitchStyle">
+    <item name="colorControlActivated">@color/blueDark</item>
+    <item name="colorControlNormal">@color/blueDark</item>
+    <item name="colorAccent">@color/white</item>
+    <item name="colorControlHighlight">@color/white</item>
+    </style>
 </resources>
