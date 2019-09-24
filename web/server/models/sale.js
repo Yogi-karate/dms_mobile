@@ -28,7 +28,7 @@ class Sale {
             if (invoice_status != null) {
                 domain.push(["invoice_status", "ilike", invoice_status]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "date_order", "invoice_status", "amount_total"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "product_name", "product_variant", "product_color", "state", "finance_type", "financier_name", "payment_date", "delivery_date", "stock_status", "balance_amount"] });
             return result;
         } catch (err) {
             return { error: err.message || err.toString() };
@@ -39,7 +39,7 @@ class Sale {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
-            let model = 'stock.picking';
+            let model = 'stock.picking'; 
             let domain = [];
             domain.push(["state", "ilike", state]);
             domain.push(["picking_type_id.code", "=", 'outgoing']);
@@ -50,7 +50,7 @@ class Sale {
         }
     }
 
-    async getInventoryStock(user, { model, domain = [], fields = []}) {
+    async getInventoryStock(user, { model, domain = [], fields = [] }) {
         let result = [];
         try {
             let server = odoo.getOdoo(user.email);
