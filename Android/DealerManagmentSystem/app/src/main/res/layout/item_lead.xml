@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/card_bg"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:paddingBottom="5dp"
                 android:text="Name"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -56,7 +56,7 @@
                 android:paddingBottom="5dp"
                 android:text="Nikhil Vivaan"
                 android:textColor="@color/textPrimary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +84,7 @@
                 android:paddingBottom="5dp"
                 android:text="Customer"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/partner_name"
@@ -103,20 +103,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_date_follow"
-                android:tint="@color/drab"
-                android:visibility="gone" />
+
 
             <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -126,7 +120,7 @@
                 android:paddingBottom="5dp"
                 android:text="Follow up date"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/user_name"
@@ -138,7 +132,6 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="9739797397"
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -162,7 +155,7 @@
                 android:paddingBottom="5dp"
                 android:text="Mobile No"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -193,7 +186,7 @@
                     android:paddingBottom="5dp"
                     android:text="actions"
                     android:textColor="@color/chrome_blue"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
