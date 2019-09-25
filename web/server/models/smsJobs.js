@@ -8,6 +8,8 @@ const JobMaster = require('../models/JobMaster');
 const MsgTemplate = require('../models/MsgTemplate');
 const sms = require('../ext/sms_new');
 const muser = require('../models/MUser');
+const MsgRecipient = require('../models/MessageRecipient');
+const email = require('../ext/sendEmail');
 
 class Jobs {
 
@@ -41,7 +43,7 @@ class Jobs {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
             let domain = [];
-            let date = new Date();
+            let date = new Date("2019", "7", "8");
             date.setDate(date.getDate() - 1);
             let today = date.toISOString().slice(0, 10) + " 18:30:00";
             console.log("The todayyy is ", today);
@@ -49,7 +51,7 @@ class Jobs {
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
             domain.push(["mobile", "!=", false]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"]});
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"], limit: 2 });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -103,7 +105,30 @@ class Jobs {
         console.log("The admins are ", admins, admins.length);
         for (let i = 0; i < admins.length; i++) {
             let adminMobile = admins[i].mobile;
-            messageResponse = await sms("9840021822", encodeURIComponent(message));
+            messageResponse = await sms("7795659269", encodeURIComponent(message));
+        }
+        return messageResponse;
+    }
+
+    async executeExcelNotification(jobLog) {
+        let messageResponse = null;
+        let excelTemplateVars = templateType("excelNotify", jobLog);
+        let excelMsgTemplate = await MsgTemplate.list({ name: "excelNotify" });
+        let template = excelMsgTemplate[0].value;
+        console.log("The excelMsgTemplate is ", template);
+        let messageTemplate = function (template, excelTemplateVars) {
+            return new Function("return `" + template + "`;").call(excelTemplateVars);
+        }
+        let message = messageTemplate(template, excelTemplateVars);
+        let recipients = await MsgRecipient.listByName("messageLogsExcel");
+        console.log("The recipients are ", recipients, recipients.length);
+        if (recipients.length > 0) {
+            for (let i = 0; i < recipients.length; i++) {
+                if (recipients[i].source.length > 0 && recipients[i].ccAddress.length > 0 && recipients[i].toAddress.length > 0) {
+                    console.log("The recipient details are ", recipients[i].source, recipients[i].ccAddress, recipients[i].toAddress, recipients[i].replyTo);
+                    //messageResponse = await email("anishkonda123@gmail.com", message, "testing", "testing email");
+                }
+            }
         }
         return messageResponse;
     }
@@ -140,7 +165,7 @@ class Jobs {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
                         message = messageTemplate(templateString, templateVars);
-                        let messageResponse = await sms(mobile, encodeURIComponent(message));
+                        let messageResponse = await sms("7795659269", encodeURIComponent(message));
                         console.log("the count after is ", smsCount);
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
@@ -161,10 +186,16 @@ class Jobs {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
                     console.log("The adminMsgResponse is", adminMsgResponse);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate);
+                    console.log("The excelNotification is", excelNotification);
+
                 } else {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
                     console.log("The adminMsgResponse is", adminMsgResponse);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate);
+                    console.log("The excelNotification is", excelNotification);
+
                 }
                 return result;
             } else {
@@ -216,6 +247,11 @@ function templateType(type, record) {
                 status: record.status,
                 failedCount: record.failedCount,
                 successCount: record.successCount
+            }
+        case 'excelNotify':
+            return {
+                name: record.name,
+                date: record.createdAt.toISOString().slice(0, 10)
             }
         default:
             return {

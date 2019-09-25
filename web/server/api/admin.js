@@ -11,6 +11,7 @@ const MsgTemplate = require('../models/MsgTemplate');
 const JobMaster = require('../models/JobMaster');
 const smsJobs = require('../models/smsJobs');
 const sms = require('../ext/sms_new');
+const MsgRecipient = require('../models/MessageRecipient');
 
 router.use((req, res, next) => {
   console.log("service api authenication ");
@@ -128,6 +129,15 @@ router.post('/createMsgTemplate', async (req, res) => {
 router.post('/createJobMaster', async (req, res) => {
   try {
     let result = await JobMaster.add(req.user, req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/createMessageRecipient', async (req, res) => {
+  try {
+    let result = await MsgRecipient.add(req.user, req.body);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

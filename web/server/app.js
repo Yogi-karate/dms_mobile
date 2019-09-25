@@ -7,6 +7,7 @@ const auth_pass = require('./passport');
 const api = require('./api');
 const admin = require('firebase-admin');
 const firebaseAccount = require("../firebase_dms.json");
+const jsonToXls = require("json2xls");
 
 require('dotenv').config();
 
@@ -32,7 +33,7 @@ app.prepare().then(() => {
   const server = express();
 
   server.use(express.json());
-
+  server.use(jsonToXls.middleware);
   // confuring MongoDB session store
   const MongoStore = mongoSessionStore(session);
   const sess = {
@@ -59,18 +60,19 @@ app.prepare().then(() => {
     databaseURL: "https://dealer-managment-system.firebaseio.com"
   });
 
-    server.get('*', (req, res) => {
-      const url = URL_MAP[req.path];
-      if (url) {
-        app.render(req, res, url);
-      } else {
-        handle(req, res);
-      }
-    });
-    
+  server.get('*', (req, res) => {
+    const url = URL_MAP[req.path];
+    if (url) {
+      app.render(req, res, url);
+    } else {
+      handle(req, res);
+    }
+  });
+
   // starting express server
   server.listen(port, (err) => {
     if (err) throw err;
     console.log(`> Ready on ${ROOT_URL}`); // eslint-disable-line no-console
   });
+
 });
