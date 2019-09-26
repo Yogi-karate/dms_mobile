@@ -29,6 +29,7 @@ class Sale {
                 domain.push(["invoice_status", "ilike", invoice_status]);
             }
             result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "product_name", "product_variant", "product_color", "state", "finance_type", "financier_name", "payment_date", "delivery_date", "stock_status", "balance_amount"] });
+            result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
             return { error: err.message || err.toString() };
@@ -64,7 +65,7 @@ class Sale {
     async getOrderCountByState(user, { state }) {
         let result = [];
         try {
-            console.log("The state is ",state);
+            console.log("The state is ", state);
             let server = odoo.getOdoo(user.email);
             let model = 'sale.order';
             let domain = [];
