@@ -12,6 +12,7 @@ const JobMaster = require('../models/JobMaster');
 const smsJobs = require('../models/smsJobs');
 const sms = require('../ext/sms_new');
 const MsgRecipient = require('../models/MessageRecipient');
+const MsgSubscription = require('../models/MessageSubscription');
 
 router.use((req, res, next) => {
   console.log("service api authenication ");
@@ -143,6 +144,16 @@ router.post('/createMessageRecipient', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+
+router.post('/createMessageSubscription', async (req, res) => {
+  try {
+    let result = await MsgSubscription.add(req.user, req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 
 router.get('/listAdminUsers', async (req, res) => {
   try {

@@ -6,40 +6,21 @@ const { Schema } = mongoose;
 const msgRecipientSchema = new Schema({
     name: {
         type: String,
-        default: "",
     },
-    source: {
-        type: Array,
-        default: [],
-    },
-    ccAddress: {
-        type: Array,
-        default: [],
-    },
-    toAddress: {
-        type: Array,
-        default: [],
-    },
-    replyTo: {
-        type: Array,
-        default: [],
+    email: {
+        type: String,
     },
     mobile: {
-        type: Array,
-        default: [],
+        type: String,
     },
     createdAt: {
         type: Date,
-    },
-    type: {
-        type: Array,
-        default: []
     },
 });
 
 class MessageRecipientClass {
     static publicFields() {
-        return ['name', 'source', 'mobile'];
+        return ['name', 'email', 'mobile'];
     }
 
     static async list() {
@@ -54,19 +35,15 @@ class MessageRecipientClass {
         return recipient;
     }
 
-    static async add(user, { name, source, ccAddress, toAddress, replyTo, mobile, type }) {
+    static async add(user, { name, email, mobile }) {
         if (name) {
             const recipient = await this.findOne({ name });
             if (recipient) return recipient;
             const newRecipient = await this.create({
                 createdAt: new Date(),
                 name,
-                source,
-                ccAddress,
-                toAddress,
-                replyTo,
+                email,
                 mobile,
-                type
             });
             return newRecipient;
         }
