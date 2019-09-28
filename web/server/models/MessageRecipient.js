@@ -50,6 +50,6 @@ class MessageRecipientClass {
     };
 }
 msgRecipientSchema.loadClass(MessageRecipientClass);
-const MessageRecipient = mongoose.model('MessageRecipient', msgRecipientSchema);
+const MessageRecipient = mongoose.model('Recipient', msgRecipientSchema);
 module.exports = MessageRecipient;
 

@@ -173,4 +173,14 @@ router.get('/listMsgTemplates/:name', async (req, res) => {
   }
 });
 
+router.get('/listSubscription/:name', async (req, res) => {
+  try {
+    let result = await MsgSubscription.listByName({ name: req.params.name });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+
 module.exports = router;

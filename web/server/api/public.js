@@ -33,18 +33,24 @@ router.post('/createAppVersion', async (req, res) => {
   }
 });
 
-router.get('/dailyMessageLogs', async (req, res) => {
+router.get('/messageLogsBasedOnDate', async (req, res) => {
   try {
-    let result = await MsgLogs.listDailyLogs({ templateName: req.query.templateName });
+    let result = await MsgLogs.msgLogsBasedOnDate({ templateName: req.query.templateName, startDate: req.query.startDate, endDate: req.query.endDate });
     console.log("The result for dailyMessageLogs are ", result);
-    if (result.length > 0 && result !== null) {
-      res.xls(`${req.query.templateName}_${result[0].createdAt}.xlsx`, result, { fields: ['name', 'mobile', 'templateName', 'message', 'response.status'] });
-    } else {
+    if (result === false) {
+      let emptyExcel = {
+        templateName: req.query.templateName,
+        status: "Incorrect Start or End date formats, please provide valid date formats YYYY-MM-DD"
+      }
+      res.xls(`${req.query.templateName}_InValidDates.xlsx`, emptyExcel);
+    } else if (result.length <= 0 && result === null) {
       let emptyExcel = {
         templateName: req.query.templateName,
         status: "No Messages sent today,because leads generated is zero"
       }
-      res.xls(`${req.query.templateName}_Empty.xlsx`, emptyExcel);
+      res.xls(`${req.query.templateName}_EmptyRecords.xlsx`, emptyExcel);
+    } else {
+      res.xls(`${req.query.templateName}_${req.query.startDate}_${req.query.endDate}.xlsx`, result, { fields: ['name', 'mobile', 'templateName', 'message', 'response.status'] });
     }
   } catch (err) {
     res.json({ error: err.message || err.toString() });

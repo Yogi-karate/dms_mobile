@@ -7,20 +7,20 @@ const msgSubscriptionSchema = new Schema({
     name: {
         type: String,
     },
-    source: [{
-        type: Schema.ObjectId, ref: "MessageRecipient"
+    from: [{
+        type: Schema.ObjectId, ref: "Recipient"
     }],
     ccAddress: [{
-        type: Schema.ObjectId, ref: "MessageRecipient"
+        type: Schema.ObjectId, ref: "Recipient"
     }],
     toAddress: [{
-        type: Schema.ObjectId, ref: "MessageRecipient"
+        type: Schema.ObjectId, ref: "Recipient"
     }],
     replyTo: [{
-        type: Schema.ObjectId, ref: "MessageRecipient"
+        type: Schema.ObjectId, ref: "Recipient"
     }],
     mobile: [{
-        type: Schema.ObjectId, ref: "MessageRecipient"
+        type: Schema.ObjectId, ref: "Recipient"
     }],
     createdAt: {
         type: Date,
@@ -45,20 +45,22 @@ class MessageSubscriptionClass {
         return msgSubscriptions;
     }
 
-    static async listByName(name) {
+    static async listByName({ name }) {
+        const populateSubscription = [{ path: "from" }, { path: "ccAddress" }, { path: "toAddress" }, { path: "replyTo" }, { path: "mobile" }, { path: "template" }];
         const msgSubscription = await this.find({ name: name })
+            .populate(populateSubscription)
             .sort({ createdAt: -1 });
         return msgSubscription;
     }
 
-    static async add(user, { name, source, ccAddress, toAddress, replyTo, mobile, type, template }) {
+    static async add(user, { name, from, ccAddress, toAddress, replyTo, mobile, type, template }) {
         if (name) {
             const subscription = await this.findOne({ name });
             if (subscription) return subscription;
             const newSubscription = await this.create({
                 createdAt: new Date(),
                 name,
-                source,
+                from,
                 ccAddress,
                 toAddress,
                 replyTo,
@@ -71,5 +73,5 @@ class MessageSubscriptionClass {
     };
 }
 msgSubscriptionSchema.loadClass(MessageSubscriptionClass);
-const MessageSubscription = mongoose.model('MessageSubscription', msgSubscriptionSchema);
+const MessageSubscription = mongoose.model('Subscription', msgSubscriptionSchema);
 module.exports = MessageSubscription;

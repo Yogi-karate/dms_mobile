@@ -10,6 +10,7 @@ const sms = require('../ext/sms_new');
 const muser = require('../models/MUser');
 const MsgRecipient = require('../models/MessageRecipient');
 const email = require('../ext/sendEmail');
+const msgSubscription = require('../models/MessageSubscription');
 
 class Jobs {
 
@@ -91,7 +92,21 @@ class Jobs {
         }
     }
 
+    async fetchRecipientDetails() {
+        console.log("Inside fetchRecipientDetails method");
+        let recepientsDetails = await msgSubscription.listByName("excelNotification");
+        console.log("recepientsDetails are ", recepientsDetails[0].type.includes("EMAIL"));
+        /* first check for type, is email present*/
+        if (recepientsDetails[0].type.includes("EMAIL")) {
+
+        }
+        if (recepientsDetails[0].type.includes("SMS")) {
+
+        }
+    }
+
     async executeAdminSMS(jobLog) {
+        console.log("Inside executeAdminSMS method");
         let messageResponse = null;
         let adminTemplateVars = templateType("adminNotify", jobLog);
         let adminMsgTemplate = await MsgTemplate.list({ name: "adminNotify" });
@@ -110,9 +125,16 @@ class Jobs {
         return messageResponse;
     }
 
-    async executeExcelNotification(jobLog) {
+    async executeExcelNotification(name, startDate, endDate) {
+        console.log("Inside executeExcelNotification method ", name, startDate, endDate);
+        let newrecord = {
+            name: name,
+            startDate: startDate,
+            endDate: endDate
+        };
+        let subscription = {};
         let messageResponse = null;
-        let excelTemplateVars = templateType("excelNotify", jobLog);
+        let excelTemplateVars = templateType("excelNotify", newrecord);
         let excelMsgTemplate = await MsgTemplate.list({ name: "excelNotify" });
         let template = excelMsgTemplate[0].value;
         console.log("The excelMsgTemplate is ", template);
@@ -120,6 +142,7 @@ class Jobs {
             return new Function("return `" + template + "`;").call(excelTemplateVars);
         }
         let message = messageTemplate(template, excelTemplateVars);
+        subscription = await this.fetchRecipientDetails();
         let recipients = await MsgRecipient.listByName("messageLogsExcel");
         console.log("The recipients are ", recipients, recipients.length);
         if (recipients.length > 0) {
@@ -186,14 +209,18 @@ class Jobs {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
                     console.log("The adminMsgResponse is", adminMsgResponse);
-                    let excelNotification = await this.executeExcelNotification(jobUpdate);
+                    let nextDay = jobUpdate.createdAt;
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, jobUpdate.createdAt, nextDay);
                     console.log("The excelNotification is", excelNotification);
 
                 } else {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
                     console.log("The adminMsgResponse is", adminMsgResponse);
-                    let excelNotification = await this.executeExcelNotification(jobUpdate);
+                    let nextDay = jobUpdate.createdAt;
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, jobUpdate.createdAt, nextDay);
                     console.log("The excelNotification is", excelNotification);
 
                 }
@@ -251,7 +278,8 @@ function templateType(type, record) {
         case 'excelNotify':
             return {
                 name: record.name,
-                date: record.createdAt.toISOString().slice(0, 10)
+                startDate: record.startDate.toISOString().slice(0, 10),
+                endDate: record.endDate.toISOString().slice(0, 10),
             }
         default:
             return {
