@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const appVersion = require('../models/appVersion');
 const MsgLogs = require('../models/MsgLog');
+const smsJobs = require('../models/smsJobs');
 
 router.use((req, res, next) => {
   next();
@@ -56,5 +57,14 @@ router.get('/messageLogsBasedOnDate', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+
+router.get('/sendExcelNotification', async (req, res) => {
+  try {
+    let result = await smsJobs.executeExcelNotification(req.query.name, req.query.startDate, req.query.endDate);
+    res.json(result);
+  } catch{
+    res.json({ error: err.message || err.toString() });
+  }
+})
 
 module.exports = router;

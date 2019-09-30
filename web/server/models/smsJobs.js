@@ -161,7 +161,7 @@ class Jobs {
             endDate: endDate
         };
         let subscription = {};
-        let messageResponse = null;
+        //let messageResponse = null;
         let excelTemplateVars = templateType("excelNotify", newrecord);
         let excelMsgTemplate = await MsgTemplate.list({ name: "excelNotify" });
         let template = excelMsgTemplate[0].value;
@@ -171,9 +171,13 @@ class Jobs {
         }
         let message = messageTemplate(template, excelTemplateVars);
         subscription = await this.fetchRecipientDetails();
-        console.log("The fetchRecipientDetails return value is ", subscription);
-        messageResponse = await email(subscription.from[0], subscription.ccAddress[0], subscription.toAddress[0], message);
-        return messageResponse;
+        console.log("The fetchRecipientDetails return value is ", subscription, message);
+        if (subscription.from.length > 0 && subscription.ccAddress.length > 0 && subscription.toAddress.length > 0) {
+            let messageResponse = await email(subscription.from.join(), subscription.ccAddress, subscription.toAddress, message);
+            return messageResponse;
+        } else {
+            return { "email Notification": "failed" };
+        }
     }
 
     async executeSMS(user, { callType }) {
