@@ -94,15 +94,43 @@ class Jobs {
 
     async fetchRecipientDetails() {
         console.log("Inside fetchRecipientDetails method");
-        let recepientsDetails = await msgSubscription.listByName("excelNotification");
-        console.log("recepientsDetails are ", recepientsDetails[0].type.includes("EMAIL"));
+        let recepientsDetails = await msgSubscription.listByName({ name: "excelNotification" });
+        console.log("recepientsDetails are ", recepientsDetails[0]);
         /* first check for type, is email present*/
+        let from = [];
+        let ccAddress = [];
+        let toAddress = [];
+        let replyTo = [];
+        let mobile = [];
+
         if (recepientsDetails[0].type.includes("EMAIL")) {
 
+            recepientsDetails[0].from.forEach(record => {
+                from.push(record.email);
+                console.log("The from are ", from);
+            });
+            recepientsDetails[0].ccAddress.forEach(record => {
+                ccAddress.push(record.email);
+                console.log("The ccAddress are ", ccAddress);
+            });
+            recepientsDetails[0].toAddress.forEach(record => {
+                toAddress.push(record.email);
+                console.log("The toAddress are ", toAddress);
+            });
+            recepientsDetails[0].replyTo.forEach(record => {
+                replyTo.push(record.email);
+                console.log("The replyTo are ", replyTo);
+            });
         }
+        /* first check for type, is email present*/
         if (recepientsDetails[0].type.includes("SMS")) {
-
+            recepientsDetails[0].toAddress.forEach(record => {
+                mobile.push(record.mobile);
+                console.log("The mobile are ", mobile);
+            });
         }
+
+        return { from, ccAddress, toAddress, replyTo, mobile };
     }
 
     async executeAdminSMS(jobLog) {
@@ -143,16 +171,8 @@ class Jobs {
         }
         let message = messageTemplate(template, excelTemplateVars);
         subscription = await this.fetchRecipientDetails();
-        let recipients = await MsgRecipient.listByName("messageLogsExcel");
-        console.log("The recipients are ", recipients, recipients.length);
-        if (recipients.length > 0) {
-            for (let i = 0; i < recipients.length; i++) {
-                if (recipients[i].source.length > 0 && recipients[i].ccAddress.length > 0 && recipients[i].toAddress.length > 0) {
-                    console.log("The recipient details are ", recipients[i].source, recipients[i].ccAddress, recipients[i].toAddress, recipients[i].replyTo);
-                    //messageResponse = await email("anishkonda123@gmail.com", message, "testing", "testing email");
-                }
-            }
-        }
+        console.log("The fetchRecipientDetails return value is ", subscription);
+        messageResponse = await email(subscription.from[0], subscription.ccAddress[0], subscription.toAddress[0], message);
         return messageResponse;
     }
 

@@ -42,16 +42,16 @@ AWS.config.update({
 
 
 // Create sendEmail params 
-const sendMail = async (emailId, emailBody, emailtext, emailSubject) => {
-
+const sendMail = async (from, ccAddress, toAddress, message) => {
+  console.log("The sendMail params are ", from, ccAddress, toAddress, message);
   let options = {
     Destination: { /* required */
       CcAddresses: [
-        emailId,
+        ccAddress,
         /* more items */
       ],
       ToAddresses: [
-        emailId,
+        toAddress,
         /* more items */
       ]
     },
@@ -59,21 +59,20 @@ const sendMail = async (emailId, emailBody, emailtext, emailSubject) => {
       Body: { /* required */
         Html: {
           Charset: "UTF-8",
-          Data: emailBody
+          Data: message
         },
         Text: {
           Charset: "UTF-8",
-          Data: emailtext
+          Data: message
         }
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: emailSubject
+        Data: message
       }
     },
-    Source: emailId, /* required */
+    Source: from, /* required */
     ReplyToAddresses: [
-      emailId,
       /* more items */
     ]
   }
