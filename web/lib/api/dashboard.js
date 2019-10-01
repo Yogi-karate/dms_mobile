@@ -58,17 +58,29 @@ export const getEnqStateData = (enqState) =>
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
-export const getUserCount = (team,id,month,year) =>
-    sendRequest(`${BASE_PATH}/leads/dailyLeadsNew/` +team+'/'+ id+'/'+month+'/'+year, {
+export const getUserCount = (team, id, month, year) =>
+    sendRequest(`${BASE_PATH}/leads/dailyLeadsNew/` + team + '/' + id + '/' + month + '/' + year, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
-export const getDailyLeads = (team,month,year,) =>
-    sendRequest(`${BASE_PATH}/leads/leadDashboards/` + team+'/'+month+'/'+year, {
+export const getDailyLeads = (team, month, year, ) =>
+    sendRequest(`${BASE_PATH}/leads/leadDashboards/` + team + '/' + month + '/' + year, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         }
+    });
+export const getCompanies = (user) =>
+    sendRequest(`${BASE_PATH}/customer/odoo/res.company`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+export const priceListUpload = (data) =>
+    sendRequest(`https://qboi2pz5tf.execute-api.ap-south-1.amazonaws.com/dev/pricelist`, {
+        method: 'POST',
+        body: JSON.stringify(data)
     });

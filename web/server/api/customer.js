@@ -8,7 +8,7 @@ const base = require('../models/base');
 const User = require('../models/MUser');
 
 router.use((req, res, next) => {
-  console.log("service api authenication  ",req);
+  console.log("service api authenication  ");
   if (req.user) {
     server = odoo.getOdoo(req.user.email);
     if (server.sid == null) {
