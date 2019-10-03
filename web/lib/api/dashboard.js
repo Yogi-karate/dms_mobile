@@ -79,8 +79,16 @@ export const getCompanies = (user) =>
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
+
 export const priceListUpload = (data) =>
-    sendRequest(`https://qboi2pz5tf.execute-api.ap-south-1.amazonaws.com/dev/pricelist`, {
-        method: 'POST',
-        body: JSON.stringify(data)
-    });
+console.log("The priceListUpload data is ",data);
+fetch('https://qboi2pz5tf.execute-api.ap-south-1.amazonaws.com/dev/pricelist', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        name:"test"
+    })
+  });
