@@ -1,4 +1,5 @@
 import sendRequest from './sendRequest';
+import sendPricelistRequest from './priceList'
 
 const BASE_PATH = '/api/v1';
 
@@ -81,14 +82,9 @@ export const getCompanies = (user) =>
     });
 
 export const priceListUpload = (data) =>
-console.log("The priceListUpload data is ",data);
-fetch('https://qboi2pz5tf.execute-api.ap-south-1.amazonaws.com/dev/pricelist', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        name:"test"
-    })
-  });
+    sendPricelistRequest('', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
