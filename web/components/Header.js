@@ -18,6 +18,10 @@ const optionsMenu = [
     text: 'Log out',
     href: '/logout',
   },
+  {
+    text: 'PriceList Form',
+    href: '/priceListForm',
+  }
 ];
 
 function Header({ user }) {

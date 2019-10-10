@@ -10,12 +10,56 @@ import {
     Fade,
     MenuItem
 } from "@material-ui/core";
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import classnames from "classnames";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { getCompanies } from '../lib/api/dashboard';
 import { priceListUpload } from '../lib/api/dashboard';
+import { priceListItems } from '../lib/api/dashboard';
 import { noAuto } from "@fortawesome/fontawesome-svg-core";
+import MUIDataTable from "mui-datatables";
+
+const options = {
+    filter: true,
+    search: true,
+    print: false,
+    download: false,
+    selectableRows: 'none',
+    filterType: 'dropdown',
+    responsive: 'stacked',
+    rowsPerPage: 10,
+};
+
+const columns = [
+    {
+        name: "Name",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        label: "ProductID",
+        name: "ProductID",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        name: "PriceListID",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "Fixed Price",
+        options: {
+            filter: false,
+        }
+    }
+];
 
 class PriceListForm extends React.Component {
 
@@ -28,6 +72,7 @@ class PriceListForm extends React.Component {
             companies: [],
             file: '',
             company: '',
+            priceListItems: []
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -90,15 +135,48 @@ class PriceListForm extends React.Component {
             const formData = { name: this.state.name, company: this.state.company[1], file: this.state.file }
             const data = await priceListUpload(formData);
             console.log("The result is ", data);
+            console.log("The arguments for priceListItems are ", this.state.name);
+            this.setState({ priceListItems: await priceListItems(this.state.name) });
+            console.log("the priceList items are ", this.state.priceListItems);
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
     }
 
+    getMuiTheme = () => createMuiTheme({
+        overrides: {
+            MUIDataTable: {
+                root: {
+                    backgroundColor: "#FFFFCC",
+                },
+                paper: {
+                    boxShadow: "none",
+                }
+            },
+            MUIDataTableBodyCell: {
+                fixedHeader: {
+                    background: '#D2F7FC'
+                }
+            },
+            MUIDataTableHeadCell: {
+                root: {
+                    backgroundColor: "#D2F7FC"
+                }
+            },
+            MUIDataTableSelectCell: {
+                headerCell: {
+                    background: '#3B9AF0'
+                }
+            }
+        }
+    });
 
     render() {
         const { classes } = this.props;
         const props = this.props;
+        let priceListItems = this.state.priceListItems;
+        let header = "PriceList Item"
+        console.log("Calling table render", priceListItems);
         return (
             <Grid container className={classes.container}>
                 {/* <div className={classes.logotypeContainer}>
@@ -110,11 +188,11 @@ class PriceListForm extends React.Component {
                         <Tabs
                             value={props.activeTabId}
                             onChange={props.handleTabChange}
-                            indicatorColor="primary"
-                            textColor="primary"
+                            indicatorColor="white"
+                            textColor="white"
                             centered
                         >
-                            <Tab label="PRICELIST FORM" classes={{ root: classes.tab }} />
+                            <Tab label="PRICELIST FORM" className={classes.formTab} />
                         </Tabs>
                         {props.activeTabId === 0 && (
                             <React.Fragment>
@@ -184,6 +262,16 @@ class PriceListForm extends React.Component {
                             </React.Fragment>
                         )}
                     </div>
+
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={header}
+                            data={priceListItems}
+                            columns={columns}
+                            options={options}
+                        />
+                    </MuiThemeProvider>
+
                     <Typography color="primary" className={classes.copyright}>
                         © Copyright  2018-2019 , TurnRight Private Ltd.
                     </Typography>
@@ -202,7 +290,8 @@ const styles = theme => ({
         alignItems: "center",
         position: "absolute",
         top: 0,
-        left: 0
+        left: 0,
+        background: "#ffffff"
     },
     logotypeContainer: {
         backgroundColor: "#212121",
@@ -231,11 +320,19 @@ const styles = theme => ({
         }
     },
     form: {
-        width: 320
+        width: 500
     },
-    tab: {
+    formTab: {
         fontWeight: 400,
-        fontSize: 18
+        fontSize: 48,
+        background: "linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)",
+        borderradius: "3px",
+        border: 0,
+        color: "white",
+        height: "88px",
+        padding: "0 30px",
+        boxshadow: "0 3px 5px 2px rgba(255, 105, 135, 0.3)",
+        minWidth: 900
     },
     errorMessage: {
         textAlign: "center",
@@ -252,15 +349,18 @@ const styles = theme => ({
         },
         "&:hover:before": {
             borderBottomColor: `${theme.palette.primary.light} !important`
-        }
+        },
+        marginTop: "30px",
+        marginBottom: "30px"
     },
     textField: {
-        borderBottomColor: theme.palette.background.light
+        borderBottomColor: theme.palette.background.light,
+        marginBottom: "10px"
     },
     formButtons: {
         width: "100%",
         marginTop: theme.spacing(4),
-        marginLeft: theme.spacing(12),
+        marginLeft: theme.spacing(25),
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center"
@@ -281,6 +381,8 @@ const styles = theme => ({
     },
     uploadButton: {
         padding: "10px 0px",
+        marginTop: "35px",
+        color: "green"
     }
 });
 const mapStateToProps = state => {

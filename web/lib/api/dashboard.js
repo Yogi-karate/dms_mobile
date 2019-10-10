@@ -81,10 +81,20 @@ export const getCompanies = (user) =>
         }
     });
 
+export const priceListItems = (name) =>
+    sendRequest(`${BASE_PATH}/sales/priceListItems?name=` + name, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+
 export const priceListUpload = (data) =>
     sendPricelistRequest('', {
         method: 'POST',
         headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
+            'Content-type': 'multipart/form-data'
+        },
+        body: JSON.stringify(data)
     });

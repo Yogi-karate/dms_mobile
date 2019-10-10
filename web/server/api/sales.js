@@ -55,5 +55,13 @@ router.get('/inventory/search', async (req, res) => {
     }
 });
 
+router.get('/priceListItems', async (req, res) => {
+    try {
+        let result = await sale.priceListItem(req.user, { name: req.query.name });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
 
 module.exports = router;

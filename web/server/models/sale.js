@@ -39,7 +39,7 @@ class Sale {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
-            let model = 'stock.picking'; 
+            let model = 'stock.picking';
             let domain = [];
             domain.push(["state", "ilike", state]);
             domain.push(["picking_type_id.code", "=", 'outgoing']);
@@ -59,6 +59,20 @@ class Sale {
             return { error: err.message || err.toString() };
         }
         return result;
+    }
+
+    async priceListItem(user, { name }) {
+        let result = null;
+        try {
+            let server = odoo.getOdoo(user.email);
+            let model = 'product.pricelist.item';
+            let domain = [];
+            domain.push(["pricelist_id", "=", name]);
+            result = await server.search_read(model, { domain: domain, fields: ["product_id", "pricelist_id.name", "fixed_price"] });
+        } catch (err) {
+            return { error: err.message || err.toString() };
+        }
+        return base.cleanModels(result.records);
     }
 
 }
