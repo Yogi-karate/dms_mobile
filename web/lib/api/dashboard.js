@@ -1,5 +1,5 @@
 import sendRequest from './sendRequest';
-import sendPricelistRequest from './priceList'
+import sendPricelistRequest from './priceList';
 
 const BASE_PATH = '/api/v1';
 
