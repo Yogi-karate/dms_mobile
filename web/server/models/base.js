@@ -71,6 +71,23 @@ class Base {
         }
     }
 
+    async getUserCompanies(user) {
+        console.log("inside getUserCompanies ", user);
+        let server = odoo.getOdoo(user.email);
+        let companies = null;
+        let model = 'res.company';
+        let domain = [];
+        domain.push(["id", "in", user.company_ids]);
+        if (user != null && user != undefined) {
+            companies = await server.search_read(model, { domain: domain, fields: ["name", "id"] });
+            console.log("the companies are ", companies);
+            return companies;
+        } else {
+            return { "result": "user undefined" };
+        }
+
+    };
+
     checkForTeamType(data) {
         console.log("inside checkType ", data);
         let modules = [];

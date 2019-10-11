@@ -152,4 +152,13 @@ router.get('/listMsgTemplates/:name', async (req, res) => {
   }
 });
 
+router.get('/getCompanies', async (req, res) => {
+  try {
+    let result = await base.getUserCompanies(req.user);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;

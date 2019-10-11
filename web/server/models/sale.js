@@ -68,7 +68,7 @@ class Sale {
             let model = 'product.pricelist.item';
             let domain = [];
             domain.push(["pricelist_id", "=", name]);
-            result = await server.search_read(model, { domain: domain, fields: ["product_id", "pricelist_id.name", "fixed_price"] });
+            result = await server.search_read(model, { domain: domain, fields: ["product_id", "pricelist_id", "fixed_price"] });
         } catch (err) {
             return { error: err.message || err.toString() };
         }

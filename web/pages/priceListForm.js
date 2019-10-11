@@ -14,6 +14,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import classnames from "classnames";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
+import withLayout from '../lib/withLayout';
 import { getCompanies } from '../lib/api/dashboard';
 import { priceListUpload } from '../lib/api/dashboard';
 import { priceListItems } from '../lib/api/dashboard';
@@ -33,6 +34,14 @@ const options = {
 
 const columns = [
     {
+        name: "ID",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        label: "Name",
         name: "Name",
         options: {
             filter: true,
@@ -40,21 +49,13 @@ const columns = [
         }
     },
     {
-        label: "ProductID",
         name: "ProductID",
-        options: {
-            filter: true,
-            sortDirection: 'asc'
-        }
-    },
-    {
-        name: "PriceListID",
         options: {
             filter: false,
         }
     },
     {
-        name: "Fixed Price",
+        name: "FixedPrice",
         options: {
             filter: false,
         }
@@ -136,10 +137,27 @@ class PriceListForm extends React.Component {
             const data = await priceListUpload(formData);
             console.log("The result is ", data);
             console.log("The arguments for priceListItems are ", this.state.name);
-            this.setState({ priceListItems: await priceListItems(this.state.name) });
-            console.log("the priceList items are ", this.state.priceListItems);
+            this.setState({ priceListItems: await this.getPriceListItems(this.state.name) });
         } catch (err) {
             console.log(err); // eslint-disable-line
+        }
+    }
+
+    async getPriceListItems(name) {
+        console.log("Inside getStateData", this.props.stage);
+        try {
+            const data = await priceListItems(name);
+            console.log("the priceList items are ", data);
+            if (data == null) {
+                return [];
+            }
+            let result = data.map(record => {
+                return [record.pricelist_id[0], record.pricelist_id[1], record.product_id, record.fixed_price];
+            })
+            return result;
+        } catch (err) {
+            console.log(err); // eslint-disable-line
+            return [];
         }
     }
 
@@ -151,6 +169,9 @@ class PriceListForm extends React.Component {
                 },
                 paper: {
                     boxShadow: "none",
+                    width: "190%",
+                    marginTop: "70px",
+                    borderTop: "1px solid #000000"
                 }
             },
             MUIDataTableBodyCell: {
@@ -175,14 +196,9 @@ class PriceListForm extends React.Component {
         const { classes } = this.props;
         const props = this.props;
         let priceListItems = this.state.priceListItems;
-        let header = "PriceList Item"
-        console.log("Calling table render", priceListItems);
+        let header = "PriceList Item";
         return (
             <Grid container className={classes.container}>
-                {/* <div className={classes.logotypeContainer}>
-                    <img src="/static/Saboo-02.png" alt="logo" className={classes.logotypeImage} />
-                    <Typography className={classes.logotypeText}>DMS</Typography>
-                </div> */}
                 <div className={classes.formContainer}>
                     <div className={classes.form}>
                         <Tabs
@@ -235,11 +251,14 @@ class PriceListForm extends React.Component {
                                     value={this.state.file}
                                 />
                                 <label htmlFor="raised-button-file">
-                                    <Button variant="raised" component="span" className={classes.uploadButton}>
+                                    <Button variant="raised" component="span" className={classes.uploadButton}
+                                        variant="contained"
+                                        size="small"
+                                    >
                                         Upload
                                     </Button>
                                 </label>
-                                <div className={classes.errorMessage}>{this.state.error}</div>
+                                <span className={classes.uploadedFileName}>{this.state.file}</span>
                                 <div className={classes.formButtons}>
                                     {this.state.isLoading ? (
                                         <CircularProgress size={26} className={classes.loginLoader} />
@@ -325,7 +344,7 @@ const styles = theme => ({
     formTab: {
         fontWeight: 400,
         fontSize: 48,
-        background: "linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)",
+        background: "linear-gradient(45deg, #0066cc 30%, #0099ff 90%)",
         borderradius: "3px",
         border: 0,
         color: "white",
@@ -363,7 +382,7 @@ const styles = theme => ({
         marginLeft: theme.spacing(25),
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
     },
     loginLoader: {
         marginLeft: theme.spacing(4),
@@ -380,9 +399,15 @@ const styles = theme => ({
         display: "none",
     },
     uploadButton: {
-        padding: "10px 0px",
-        marginTop: "35px",
-        color: "green"
+        marginTop: "27px",
+        color: "green",
+        background: "#ffffff"
+    },
+    uploadedFileName: {
+        position: "relative",
+        top: "18px",
+        left: "15px",
+        color: "#3b46d1"
     }
 });
 const mapStateToProps = state => {
