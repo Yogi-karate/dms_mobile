@@ -37,7 +37,7 @@ const sendMail = async (from, ccAddress, toAddress, message) => {
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: message
+        Data: "Service And Insurance Leads Generation "
       }
     },
     Source: from, /* required */

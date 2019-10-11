@@ -37,12 +37,12 @@ class MsgLogClass {
             .sort({ createdAt: -1 });
         return msgLogs;
     }
-    static async msgLogsBasedOnDate({ templateName, startDate, endDate }) {
+    static async msgLogsBasedOnDate({ name, startDate, endDate }) {
         console.log("The query paramaters received for msgLogsBasedOnDate ", startDate, endDate);
         const inputDate = await this.validateDate(startDate, endDate);
         if (inputDate) {
             console.log("The date domain for find method is ", inputDate);
-            const msgLogs = await this.find({ templateName: templateName, createdAt: inputDate })
+            const msgLogs = await this.find({ templateName: name, createdAt: inputDate })
                 .sort({ createdAt: -1 });
             return msgLogs;
         } else {
@@ -63,10 +63,11 @@ class MsgLogClass {
         return newMsgLog;
     };
     static async validateDate(startDate, endDate) {
+        let date = new Date().toISOString().slice(0, 10);
         console.log("Inside validateDate method");
         let dateDomain = {};
         let regEx = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
-        if (startDate !== undefined && startDate !== null && startDate.match(regEx)) {
+        if (startDate !== undefined && startDate !== null && startDate <= date && startDate.match(regEx)) {
             console.log("startDate validation success");
             dateDomain.$gte = startDate;
         }
@@ -74,8 +75,8 @@ class MsgLogClass {
             console.log("endDate validation success");
             dateDomain.$lt = endDate;
         }
-        if (Object.keys(dateDomain).length === 0) {
-            console.log(" date validation failed");
+        if (Object.keys(dateDomain).length < 2) {
+            console.log(" date validation failed ");
             return false;
         } else {
             return dateDomain;

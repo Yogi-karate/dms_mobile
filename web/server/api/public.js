@@ -34,35 +34,36 @@ router.post('/createAppVersion', async (req, res) => {
   }
 });
 
+/* on click message template send to email for excel notification this is called */
 router.get('/messageLogsBasedOnDate', async (req, res) => {
   try {
-    let result = await MsgLogs.msgLogsBasedOnDate({ templateName: req.query.templateName, startDate: req.query.startDate, endDate: req.query.endDate });
-    console.log("The result for dailyMessageLogs are ", result);
+    let result = await MsgLogs.msgLogsBasedOnDate({ name: req.query.name, startDate: req.query.startDate, endDate: req.query.endDate });
     if (result === false) {
       let emptyExcel = {
-        templateName: req.query.templateName,
-        status: "Incorrect Start or End date formats, please provide valid date formats YYYY-MM-DD"
+        name: req.query.name,
+        status: "Incorrect Start or End date formats, please provide valid date formats YYYY-MM-DD and StartDate less than today"
       }
-      res.xls(`${req.query.templateName}_InValidDates.xlsx`, emptyExcel);
+      res.xls(`${req.query.name}_InValidDates.xlsx`, emptyExcel);
     } else if (result.length <= 0 && result === null) {
       let emptyExcel = {
-        templateName: req.query.templateName,
+        templateName: req.query.name,
         status: "No Messages sent today,because leads generated is zero"
       }
-      res.xls(`${req.query.templateName}_EmptyRecords.xlsx`, emptyExcel);
+      res.xls(`${req.query.name}_EmptyRecords.xlsx`, emptyExcel);
     } else {
-      res.xls(`${req.query.templateName}_${req.query.startDate}_${req.query.endDate}.xlsx`, result, { fields: ['name', 'mobile', 'templateName', 'message', 'response.status'] });
+      res.xls(`${req.query.name}_${req.query.startDate}_${req.query.endDate}.xlsx`, result, { fields: ['name', 'mobile', 'templateName', 'message', 'response.status'] });
     }
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 });
 
+/* for manual sending of email notification */
 router.get('/sendExcelNotification', async (req, res) => {
   try {
     let result = await smsJobs.executeExcelNotification(req.query.name, req.query.startDate, req.query.endDate);
     res.json(result);
-  } catch{
+  } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
 })

@@ -52,7 +52,7 @@ class Jobs {
             domain.push(["opportunity_type", "=", "Insurance"]);
             domain.push(["type", "=", "lead"]);
             domain.push(["mobile", "!=", false]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"], limit: 2 });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "mobile", "partner_name", "opportunity_type", "service_type", "model"], limit: 10 });
         } catch (err) {
             return { error: err.message || err.toString() };
         }
@@ -95,7 +95,7 @@ class Jobs {
     async fetchRecipientDetails() {
         console.log("Inside fetchRecipientDetails method");
         let recepientsDetails = await msgSubscription.listByName({ name: "excelNotification" });
-        console.log("recepientsDetails are ", recepientsDetails[0]);
+        console.log("fetchRecipientDetails recepientsDetails are ", recepientsDetails[0]);
         /* first check for type, is email present*/
         let from = [];
         let ccAddress = [];
@@ -122,14 +122,14 @@ class Jobs {
                 console.log("The replyTo are ", replyTo);
             });
         }
-        /* first check for type, is email present*/
+        /* first check for type, is sms present*/
         if (recepientsDetails[0].type.includes("SMS")) {
-            recepientsDetails[0].toAddress.forEach(record => {
+            recepientsDetails[0].mobile.forEach(record => {
                 mobile.push(record.mobile);
                 console.log("The mobile are ", mobile);
             });
         }
-
+        console.log("The final email recipients are ", " from: " + from, " ccAddress: " + ccAddress, " toAddress: " + toAddress, " replyTo: " + replyTo, " mobile: " + mobile);
         return { from, ccAddress, toAddress, replyTo, mobile };
     }
 
@@ -148,7 +148,7 @@ class Jobs {
         console.log("The admins are ", admins, admins.length);
         for (let i = 0; i < admins.length; i++) {
             let adminMobile = admins[i].mobile;
-            messageResponse = await sms("7795659269", encodeURIComponent(message));
+            messageResponse = await sms("8660187787", encodeURIComponent(message));
         }
         return messageResponse;
     }
@@ -212,7 +212,7 @@ class Jobs {
                             return new Function("return `" + templateString + "`;").call(templateVars);
                         }
                         message = messageTemplate(templateString, templateVars);
-                        let messageResponse = await sms("7795659269", encodeURIComponent(message));
+                        let messageResponse = await sms("8660187787", encodeURIComponent(message));
                         console.log("the count after is ", smsCount);
                         let NewMsgLog = { name: record.partner_name, mobile: record.mobile, templateName: callType, message: message, response: messageResponse, jobLog: newJobLogs._id };
                         let newMsgLogs = await MsgLog.add(NewMsgLog);
@@ -232,20 +232,23 @@ class Jobs {
                 if (failedSmsCount > 0) {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Partial", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
-                    console.log("The adminMsgResponse is", adminMsgResponse);
-                    let nextDay = jobUpdate.createdAt;
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, jobUpdate.createdAt, nextDay);
-                    console.log("The excelNotification is", excelNotification);
-
+                    console.log("The final adminMsgResponse is", adminMsgResponse);
+                    let getNextDay = new Date();
+                    getNextDay.setDate(getNextDay.getDate() + 1);
+                    let today = jobUpdate.createdAt.toISOString().slice(0, 10);
+                    let nextDay = getNextDay.toISOString().slice(0, 10);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, today, nextDay);
+                    console.log("The final excelNotification is", excelNotification);
                 } else {
                     let jobUpdate = await JobLog.update(newJobLogs._id, { "status": "Completed", "successCount": successSmsCount, "failedCount": failedSmsCount });
                     let adminMsgResponse = await this.executeAdminSMS(jobUpdate);
-                    console.log("The adminMsgResponse is", adminMsgResponse);
-                    let nextDay = jobUpdate.createdAt;
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, jobUpdate.createdAt, nextDay);
-                    console.log("The excelNotification is", excelNotification);
+                    console.log("The final adminMsgResponse is", adminMsgResponse);
+                    let getNextDay = new Date();
+                    getNextDay.setDate(getNextDay.getDate() + 1);
+                    let today = jobUpdate.createdAt.toISOString().slice(0, 10);
+                    let nextDay = getNextDay.toISOString().slice(0, 10);
+                    let excelNotification = await this.executeExcelNotification(jobUpdate.name, today, nextDay);
+                    console.log("The final excelNotification is", excelNotification);
 
                 }
                 return result;
@@ -302,8 +305,8 @@ function templateType(type, record) {
         case 'excelNotify':
             return {
                 name: record.name,
-                startDate: record.startDate.toISOString().slice(0, 10),
-                endDate: record.endDate.toISOString().slice(0, 10),
+                startDate: record.startDate,
+                endDate: record.endDate,
             }
         default:
             return {
