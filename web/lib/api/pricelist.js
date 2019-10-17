@@ -1,15 +1,12 @@
 import 'isomorphic-unfetch';
-import {getRootUrl} from './config';
+import { getPriceListApiUrl } from '../../lib/api/config';
 
 export default async function sendPricelistRequest(path, opts = {}) {
-  const headers = Object.assign({}, opts.headers || {}, {
-    'Content-type': 'application/json; charset=UTF-8',
-  });
   console.log("The path are", path);
   console.log("The headers are", opts);
   const response = await fetch(
-    'https://qboi2pz5tf.execute-api.ap-south-1.amazonaws.com/dev/pricelist',
-    Object.assign({ method: 'POST'}, opts, { headers }),
+    getPriceListApiUrl(),
+    Object.assign({ method: 'POST'}, opts),
   );
   console.log("response as is object",response);
   if(response.status != 200){

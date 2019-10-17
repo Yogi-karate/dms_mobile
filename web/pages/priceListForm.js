@@ -71,9 +71,10 @@ class PriceListForm extends React.Component {
         this.state = {
             name: '',
             companies: [],
-            file: '',
+            file: null,
             company: '',
-            priceListItems: []
+            priceListItems: [],
+            fileName: ''
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -94,7 +95,7 @@ class PriceListForm extends React.Component {
     }
 
     handleNameChange(evt) {
-        this.setState({ name: evt.target.value, error: "" });
+        this.setState({ name: evt.target.value });
     }
 
     handleCompanyChange = prop => event => {
@@ -105,7 +106,9 @@ class PriceListForm extends React.Component {
     };
 
     handleFileChange(evt) {
-        this.setState({ file: evt.target.value, error: "" });
+        console.log("The handleFileChange ",evt.target.files[0]);
+        this.setState({ file:evt.target.files[0]});
+        this.setState({ fileName:evt.target.files[0].name});
     }
 
     async componentDidMount() {
@@ -133,7 +136,11 @@ class PriceListForm extends React.Component {
 
     async submitPriceListForm() {
         try {
-            const formData = { name: this.state.name, company: this.state.company[1], file: this.state.file }
+            const formData = new FormData();
+            formData.append('file', this.state.file);
+            formData.append("name", this.state.name);
+            formData.append("company", this.state.company[1]);
+            console.log("The formdata is ", formData);
             const data = await priceListUpload(formData);
             console.log("The result is ", data);
             console.log("The arguments for priceListItems are ", this.state.name);
@@ -242,13 +249,12 @@ class PriceListForm extends React.Component {
                                     ))}
                                 </TextField>
                                 <input
-                                    accept="image/*"
+                                    accept="*"
                                     className={classes.uploadInput}
                                     id="raised-button-file"
                                     multiple
                                     type="file"
                                     onChange={this.handleFileChange}
-                                    value={this.state.file}
                                 />
                                 <label htmlFor="raised-button-file">
                                     <Button variant="raised" component="span" className={classes.uploadButton}
@@ -258,7 +264,7 @@ class PriceListForm extends React.Component {
                                         Upload
                                     </Button>
                                 </label>
-                                <span className={classes.uploadedFileName}>{this.state.file}</span>
+                                <span className={classes.uploadedFileName}>{this.state.fileName}</span>
                                 <div className={classes.formButtons}>
                                     {this.state.isLoading ? (
                                         <CircularProgress size={26} className={classes.loginLoader} />
@@ -267,7 +273,7 @@ class PriceListForm extends React.Component {
                                                 disabled={
                                                     this.state.companies.length === 0 ||
                                                     this.state.name.length === 0 ||
-                                                    this.state.file.length === 0
+                                                    this.state.fileName.length === 0
                                                 }
                                                 onClick={this.onSubmitHandler}
                                                 variant="contained"

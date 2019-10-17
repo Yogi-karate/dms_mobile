@@ -15,5 +15,6 @@ module.exports = {
     phost:process.env.PROD_HOST_URL,
     dhost:process.env.DEV_HOST_URL,
     dashboard_year:process.env.DASHBOARD_YEAR,
+    priceListApiUrl:process.env.PRICELIST_API_URL
   },
 }

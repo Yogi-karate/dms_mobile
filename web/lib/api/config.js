@@ -15,3 +15,8 @@ export const getDashboardYear = () => {
   const year = publicRuntimeConfig.dashboard_year;
   return year !=null ? year:new Date().getFullYear();
 }
+
+export const getPriceListApiUrl = () => {
+  const url = publicRuntimeConfig.priceListApiUrl;
+  return url !=null ? url:'dev.api.turnright.tech';
+}

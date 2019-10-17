@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { CircularProgress } from '@material-ui/core';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
 import { getEnqStateData } from '../../lib/api/dashboard';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
 
 const options = {
   filter: true,
@@ -65,6 +67,7 @@ class TRTable extends Component {
     super(props);
     this.state = {
       enquiryStates: [],
+      isLoading: true,
     };
   }
   async componentDidUpdate(prevProps) {
@@ -72,18 +75,20 @@ class TRTable extends Component {
     if (this.props.stage != prevProps.stage) {
       console.log("changing state ----");
       this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
+      this.setState({ isLoading: false });
     }
   }
   async getStateData(state) {
     console.log("Inside getStateData", this.props.stage);
     try {
-      const data = await getEnqStateData(state == null ? "overdue":state);
+      this.setState({ isLoading: true });
+      const data = await getEnqStateData(state == null ? "overdue" : state);
       console.log("The result is ", data);
       if (data == null) {
         return [];
       }
       let result = data.records.map(record => {
-        return [record.name, record.mobile, record.partner_name, record.stage_id[1],record.user_id[1],record.activity_date_deadline];
+        return [record.name, record.mobile, record.partner_name, record.stage_id[1], record.user_id[1], record.activity_date_deadline];
       })
       return result;
     } catch (err) {
@@ -93,6 +98,7 @@ class TRTable extends Component {
   }
   async componentDidMount() {
     this.setState({ enquiryStates: await this.getStateData(this.props.stage) });
+    this.setState({ isLoading: false });
   }
   getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -121,28 +127,40 @@ class TRTable extends Component {
       }
     }
   });
-  
+
   render() {
+    const { classes } = this.props;
     let enquiryStates = this.state.enquiryStates;
     let enq = "Enquiry Followup"
-    let status = this.props.stage == null ? "overdue":this.props.stage;
-    let header = enq+" ( "+status+" )"
+    let status = this.props.stage == null ? "overdue" : this.props.stage;
+    let header = enq + " ( " + status + " )"
     console.log("Calling table render", enquiryStates);
     return (
 
       <MuiThemeProvider theme={this.getMuiTheme()}>
-      <MUIDataTable
-        title={header}
-        data={enquiryStates}
-        columns={columns}
-        options={options}
-      />
-    </MuiThemeProvider>
+        {this.state.isLoading ? (
+          <CircularProgress size={50} className={classes.loginLoader} />
+        ) : (
+            <MUIDataTable
+              title={header}
+              data={enquiryStates}
+              columns={columns}
+              options={options}
+            />
+          )}
+      </MuiThemeProvider>
 
     );
   }
 
 }
+
+const styles = theme => ({
+  loginLoader: {
+    marginLeft: theme.spacing(90),
+  }
+});
+
 const mapStateToProps = state => {
   console.log("enquiry stage change ", state);
   return { stage: state.lead_state, team: state.team };
@@ -150,4 +168,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   null
-)(TRTable);
+)(withStyles(styles)(TRTable));

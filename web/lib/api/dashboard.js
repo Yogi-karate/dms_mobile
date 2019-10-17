@@ -93,8 +93,5 @@ export const priceListItems = (name) =>
 export const priceListUpload = (data) =>
     sendPricelistRequest('', {
         method: 'POST',
-        headers: {
-            'Content-type': 'multipart/form-data'
-        },
-        body: JSON.stringify(data)
+        body: data
     });
