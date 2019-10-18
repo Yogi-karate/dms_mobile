@@ -55,6 +55,12 @@ const columns = [
         }
     },
     {
+        name: "ProductName",
+        options: {
+            filter: false,
+        }
+    },
+    {
         name: "FixedPrice",
         options: {
             filter: false,
@@ -106,12 +112,12 @@ class PriceListForm extends React.Component {
     };
 
     handleFileChange(evt) {
-        console.log("The handleFileChange ",evt.target.files[0]);
-        this.setState({ file:evt.target.files[0]});
-        if(evt.target.files[0].name != undefined || evt.target.files[0].name != null){
-            this.setState({ fileName:evt.target.files[0].name});
-        }else{
-            this.setState({ fileName:'empty'});
+        console.log("The handleFileChange ", evt.target.files[0]);
+        this.setState({ file: evt.target.files[0] });
+        if (evt.target.files[0].name != undefined || evt.target.files[0].name != null) {
+            this.setState({ fileName: evt.target.files[0].name });
+        } else {
+            this.setState({ fileName: 'empty' });
         }
     }
 
@@ -157,14 +163,16 @@ class PriceListForm extends React.Component {
     async getPriceListItems(name) {
         console.log("Inside getStateData", this.props.stage);
         try {
+            let result = null;
             const data = await priceListItems(name);
             console.log("the priceList items are ", data);
             if (data == null) {
                 return [];
+            } else {
+                result = data.map(record => {
+                    return [record.pricelist_id[0], record.pricelist_id[1], record.product_id[0], record.product_id[1], record.fixed_price];
+                })
             }
-            let result = data.map(record => {
-                return [record.pricelist_id[0], record.pricelist_id[1], record.product_id, record.fixed_price];
-            })
             return result;
         } catch (err) {
             console.log(err); // eslint-disable-line
@@ -301,9 +309,9 @@ class PriceListForm extends React.Component {
                         />
                     </MuiThemeProvider>
 
-                    <Typography color="primary" className={classes.copyright}>
+                    {/* <Typography color="primary" className={classes.copyright}>
                         © Copyright  2018-2019 , TurnRight Private Ltd.
-                    </Typography>
+                    </Typography> */}
                 </div>
             </Grid>
         )
