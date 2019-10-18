@@ -108,7 +108,11 @@ class PriceListForm extends React.Component {
     handleFileChange(evt) {
         console.log("The handleFileChange ",evt.target.files[0]);
         this.setState({ file:evt.target.files[0]});
-        this.setState({ fileName:evt.target.files[0].name});
+        if(evt.target.files[0].name != undefined || evt.target.files[0].name != null){
+            this.setState({ fileName:evt.target.files[0].name});
+        }else{
+            this.setState({ fileName:'empty'});
+        }
     }
 
     async componentDidMount() {
