@@ -68,6 +68,86 @@ const columns = [
     }
 ];
 
+
+const columns2 = [
+    {
+        name: "item_id",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        name: "applied_on",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        name: "base",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "compute_price",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "date_end",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "date_start",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        name: "fixed_price",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "min_quantity",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "percent_price",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "price_discount",
+        options: {
+            filter: true,
+            sortDirection: 'asc'
+        }
+    },
+    {
+        name: "pricelist_id",
+        options: {
+            filter: false,
+        }
+    },
+    {
+        name: "product_id",
+        options: {
+            filter: false,
+        }
+    }
+];
+
 class PriceListForm extends React.Component {
 
     constructor(props) {
@@ -80,7 +160,8 @@ class PriceListForm extends React.Component {
             file: null,
             company: '',
             priceListItems: [],
-            fileName: ''
+            fileName: '',
+            priceListFileItems: []
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -152,9 +233,13 @@ class PriceListForm extends React.Component {
             formData.append("company", this.state.company[1]);
             console.log("The formdata is ", formData);
             const data = await priceListUpload(formData);
-            console.log("The result is ", data);
+            console.log("The result after submitPriceListForm from lamda is  ", data);
             console.log("The arguments for priceListItems are ", this.state.name);
             this.setState({ priceListItems: await this.getPriceListItems(this.state.name) });
+
+            /* items data table 2 */
+            this.setState({ priceListFileItems: await this.priceListFileItems(data) });
+
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -179,6 +264,38 @@ class PriceListForm extends React.Component {
             return [];
         }
     }
+
+    /* items data table 2 */
+    async priceListFileItems(priceListData) {
+        console.log("Inside priceListFileItems method");
+        try {
+            let itemsArray = null;
+            let finalItems = [];
+            itemsArray = priceListData.map(record => {
+                if (Array.isArray(record.values)) {
+                    return record.values.map(item => {
+                        return [item.item_id, item.item.applied_on, item.item.base, item.item.compute_price, item.item.date_end, item.item.date_start, item.item.fixed_price, item.item.min_quantity, item.item.percent_price, item.item.price_discount, item.item.pricelist_id, item.item.product_id];
+                    })
+                };
+            });
+            console.log("The itemsArray for priceListFileItems ", itemsArray);
+            itemsArray = itemsArray.filter((element) => {
+                return element !== undefined;
+            });
+            console.log("The itemsArray after filtering is ", itemsArray);
+            for (let i = 0; i < itemsArray.length; i++) {
+                for (let j = 0; j < itemsArray[i].length; j++) {
+                    finalItems.push(itemsArray[i][j]);
+                }
+            }
+            console.log("The returning final itemsArray is ", finalItems);
+            return finalItems;
+        } catch (err) {
+            console.log(err); // eslint-disable-line
+            return [];
+        }
+    }
+
 
     getMuiTheme = () => createMuiTheme({
         overrides: {
@@ -215,7 +332,9 @@ class PriceListForm extends React.Component {
         const { classes } = this.props;
         const props = this.props;
         let priceListItems = this.state.priceListItems;
+        let priceListFileItems = this.state.priceListFileItems;
         let header = "PriceList Item";
+        let header2 = "Item Details";
         return (
             <Grid container className={classes.container}>
                 <div className={classes.formContainer}>
@@ -309,6 +428,15 @@ class PriceListForm extends React.Component {
                         />
                     </MuiThemeProvider>
 
+                    <MuiThemeProvider theme={this.getMuiTheme()}>
+                        <MUIDataTable
+                            title={header2}
+                            data={priceListFileItems}
+                            columns={columns2}
+                            options={options}
+                        />
+                    </MuiThemeProvider>
+
                     {/* <Typography color="primary" className={classes.copyright}>
                         © Copyright  2018-2019 , TurnRight Private Ltd.
                     </Typography> */}
@@ -320,8 +448,8 @@ class PriceListForm extends React.Component {
 
 const styles = theme => ({
     container: {
-        height: "100vh",
-        width: "100vw",
+        height: "auto",
+        width: "auto",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
