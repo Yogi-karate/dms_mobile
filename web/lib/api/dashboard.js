@@ -81,6 +81,7 @@ export const getCompanies = (user) =>
         }
     });
 
+/* this is used to get the product_pricelist data */
 export const priceListItems = (name) =>
     sendRequest(`${BASE_PATH}/sales/priceListItems?name=` + name, {
         method: 'GET',

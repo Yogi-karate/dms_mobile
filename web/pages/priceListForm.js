@@ -14,11 +14,8 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import classnames from "classnames";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import withLayout from '../lib/withLayout';
 import { getCompanies } from '../lib/api/dashboard';
 import { priceListUpload } from '../lib/api/dashboard';
-import { priceListItems } from '../lib/api/dashboard';
-import { noAuto } from "@fortawesome/fontawesome-svg-core";
 import MUIDataTable from "mui-datatables";
 
 const options = {
@@ -33,43 +30,6 @@ const options = {
 };
 
 const columns = [
-    {
-        name: "ID",
-        options: {
-            filter: true,
-            sortDirection: 'asc'
-        }
-    },
-    {
-        label: "Name",
-        name: "Name",
-        options: {
-            filter: true,
-            sortDirection: 'asc'
-        }
-    },
-    {
-        name: "ProductID",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "ProductName",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "FixedPrice",
-        options: {
-            filter: false,
-        }
-    }
-];
-
-
-const columns2 = [
     {
         name: "item_id",
         options: {
@@ -159,7 +119,6 @@ class PriceListForm extends React.Component {
             companies: [],
             file: null,
             company: '',
-            priceListItems: [],
             fileName: '',
             priceListFileItems: []
         };
@@ -234,10 +193,6 @@ class PriceListForm extends React.Component {
             console.log("The formdata is ", formData);
             const data = await priceListUpload(formData);
             console.log("The result after submitPriceListForm from lamda is  ", data);
-            console.log("The arguments for priceListItems are ", this.state.name);
-            this.setState({ priceListItems: await this.getPriceListItems(this.state.name) });
-
-            /* items data table 2 */
             this.setState({ priceListFileItems: await this.priceListFileItems(data) });
 
         } catch (err) {
@@ -245,27 +200,6 @@ class PriceListForm extends React.Component {
         }
     }
 
-    async getPriceListItems(name) {
-        console.log("Inside getStateData", this.props.stage);
-        try {
-            let result = null;
-            const data = await priceListItems(name);
-            console.log("the priceList items are ", data);
-            if (data == null) {
-                return [];
-            } else {
-                result = data.map(record => {
-                    return [record.pricelist_id[0], record.pricelist_id[1], record.product_id[0], record.product_id[1], record.fixed_price];
-                })
-            }
-            return result;
-        } catch (err) {
-            console.log(err); // eslint-disable-line
-            return [];
-        }
-    }
-
-    /* items data table 2 */
     async priceListFileItems(priceListData) {
         console.log("Inside priceListFileItems method");
         try {
@@ -331,10 +265,8 @@ class PriceListForm extends React.Component {
     render() {
         const { classes } = this.props;
         const props = this.props;
-        let priceListItems = this.state.priceListItems;
         let priceListFileItems = this.state.priceListFileItems;
-        let header = "PriceList Item";
-        let header2 = "Item Details";
+        let header = "PriceList Items";
         return (
             <Grid container className={classes.container}>
                 <div className={classes.formContainer}>
@@ -422,17 +354,8 @@ class PriceListForm extends React.Component {
                     <MuiThemeProvider theme={this.getMuiTheme()}>
                         <MUIDataTable
                             title={header}
-                            data={priceListItems}
-                            columns={columns}
-                            options={options}
-                        />
-                    </MuiThemeProvider>
-
-                    <MuiThemeProvider theme={this.getMuiTheme()}>
-                        <MUIDataTable
-                            title={header2}
                             data={priceListFileItems}
-                            columns={columns2}
+                            columns={columns}
                             options={options}
                         />
                     </MuiThemeProvider>
