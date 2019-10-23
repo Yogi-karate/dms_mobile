@@ -103,7 +103,7 @@ class Jobs {
         console.log("The admins are ", admins, admins.length);
         for (let i = 0; i < admins.length; i++) {
             let adminMobile = admins[i].mobile;
-            messageResponse = await sms("9840021822", encodeURIComponent(message));
+            messageResponse = await sms("7795659269", encodeURIComponent(message));
         }
         return messageResponse;
     }

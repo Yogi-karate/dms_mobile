@@ -13,24 +13,25 @@ const sendSMS = async (number, message) => {
     console.log("Cannot send sms without number")
     return;
   }
-  let path = "/sendurlcomma.aspx?user=" + user + "&pwd=" + password + "&senderid=" + sender_id+"&mobileno="+number;
-  path = path+"&msgtext="+message+"&smstype=0/4/3"
+  let path = "/sendsms.aspx?userid=" + user + "&password=" + password + "&sender=" + sender_id + "&mobileno=" +number;
+  path = path+"&msg="+message
   console.log("the path is "+path);
   let options = {
     "method": "GET",
-    "uri": "http://car.myinboxmedia.com"+path,
+    "uri": "http://smsstreet.in/websms"+path,
     "port": null,
     "path": path,
     "headers": {}
   };
   const res = await request(options);
   let response = {};
-  if(res.trim() == 'Send Successful'){
+  if(res.includes('Success')){
     response.status = "success";
+    response.message = "Send Successful";
   } else {
     response.status = "error";
+    response.message = "Send Failed";
   }
-  response.message = res.trim();
   console.log("response message: ",response);
   return response;
 };
