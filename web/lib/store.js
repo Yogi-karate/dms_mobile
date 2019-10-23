@@ -16,7 +16,8 @@ const exampleInitialState = {
     year: null,
     team: null,
   },
-  usrTeam: []
+  usrTeam: [],
+  priceListFileItems: null
 }
 
 export const actionTypes = {
@@ -27,7 +28,8 @@ export const actionTypes = {
   DAILYLEADS_USERINDEX: 'DAILYLEADS_USERINDEX',
   SHOWDAILYLEADS: 'SHOWDAILYLEADS',
   LOGGEDIN: 'LOGGEDIN',
-  USERTEAM: 'USERTEAM'
+  USERTEAM: 'USERTEAM',
+  PRICELISTFILEITEMS: 'PRICELISTFILEITEMS',
 }
 
 // REDUCERS
@@ -64,6 +66,10 @@ export const reducer = (state = exampleInitialState, action) => {
     case actionTypes.USERTEAM:
       return Object.assign({}, state, {
         usrTeam: action.usrTeam
+      })
+    case actionTypes.PRICELISTFILEITEMS:
+      return Object.assign({}, state, {
+        priceListFileItems: action.priceListFileItems
       })
 
     default:
@@ -103,6 +109,10 @@ export const isLoggedIn = (loggedIn) => {
 export const userTeam = (usrTeam) => {
   console.log("inside userteam action ");
   return { type: actionTypes.USERTEAM, usrTeam: usrTeam }
+}
+export const priceListFileItems = (priceListFileItems) => {
+  console.log("inside priceListFileItems action ");
+  return { type: actionTypes.PRICELISTFILEITEMS, priceListFileItems: priceListFileItems }
 }
 
 
