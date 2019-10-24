@@ -96,3 +96,19 @@ export const priceListUpload = (data) =>
         method: 'POST',
         body: data
     });
+
+export const createJobLog = (jobLogBody) =>
+    sendRequest(`${BASE_PATH}/admin/createJobLog`, {
+        method: 'POST',
+        body: JSON.stringify(jobLogBody)
+    });
+
+export const getJobMaster = () =>
+    sendRequest(`${BASE_PATH}/admin/listJobMaster/PriceList_Status`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+

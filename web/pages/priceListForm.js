@@ -7,6 +7,7 @@ import PriceListFormComponent from '../../web/components/dashboard/PriceListForm
 import PriceListItemTable from '../../web/components/dashboard/PriceListItemTable';
 import { connect } from 'react-redux';
 import withLayout from '../lib/withLayout';
+import withAuth from '../lib/withAuth';
 
 class PriceListForm extends React.Component {
     constructor(props) {
@@ -30,7 +31,4 @@ class PriceListForm extends React.Component {
 }
 
 
-export default connect(
-    null,
-    null
-)(withLayout(PriceListForm));
+export default withAuth(withLayout(PriceListForm));

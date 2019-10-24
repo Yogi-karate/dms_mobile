@@ -105,7 +105,7 @@ const columns = [
     }
 ];
 
-class PriceListFileDetailsTable extends React.Component {
+class PriceListItemTable extends React.Component {
 
     constructor(props) {
         super(props);
@@ -238,4 +238,4 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     null
-)(withStyles(styles)(PriceListFileDetailsTable));
+)(withStyles(styles)(PriceListItemTable));

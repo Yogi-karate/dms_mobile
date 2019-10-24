@@ -14,7 +14,9 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { getCompanies } from '../../lib/api/dashboard';
 import { priceListUpload } from '../../lib/api/dashboard';
+import { createJobLog } from '../../lib/api/dashboard';
 import { priceListFileItems } from '../../lib/store';
+import { getJobMaster } from '../../lib/api/dashboard';
 
 class PriceListFormComponent extends React.Component {
 
@@ -28,6 +30,7 @@ class PriceListFormComponent extends React.Component {
             file: null,
             company: '',
             fileName: '',
+            jobLogID: ''
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -86,10 +89,26 @@ class PriceListFormComponent extends React.Component {
 
     async submitPriceListForm() {
         try {
+            /* get the  jobMaster for priceList */
+            const jobMaster = await getJobMaster();
+            
+            /* create job log */
+            const jobLogBody = {
+                    "successCount":0, 
+                    "failedCount":0, 
+                    "status":"Pending", 
+                     "name":"PriceList", 
+                     "jobMaster":jobMaster[0]._id
+            };
+            const jobLogCreated = await createJobLog(jobLogBody);
+            console.log("The created jobLog ID is ",jobLogCreated._id);
+            this.setState({ jobLogID: jobLogCreated._id});
+
             const formData = new FormData();
             formData.append('file', this.state.file);
             formData.append("name", this.state.name);
             formData.append("company", this.state.company[1]);
+            formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
             const data = await priceListUpload(formData);
             console.log("The result after submitPriceListForm from lamda is  ", data);

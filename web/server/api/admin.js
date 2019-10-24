@@ -9,6 +9,7 @@ const User = require('../models/MUser');
 const task = require('../models/tasks');
 const MsgTemplate = require('../models/MsgTemplate');
 const JobMaster = require('../models/JobMaster');
+const JobLog = require('../models/JobLog');
 const smsJobs = require('../models/smsJobs');
 const sms = require('../ext/sms_new');
 
@@ -134,6 +135,15 @@ router.post('/createJobMaster', async (req, res) => {
   }
 });
 
+router.post('/createJobLog', async (req, res) => {
+  try {
+    let result = await JobLog.add(req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 router.get('/listAdminUsers', async (req, res) => {
   try {
     let result = await User.listByAdmin();
@@ -146,6 +156,15 @@ router.get('/listAdminUsers', async (req, res) => {
 router.get('/listMsgTemplates/:name', async (req, res) => {
   try {
     let result = await MsgTemplate.list({ name: req.params.name });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/listJobMaster/:name', async (req, res) => {
+  try {
+    let result = await JobMaster.list( req.params.name );
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
