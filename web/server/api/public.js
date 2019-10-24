@@ -32,4 +32,14 @@ router.post('/createAppVersion', async (req, res) => {
   }
 });
 
+router.post('/jobLog/update/:id', async (req, res) => {
+  try {
+    const updatedJobLog = await JobLog.update(req.params.id, req.body);
+    res.json({ message: "Successfully Updated" });
+  } catch (err) {
+    logger.error(err);
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;

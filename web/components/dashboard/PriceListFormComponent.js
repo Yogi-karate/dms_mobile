@@ -12,11 +12,8 @@ import {
 } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { getCompanies } from '../../lib/api/dashboard';
-import { priceListUpload } from '../../lib/api/dashboard';
-import { createJobLog } from '../../lib/api/dashboard';
+import { getCompanies, priceListUpload, createJobLog, getJobMaster } from '../../lib/api/dashboard';
 import { priceListFileItems } from '../../lib/store';
-import { getJobMaster } from '../../lib/api/dashboard';
 
 class PriceListFormComponent extends React.Component {
 
@@ -91,18 +88,18 @@ class PriceListFormComponent extends React.Component {
         try {
             /* get the  jobMaster for priceList */
             const jobMaster = await getJobMaster();
-            
+
             /* create job log */
             const jobLogBody = {
-                    "successCount":0, 
-                    "failedCount":0, 
-                    "status":"Pending", 
-                     "name":"PriceList", 
-                     "jobMaster":jobMaster[0]._id
+                "successCount": 0,
+                "failedCount": 0,
+                "status": "Pending",
+                "name": "PriceList",
+                "jobMaster": jobMaster[0]._id
             };
             const jobLogCreated = await createJobLog(jobLogBody);
-            console.log("The created jobLog ID is ",jobLogCreated._id);
-            this.setState({ jobLogID: jobLogCreated._id});
+            console.log("The created jobLog ID is ", jobLogCreated._id);
+            this.setState({ jobLogID: jobLogCreated._id });
 
             const formData = new FormData();
             formData.append('file', this.state.file);
@@ -113,7 +110,7 @@ class PriceListFormComponent extends React.Component {
             const data = await priceListUpload(formData);
             console.log("The result after submitPriceListForm from lamda is  ", data);
             console.log("The arguments for priceListItems are ", this.state.name);
-            if(data != null){
+            if (data != null) {
                 this.props.priceListFileItems(data);
             }
         } catch (err) {
@@ -136,73 +133,73 @@ class PriceListFormComponent extends React.Component {
                         >
                             <Tab label="PRICELIST FORM" className={classes.formTab} />
                         </Tabs>
-                            <React.Fragment>
-                                <TextField
-                                    id="name"
-                                    InputProps={{
-                                        classes: {
-                                            underline: classes.textFieldUnderline,
-                                            input: classes.textField
-                                        }
-                                    }}
-                                    defaultValue={this.state.name}
-                                    onChange={this.handleNameChange}
-                                    margin="normal"
-                                    placeholder="Enter the file name"
-                                    type="string"
-                                    fullWidth
-                                />
-                                <TextField
-                                    select
-                                    className={classes.textField}
-                                    label="Select a Company"
-                                    value={this.state.company}
-                                    onChange={this.handleCompanyChange('company')}
-                                    fullWidth
+                        <React.Fragment>
+                            <TextField
+                                id="name"
+                                InputProps={{
+                                    classes: {
+                                        underline: classes.textFieldUnderline,
+                                        input: classes.textField
+                                    }
+                                }}
+                                defaultValue={this.state.name}
+                                onChange={this.handleNameChange}
+                                margin="normal"
+                                placeholder="Enter the file name"
+                                type="string"
+                                fullWidth
+                            />
+                            <TextField
+                                select
+                                className={classes.textField}
+                                label="Select a Company"
+                                value={this.state.company}
+                                onChange={this.handleCompanyChange('company')}
+                                fullWidth
+                            >
+                                {this.state.companies.map(option => (
+                                    <MenuItem key={option[1]} value={option}>
+                                        {option[0]}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <input
+                                accept="*"
+                                className={classes.uploadInput}
+                                id="raised-button-file"
+                                multiple
+                                type="file"
+                                onChange={this.handleFileChange}
+                            />
+                            <label htmlFor="raised-button-file">
+                                <Button variant="raised" component="span" className={classes.uploadButton}
+                                    variant="contained"
+                                    size="small"
                                 >
-                                    {this.state.companies.map(option => (
-                                        <MenuItem key={option[1]} value={option}>
-                                            {option[0]}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                                <input
-                                    accept="*"
-                                    className={classes.uploadInput}
-                                    id="raised-button-file"
-                                    multiple
-                                    type="file"
-                                    onChange={this.handleFileChange}
-                                />
-                                <label htmlFor="raised-button-file">
-                                    <Button variant="raised" component="span" className={classes.uploadButton}
-                                        variant="contained"
-                                        size="small"
-                                    >
-                                        Upload
+                                    Upload
                                     </Button>
-                                </label>
-                                <span className={classes.uploadedFileName}>{this.state.fileName}</span>
-                                <div className={classes.formButtons}>
-                                    {this.state.isLoading ? (
-                                        <CircularProgress size={26} className={classes.loginLoader} />
-                                    ) : (
-                                            <Button
-                                                disabled={
-                                                    this.state.companies.length === 0 ||
-                                                    this.state.name.length === 0 ||
-                                                    this.state.fileName.length === 0
-                                                }
-                                                onClick={this.onSubmitHandler}
-                                                variant="contained"
-                                                color="primary"
-                                                size="large"
-                                            >
-                                                SUBMIT
+                            </label>
+                            <span className={classes.uploadedFileName}>{this.state.fileName}</span>
+                            <div className={classes.formButtons}>
+                                {this.state.isLoading ? (
+                                    <CircularProgress size={26} className={classes.loginLoader} />
+                                ) : (
+                                        <Button
+                                            disabled={
+                                                this.state.companies.length === 0 ||
+                                                this.state.name.length === 0 ||
+                                                this.state.fileName.length === 0
+                                            }
+                                            onClick={this.onSubmitHandler}
+                                            variant="contained"
+                                            color="primary"
+                                            size="large"
+                                        >
+                                            SUBMIT
                                         </Button>
-                                        )}
-                                </div>
-                            </React.Fragment>
+                                    )}
+                            </div>
+                        </React.Fragment>
                     </div>
                 </div>
             </Grid>
@@ -211,7 +208,7 @@ class PriceListFormComponent extends React.Component {
 };
 
 const styles = theme => ({
-     container: {
+    container: {
         height: "auto",
         width: "auto",
         display: "flex",
@@ -232,7 +229,7 @@ const styles = theme => ({
         [theme.breakpoints.down("md")]: {
             width: "50%"
         }
-    }, 
+    },
     form: {
         width: 500
     },
