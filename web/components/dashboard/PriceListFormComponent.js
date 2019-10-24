@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { getCompanies, priceListUpload, createJobLog, getJobMaster } from '../../lib/api/dashboard';
+import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog, priceListItems } from '../../lib/api/dashboard';
 import { priceListFileItems } from '../../lib/store';
 
 class PriceListFormComponent extends React.Component {
@@ -27,7 +27,8 @@ class PriceListFormComponent extends React.Component {
             file: null,
             company: '',
             fileName: '',
-            jobLogID: ''
+            jobLogID: '',
+            jobLogStatus: ''
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -59,6 +60,12 @@ class PriceListFormComponent extends React.Component {
         } else {
             this.setState({ fileName: 'empty' });
         }
+    }
+
+    onRefreshHandler = (e) => {
+        console.log("Inside onRefreshHandler");
+        e.preventDefault();
+        this.fetchPriceListItems();
     }
 
     async componentDidMount() {
@@ -93,7 +100,7 @@ class PriceListFormComponent extends React.Component {
             const jobLogBody = {
                 "successCount": 0,
                 "failedCount": 0,
-                "status": "Pending",
+                "status": "pending",
                 "name": "PriceList",
                 "jobMaster": jobMaster[0]._id
             };
@@ -108,13 +115,29 @@ class PriceListFormComponent extends React.Component {
             formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
             const data = await priceListUpload(formData);
-            console.log("The result after submitPriceListForm from lamda is  ", data);
-            console.log("The arguments for priceListItems are ", this.state.name);
-            if (data != null) {
-                this.props.priceListFileItems(data);
-            }
         } catch (err) {
             console.log(err); // eslint-disable-line
+        }
+    }
+
+    /* on refresh check the status for jobLog stored in state and if (state = success) fetch data from db */
+    async fetchPriceListItems() {
+        const formDataJobLogId = this.state.jobLogID;
+        const fileName = this.state.name;
+        console.log("The formDataJobLogId and fileName is ", formDataJobLogId, fileName);
+        if (formDataJobLogId != null && formDataJobLogId != '') {
+            const jobLog = await getJobLog(formDataJobLogId);
+            const jobLogStatus = jobLog[0].status;
+            this.setState({ jobLogStatus: jobLogStatus });
+            console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
+            if (fileName != null && fileName != '' && jobLogStatus === 'success') {
+                const data = await priceListItems(fileName);
+                console.log("The result after submitPriceListForm from dataBase is  ", data);
+                console.log("The arguments for priceListItems are ", this.state.name);
+                if (data != null) {
+                    this.props.priceListFileItems(data);
+                }
+            }
         }
     }
 
@@ -180,6 +203,13 @@ class PriceListFormComponent extends React.Component {
                                     </Button>
                             </label>
                             <span className={classes.uploadedFileName}>{this.state.fileName}</span>
+                            <Button
+                                className={classes.refreshButton}
+                                onClick={this.onRefreshHandler}
+                            >
+                                Refresh
+                            </Button>
+                            <span className={classes.statusName}>{this.state.jobLogStatus}</span>
                             <div className={classes.formButtons}>
                                 {this.state.isLoading ? (
                                     <CircularProgress size={26} className={classes.loginLoader} />
@@ -300,6 +330,18 @@ const styles = theme => ({
         top: "18px",
         left: "15px",
         color: "#3b46d1"
+    },
+    refreshButton: {
+        marginTop: "27px",
+        color: "red",
+        background: "#ffffff",
+        float: "right"
+    },
+    statusName: {
+        position: "relative",
+        top: "34px",
+        color: "#3b46d1",
+        float: "right"
     }
 });
 const mapStateToProps = state => {

@@ -32,6 +32,13 @@ class JobLogClass {
     static publicFields() {
         return ['id', 'createdAt', 'successCount', 'status'];
     }
+
+    static async listById({id}) {
+        const jobLogs = await this.find({'_id':id})
+            .sort({ createdAt: -1 });
+        return jobLogs ;
+    }
+
     static async list() {
         const jobLogs = await this.find({})
             .sort({ createdAt: -1 });
