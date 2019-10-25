@@ -81,7 +81,7 @@ export const getCompanies = (user) =>
         }
     });
 
-/* this is used to get the product_pricelist data */
+/* this is used to get the product_pricelist data to display in Items table*/
 export const priceListItems = (name) =>
     sendRequest(`${BASE_PATH}/sales/priceListItems?name=` + name, {
         method: 'GET',
@@ -110,5 +110,14 @@ export const getJobMaster = () =>
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
+
+export const getJobLog = (id) =>
+    sendRequest(`${BASE_PATH}/admin/getJobLog/` + id, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
 
 

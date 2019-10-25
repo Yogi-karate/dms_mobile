@@ -1,14 +1,6 @@
 import React from "react";
 import {
-    Grid,
     CircularProgress,
-    Typography,
-    Button,
-    Tabs,
-    Tab,
-    TextField,
-    Fade,
-    MenuItem
 } from "@material-ui/core";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -28,29 +20,17 @@ const options = {
 
 const columns = [
     {
-        name: "item_id",
+        name: "product_id",
         options: {
             filter: true,
             sortDirection: 'asc'
         }
     },
     {
-        name: "applied_on",
+        name: "product_name",
         options: {
             filter: true,
             sortDirection: 'asc'
-        }
-    },
-    {
-        name: "base",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "compute_price",
-        options: {
-            filter: false,
         }
     },
     {
@@ -71,37 +51,6 @@ const columns = [
         options: {
             filter: false,
         }
-    },
-    {
-        name: "min_quantity",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "percent_price",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "price_discount",
-        options: {
-            filter: true,
-            sortDirection: 'asc'
-        }
-    },
-    {
-        name: "pricelist_id",
-        options: {
-            filter: false,
-        }
-    },
-    {
-        name: "product_id",
-        options: {
-            filter: false,
-        }
     }
 ];
 
@@ -117,7 +66,7 @@ class PriceListItemTable extends React.Component {
         };
     }
 
-     async componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         console.log("Old props and new props in priceList item table", this.props.priceListFileItems, prevProps.priceListFileItems);
         if (this.props.priceListFileItems != prevProps.priceListFileItems) {
             console.log("changing state priceList item table----");
@@ -125,9 +74,9 @@ class PriceListItemTable extends React.Component {
             this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
             this.setState({ isLoading: false });
         }
-    }    
+    }
 
-     async componentDidMount() {
+    async componentDidMount() {
         try {
             console.log("Inside componentDidMount pricelist file details", this.props.priceListFileItems);
             this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
@@ -135,36 +84,20 @@ class PriceListItemTable extends React.Component {
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
-    } 
+    }
 
     async priceListFileItems(priceListData) {
-        console.log("Inside priceListFileItems method");
+        console.log("Inside priceListFileItems method", priceListData);
+        let result = null;
         try {
-            let itemsArray = null;
-            let finalItems = [];
-            if (priceListData != null) {
-                itemsArray = priceListData.map(record => {
-                    if (Array.isArray(record.values)) {
-                        return record.values.map(item => {
-                            return [item.item_id, item.item.applied_on, item.item.base, item.item.compute_price, item.item.date_end, item.item.date_start, item.item.fixed_price, item.item.min_quantity, item.item.percent_price, item.item.price_discount, item.item.pricelist_id, item.item.product_id];
-                        })
-                    };
-                });
-                console.log("The itemsArray for priceListFileItems ", itemsArray);
-                itemsArray = itemsArray.filter((element) => {
-                    return element !== undefined;
-                });
-                console.log("The itemsArray after filtering is ", itemsArray);
-                for (let i = 0; i < itemsArray.length; i++) {
-                    for (let j = 0; j < itemsArray[i].length; j++) {
-                        finalItems.push(itemsArray[i][j]);
-                    }
-                }
-                console.log("The returning final itemsArray is ", finalItems);
-                return finalItems;
-            } else {
+            if (priceListData === null && !(Array.isArray(priceListData.record))) {
                 return [];
+            } else {
+                result = priceListData.records.map(record => {
+                    return [record.product_id[0], record.product_id[1], record.date_start, record.date_end, record.fixed_price];
+                })
             }
+            return result;
         } catch (err) {
             console.log(err); // eslint-disable-line
             return [];

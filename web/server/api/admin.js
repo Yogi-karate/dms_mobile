@@ -164,7 +164,7 @@ router.get('/listMsgTemplates/:name', async (req, res) => {
 
 router.get('/listJobMaster/:name', async (req, res) => {
   try {
-    let result = await JobMaster.list( req.params.name );
+    let result = await JobMaster.list(req.params.name);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
@@ -174,6 +174,15 @@ router.get('/listJobMaster/:name', async (req, res) => {
 router.get('/getCompanies', async (req, res) => {
   try {
     let result = await base.getUserCompanies(req.user);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.get('/getJobLog/:id', async (req, res) => {
+  try {
+    let result = await JobLog.listById({ id: req.params.id });
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const appVersion = require('../models/appVersion');
+const JobLog = require('../models/JobLog');
 
 router.use((req, res, next) => {
   next();
@@ -28,6 +29,16 @@ router.post('/createAppVersion', async (req, res) => {
     let result = await appVersion.add(req.body);
     res.json(result);
   } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
+router.post('/jobLog/update/:id', async (req, res) => {
+  try {
+    const updatedJobLog = await JobLog.update(req.params.id, req.body);
+    res.json({ message: "Successfully Updated" });
+  } catch (err) {
+    logger.error(err);
     res.json({ error: err.message || err.toString() });
   }
 });
