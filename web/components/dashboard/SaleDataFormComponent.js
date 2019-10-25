@@ -27,7 +27,8 @@ class SaleDataFormComponent extends React.Component {
             company: '',
             fileName: '',
             jobLogID: '',
-            jobLogStatus: ''
+            jobLogStatus: '',
+            fileSubmit: ''
         };
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
@@ -107,6 +108,7 @@ class SaleDataFormComponent extends React.Component {
             formData.append("company", this.state.company[1]);
             formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
+            this.setState({ fileSubmit: "SUBMIT SUCCESSFULL" });
             const data = await saleDataUpload(formData);
         } catch (err) {
             console.log(err); // eslint-disable-line
@@ -193,7 +195,8 @@ class SaleDataFormComponent extends React.Component {
                                         <Button
                                             disabled={
                                                 this.state.companies.length === 0 ||
-                                                this.state.fileName.length === 0
+                                                this.state.fileName.length === 0 ||
+                                                this.state.fileSubmit === "SUBMIT SUCCESSFULL"
                                             }
                                             onClick={this.onSubmitHandler}
                                             variant="contained"
@@ -204,6 +207,7 @@ class SaleDataFormComponent extends React.Component {
                                         </Button>
                                     )}
                             </div>
+                            <span className={classes.submitMessage}>{this.state.fileSubmit}</span>
                         </React.Fragment>
                     </div>
                 </div>
@@ -317,6 +321,12 @@ const styles = theme => ({
         top: "34px",
         color: "#3b46d1",
         float: "right"
+    },
+    submitMessage: {
+        position: "relative",
+        left: "178px",
+        color: "#168a1f",
+        fontSize: "15px"
     }
 });
 const mapStateToProps = state => {
