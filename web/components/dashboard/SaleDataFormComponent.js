@@ -12,17 +12,16 @@ import {
 } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog, priceListItems } from '../../lib/api/dashboard';
+import { getCompanies, createJobLog, getJobMaster, getJobLog, priceListItems, saleDataUpload } from '../../lib/api/dashboard';
 import { priceListFileItems } from '../../lib/store';
 
-class PriceListFormComponent extends React.Component {
+class SaleDataFormComponent extends React.Component {
 
     constructor(props) {
         super(props);
         this.props = props;
         console.log("dropdown props are", this.props);
         this.state = {
-            name: '',
             companies: [],
             file: null,
             company: '',
@@ -30,7 +29,6 @@ class PriceListFormComponent extends React.Component {
             jobLogID: '',
             jobLogStatus: ''
         };
-        this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
     }
@@ -39,10 +37,6 @@ class PriceListFormComponent extends React.Component {
         console.log("Inside onSubmitHandler");
         e.preventDefault();
         this.submitPriceListForm();
-    }
-
-    handleNameChange(evt) {
-        this.setState({ name: evt.target.value });
     }
 
     handleCompanyChange = prop => event => {
@@ -94,7 +88,7 @@ class PriceListFormComponent extends React.Component {
     async submitPriceListForm() {
         try {
             /* get the  jobMaster for priceList */
-            const jobMaster = await getJobMaster("PriceList_Status");
+            const jobMaster = await getJobMaster("SaleData");
 
             /* create job log */
             const jobLogBody = {
@@ -110,11 +104,10 @@ class PriceListFormComponent extends React.Component {
 
             const formData = new FormData();
             formData.append('file', this.state.file);
-            formData.append("name", this.state.name);
             formData.append("company", this.state.company[1]);
             formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
-            const data = await priceListUpload(formData);
+            const data = await saleDataUpload(formData);
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -123,14 +116,12 @@ class PriceListFormComponent extends React.Component {
     /* on refresh check the status for jobLog stored in state and if (state = success) fetch data from db */
     async fetchPriceListItems() {
         const formDataJobLogId = this.state.jobLogID;
-        const fileName = this.state.name;
-        console.log("The formDataJobLogId and fileName is ", formDataJobLogId, fileName);
         if (formDataJobLogId != null && formDataJobLogId != '') {
             const jobLog = await getJobLog(formDataJobLogId);
             const jobLogStatus = jobLog[0].status;
             this.setState({ jobLogStatus: jobLogStatus });
             console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
-            if (fileName != null && fileName != '' && jobLogStatus === 'success') {
+            if (jobLogStatus === 'success') {
                 const data = await priceListItems(fileName);
                 console.log("The result after submitPriceListForm from dataBase is  ", data);
                 console.log("The arguments for priceListItems are ", this.state.name);
@@ -154,24 +145,9 @@ class PriceListFormComponent extends React.Component {
                             textColor="white"
                             centered
                         >
-                            <Tab label="PRICELIST FORM" className={classes.formTab} />
+                            <Tab label="SALEDATA FORM" className={classes.formTab} />
                         </Tabs>
                         <React.Fragment>
-                            <TextField
-                                id="name"
-                                InputProps={{
-                                    classes: {
-                                        underline: classes.textFieldUnderline,
-                                        input: classes.textField
-                                    }
-                                }}
-                                defaultValue={this.state.name}
-                                onChange={this.handleNameChange}
-                                margin="normal"
-                                placeholder="Enter the file name"
-                                type="string"
-                                fullWidth
-                            />
                             <TextField
                                 select
                                 className={classes.textField}
@@ -217,7 +193,6 @@ class PriceListFormComponent extends React.Component {
                                         <Button
                                             disabled={
                                                 this.state.companies.length === 0 ||
-                                                this.state.name.length === 0 ||
                                                 this.state.fileName.length === 0
                                             }
                                             onClick={this.onSubmitHandler}
@@ -296,7 +271,7 @@ const styles = theme => ({
     },
     textField: {
         borderBottomColor: theme.palette.background.light,
-        marginBottom: "10px"
+        marginTop: "40px"
     },
     formButtons: {
         width: "100%",
@@ -355,4 +330,4 @@ const mapDispatchToProps = { priceListFileItems }
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(styles)(PriceListFormComponent));
+)(withStyles(styles)(SaleDataFormComponent));

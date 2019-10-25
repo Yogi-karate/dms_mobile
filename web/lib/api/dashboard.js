@@ -1,5 +1,6 @@
 import sendRequest from './sendRequest';
 import sendPricelistRequest from './pricelist';
+import sendSaleDataRequest from './saleDataRequest';
 
 const BASE_PATH = '/api/v1';
 
@@ -97,14 +98,21 @@ export const priceListUpload = (data) =>
         body: data
     });
 
+export const saleDataUpload = (data) =>
+    sendSaleDataRequest('', {
+        method: 'POST',
+        body: data
+    });
+
+
 export const createJobLog = (jobLogBody) =>
     sendRequest(`${BASE_PATH}/admin/createJobLog`, {
         method: 'POST',
         body: JSON.stringify(jobLogBody)
     });
 
-export const getJobMaster = () =>
-    sendRequest(`${BASE_PATH}/admin/listJobMaster/PriceList_Status`, {
+export const getJobMaster = (name) =>
+    sendRequest(`${BASE_PATH}/admin/listJobMaster/` + name, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8'

@@ -20,3 +20,8 @@ export const getPriceListApiUrl = () => {
   const url = publicRuntimeConfig.priceListApiUrl;
   return url !=null ? url:'dev.api.turnright.tech';
 }
+
+export const getSaleDataApiUrl = () => {
+  const url = publicRuntimeConfig.saleDataApiUrl;
+  return url !=null ? url:'dev.api.turnright.tech';
+}

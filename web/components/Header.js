@@ -19,8 +19,12 @@ const optionsMenu = [
     href: '/logout',
   },
   {
-    text: 'PriceList Form',
+    text: 'PriceList',
     href: '/priceListForm',
+  },
+  {
+    text: 'SaleData',
+    href: '/SaleData',
   }
 ];
 
