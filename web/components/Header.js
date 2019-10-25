@@ -24,7 +24,7 @@ const optionsMenu = [
   },
   {
     text: 'SaleData',
-    href: '/SaleData',
+    href: '/saleData',
   }
 ];
 
