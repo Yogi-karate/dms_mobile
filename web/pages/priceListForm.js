@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Zoom } from "@material-ui/core";
 import GridItem from "../components/common/Grid/GridItem.js";
 import GridContainer from "../components/common/Grid/GridContainer.js";
 import Grid from "@material-ui/core/Grid";
@@ -17,18 +18,32 @@ class PriceListForm extends React.Component {
     }
 
     render() {
+        console.log("The showPriceListItemssssss in priceList form is ", this.props.showPriceListItems);
         return (
             <Grid direction="column">
                 <GridItem xs={12} sm={12} md={12}>
                     <PriceListFormComponent {... this.props} />
                 </GridItem>
-                {/* <GridItem xs={12} sm={12} md={12}>
-                    <PriceListItemTable {... this.props} />
-                </GridItem> */}
+                {(this.props.showPriceListItems == null || this.props.showPriceListItems == false) ?
+                    (<GridItem xs={12} sm={12} md={12}>
+
+                    </GridItem>) : (
+                        <Zoom in={true} style={{ transitionDelay: true ? '500ms' : '0ms' }}>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <PriceListItemTable {... this.props} />
+                            </GridItem>
+                        </Zoom>)}
             </Grid>
         );
     }
 }
 
+const mapStateToProps = (state) => {
+    console.log("state in mapping in priceListForm main page", state);
+    return { showPriceListItems: state.showPriceListItems };
+}
 
-export default withAuth(withLayout(PriceListForm));
+export default connect(
+    mapStateToProps,
+    null
+)(withAuth(withLayout(PriceListForm)));

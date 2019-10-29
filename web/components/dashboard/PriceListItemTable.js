@@ -1,6 +1,7 @@
 import React from "react";
 import {
     CircularProgress,
+    Grow
 } from "@material-ui/core";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -62,7 +63,7 @@ class PriceListItemTable extends React.Component {
         console.log("dropdown props are", this.props);
         this.state = {
             priceListFileItems: [],
-            isLoading: true
+            isLoading: false
         };
     }
 
@@ -70,9 +71,9 @@ class PriceListItemTable extends React.Component {
         console.log("Old props and new props in priceList item table", this.props.priceListFileItems, prevProps.priceListFileItems);
         if (this.props.priceListFileItems != prevProps.priceListFileItems) {
             console.log("changing state priceList item table----");
-            this.setState({ isLoading: true });
+            //this.setState({ isLoading: true });
             this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
-            this.setState({ isLoading: false });
+            //this.setState({ isLoading: false });
         }
     }
 
@@ -80,7 +81,7 @@ class PriceListItemTable extends React.Component {
         try {
             console.log("Inside componentDidMount pricelist file details", this.props.priceListFileItems);
             this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
-            this.setState({ isLoading: false });
+            //this.setState({ isLoading: false });
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -141,18 +142,14 @@ class PriceListItemTable extends React.Component {
         let priceListFileItems = this.state.priceListFileItems;
         let header = "PriceList Items";
         return (
-            <MuiThemeProvider theme={this.getMuiTheme()}>
-                {this.state.isLoading ? (
-                    <CircularProgress size={100} className={classes.loginLoader} />
-                ) : (
-                        <MUIDataTable
-                            title={header}
-                            data={priceListFileItems}
-                            columns={columns}
-                            options={options}
-                        />
-                    )}
-            </MuiThemeProvider>
+                <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <MUIDataTable
+                        title={header}
+                        data={priceListFileItems}
+                        columns={columns}
+                        options={options}
+                    />
+                </MuiThemeProvider>
         )
     }
 };

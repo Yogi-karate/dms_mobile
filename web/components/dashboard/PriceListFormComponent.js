@@ -8,12 +8,14 @@ import {
     Tab,
     TextField,
     Fade,
-    MenuItem
+    MenuItem,
+    Slide,
+    Icon
 } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog, priceListItems } from '../../lib/api/dashboard';
-import { priceListFileItems } from '../../lib/store';
+import { priceListFileItems, showPriceListItems } from '../../lib/store';
 
 class PriceListFormComponent extends React.Component {
 
@@ -29,7 +31,8 @@ class PriceListFormComponent extends React.Component {
             fileName: '',
             jobLogID: '',
             jobLogStatus: '',
-            fileSubmit: ''
+            submitStatus: false,
+            refreshStatus: ''
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -63,14 +66,15 @@ class PriceListFormComponent extends React.Component {
         }
     }
 
-    /* onRefreshHandler = (e) => {
+    onRefreshHandler = (e) => {
         console.log("Inside onRefreshHandler");
         e.preventDefault();
         this.fetchPriceListItems();
-    } */
+    }
 
     async componentDidMount() {
         console.log("Inside getting companiesss");
+        this.props.showPriceListItems(false);//on display of submit page dont show pricelist table
         try {
             console.log("Printing the user ", this.props.user);
             const data = await getCompanies();
@@ -115,7 +119,7 @@ class PriceListFormComponent extends React.Component {
             formData.append("company", this.state.company[1]);
             formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
-            this.setState({ fileSubmit: "SUBMIT SUCCESSFULL" });
+            this.setState({ submitStatus: true });
             const data = await priceListUpload(formData);
         } catch (err) {
             console.log(err); // eslint-disable-line
@@ -127,114 +131,199 @@ class PriceListFormComponent extends React.Component {
         const formDataJobLogId = this.state.jobLogID;
         const fileName = this.state.name;
         console.log("The formDataJobLogId and fileName is ", formDataJobLogId, fileName);
-        if (formDataJobLogId != null && formDataJobLogId != '') {
+        if (formDataJobLogId != null && formDataJobLogId != '' && fileName != null && fileName != '') {
             const jobLog = await getJobLog(formDataJobLogId);
             const jobLogStatus = jobLog[0].status;
             this.setState({ jobLogStatus: jobLogStatus });
             console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
-            if (fileName != null && fileName != '' && jobLogStatus === 'success') {
+            if (jobLogStatus === 'pending') {
                 const data = await priceListItems(fileName);
                 console.log("The result after submitPriceListForm from dataBase is  ", data);
                 console.log("The arguments for priceListItems are ", this.state.name);
                 if (data != null) {
+                    this.setState({ refreshStatus: "success" });
                     this.props.priceListFileItems(data);
+                    this.props.showPriceListItems(true);//show pricelist table
+                } else {
+                    this.setState({ refreshStatus: "No Data Found" });
                 }
+            } else {
+                this.setState({ refreshStatus: "pending" });
             }
+        } else {
+            this.setState({ refreshStatus: "JobLog or FileName empty" });
         }
     }
 
     render() {
+        console.log("The submittttt status is ", this.state.submitStatus);
         const { classes } = this.props;
         const props = this.props;
         return (
             <Grid container>
                 <div className={classes.formContainer}>
-                    <div className={classes.form}>
-                        <Tabs
-                            onChange={props.handleTabChange}
-                            indicatorColor="white"
-                            textColor="white"
-                            centered
-                        >
-                            <Tab label="PRICELIST FORM" className={classes.formTab} />
-                        </Tabs>
-                        <React.Fragment>
-                            <TextField
-                                id="name"
-                                InputProps={{
-                                    classes: {
-                                        underline: classes.textFieldUnderline,
-                                        input: classes.textField
-                                    }
-                                }}
-                                defaultValue={this.state.name}
-                                onChange={this.handleNameChange}
-                                margin="normal"
-                                placeholder="Enter the file name"
-                                type="string"
-                                fullWidth
-                            />
-                            <TextField
-                                select
-                                className={classes.textField}
-                                label="Select a Company"
-                                value={this.state.company}
-                                onChange={this.handleCompanyChange('company')}
-                                fullWidth
-                            >
-                                {this.state.companies.map(option => (
-                                    <MenuItem key={option[1]} value={option}>
-                                        {option[0]}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <input
-                                accept="*"
-                                className={classes.uploadInput}
-                                id="raised-button-file"
-                                multiple
-                                type="file"
-                                onChange={this.handleFileChange}
-                            />
-                            <label htmlFor="raised-button-file">
-                                <Button variant="raised" component="span" className={classes.uploadButton}
-                                    variant="contained"
-                                    size="small"
+                    {this.state.submitStatus ? (
+                        <Slide direction="left" in={true} mountOnEnter unmountOnExit>
+
+                            <div className={classes.form}>
+                                <Tabs
+                                    onChange={props.handleTabChange}
+                                    indicatorColor="white"
+                                    textColor="white"
+                                    centered
                                 >
-                                    Upload
-                                    </Button>
-                            </label>
-                            <span className={classes.uploadedFileName}>{this.state.fileName}</span>
-                            {/* <Button
-                                className={classes.refreshButton}
-                                onClick={this.onRefreshHandler}
-                            >
-                                Refresh
-                            </Button>
-                            <span className={classes.statusName}>{this.state.jobLogStatus}</span> */}
-                            <div className={classes.formButtons}>
-                                {this.state.isLoading ? (
-                                    <CircularProgress size={26} className={classes.loginLoader} />
-                                ) : (
-                                        <Button
-                                            disabled={
-                                                this.state.companies.length === 0 ||
-                                                this.state.name.length === 0 ||
-                                                this.state.fileName.length === 0 ||
-                                                this.state.fileSubmit === "SUBMIT SUCCESSFULL"
+                                    <Tab label="FORM DETAILS" className={classes.formTab} />
+                                </Tabs>
+                                <React.Fragment>
+                                    <TextField
+                                        id="name"
+                                        label="Name"
+                                        InputProps={{
+                                            classes: {
+                                                underline: classes.textFieldUnderline,
+                                                input: classes.textField
                                             }
-                                            onClick={this.onSubmitHandler}
-                                            variant="contained"
-                                            color="primary"
-                                            size="large"
-                                        >
-                                            SUBMIT
+                                        }}
+                                        defaultValue={this.state.name}
+                                        margin="normal"
+                                        fullWidth
+                                        disabled
+                                    />
+                                    <TextField
+                                        id="Company"
+                                        label="Company"
+                                        InputProps={{
+                                            classes: {
+                                                underline: classes.textFieldUnderline,
+                                                input: classes.textField
+                                            }
+                                        }}
+                                        defaultValue={this.state.company[0]}
+                                        margin="normal"
+                                        fullWidth
+                                        disabled
+                                    />
+                                    <TextField
+                                        id="fileName"
+                                        label="FileName"
+                                        InputProps={{
+                                            classes: {
+                                                underline: classes.textFieldUnderline,
+                                                input: classes.textField
+                                            }
+                                        }}
+                                        defaultValue={this.state.fileName}
+                                        margin="normal"
+                                        fullWidth
+                                        disabled
+                                    />
+                                    <div className={classes.formButtons}>
+                                        {this.state.isLoading ? (
+                                            <CircularProgress size={26} className={classes.loginLoader} />
+                                        ) : (
+                                                <Button
+                                                    disabled={
+                                                        this.state.company.length === 0 ||
+                                                        this.state.name.length === 0 ||
+                                                        this.state.fileName.length === 0 ||
+                                                        this.state.refreshStatus === "success" ||
+                                                        this.state.refreshStatus === "No Data Found"
+                                                    }
+                                                    onClick={this.onRefreshHandler}
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    size="small"
+                                                >
+                                                    REFRESH
                                         </Button>
-                                    )}
+                                            )}
+                                    </div>
+                                    {this.state.refreshStatus !== '' ?
+                                        (<span className={classes.refreshStatusName}><b>STATUS:</b> {this.state.refreshStatus}</span>) :
+                                        (<span> </span>)
+                                    }
+                                </React.Fragment>
                             </div>
-                            <span className={classes.submitMessage}>{this.state.fileSubmit}</span>
-                        </React.Fragment>
-                    </div>
+                        </Slide>) : (
+
+                            <div className={classes.form}>
+                                <Tabs
+                                    onChange={props.handleTabChange}
+                                    indicatorColor="white"
+                                    textColor="white"
+                                    centered
+                                >
+                                    <Tab label="PRICELIST FORM" className={classes.formTab} />
+                                </Tabs>
+                                <React.Fragment>
+                                    <TextField
+                                        id="name"
+                                        InputProps={{
+                                            classes: {
+                                                underline: classes.textFieldUnderline,
+                                                input: classes.textField
+                                            }
+                                        }}
+                                        defaultValue={this.state.name}
+                                        onChange={this.handleNameChange}
+                                        margin="normal"
+                                        placeholder="Enter the file name"
+                                        type="string"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        select
+                                        className={classes.textField}
+                                        label="Select a Company"
+                                        value={this.state.company}
+                                        onChange={this.handleCompanyChange('company')}
+                                        fullWidth
+                                    >
+                                        {this.state.companies.map(option => (
+                                            <MenuItem key={option[1]} value={option}>
+                                                {option[0]}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                    <input
+                                        accept="*"
+                                        className={classes.uploadInput}
+                                        id="raised-button-file"
+                                        multiple
+                                        type="file"
+                                        onChange={this.handleFileChange}
+                                    />
+                                    <label htmlFor="raised-button-file">
+                                        <Button variant="raised" component="span" className={classes.uploadButton}
+                                            variant="contained"
+                                            size="small"
+                                        >
+                                            Upload
+                                    </Button>
+                                    </label>
+                                    <span className={classes.uploadedFileName}>{this.state.fileName}</span>
+                                    <div className={classes.formButtons}>
+                                        {this.state.isLoading ? (
+                                            <CircularProgress size={26} className={classes.loginLoader} />
+                                        ) : (
+                                                <Button
+                                                    disabled={
+                                                        this.state.companies.length === 0 ||
+                                                        this.state.name.length === 0 ||
+                                                        this.state.fileName.length === 0
+                                                    }
+                                                    onClick={this.onSubmitHandler}
+                                                    variant="contained"
+                                                    color="primary"
+                                                    size="large"
+                                                >
+                                                    SUBMIT
+                                        </Button>
+                                            )}
+                                    </div>
+                                </React.Fragment>
+                            </div>
+                        )}
                 </div>
             </Grid>
         )
@@ -262,10 +351,17 @@ const styles = theme => ({
         alignItems: "center",
         [theme.breakpoints.down("md")]: {
             width: "50%"
-        }
+        },
+        margin: "50px"
     },
     form: {
-        width: 500
+        width: 500,
+        padding: 50,
+        boxShadow: "4px 4px 9px 0 rgb(9, 89, 165)",
+
+        "&:hover": {
+            boxShadow: "-2px -3px 9px 0 rgb(230, 27, 27)",
+        }
     },
     formTab: {
         fontWeight: 400,
@@ -305,7 +401,7 @@ const styles = theme => ({
     formButtons: {
         width: "100%",
         marginTop: theme.spacing(4),
-        marginLeft: theme.spacing(25),
+        marginLeft: theme.spacing(20),
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -341,18 +437,13 @@ const styles = theme => ({
         background: "#ffffff",
         float: "right"
     },
-    statusName: {
+    refreshStatusName: {
         position: "relative",
-        top: "34px",
+        top: "10px",
+        right: "146px",
         color: "#3b46d1",
         float: "right"
-    },
-    submitMessage: {
-        position: "relative",
-        left: "178px",
-        color: "#168a1f",
-        fontSize: "15px"
-}
+    }
 });
 const mapStateToProps = state => {
     //const {app_state} = state;     
@@ -360,7 +451,7 @@ const mapStateToProps = state => {
     return { user: state.user };
 }
 
-const mapDispatchToProps = { priceListFileItems }
+const mapDispatchToProps = { priceListFileItems, showPriceListItems }
 
 export default connect(
     mapStateToProps,

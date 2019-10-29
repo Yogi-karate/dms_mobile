@@ -17,7 +17,8 @@ const exampleInitialState = {
     team: null,
   },
   usrTeam: [],
-  priceListFileItems: null
+  priceListFileItems: null,
+  showPriceListItems: false
 }
 
 export const actionTypes = {
@@ -30,6 +31,7 @@ export const actionTypes = {
   LOGGEDIN: 'LOGGEDIN',
   USERTEAM: 'USERTEAM',
   PRICELISTFILEITEMS: 'PRICELISTFILEITEMS',
+  SHOWPRICELISTITEMS: 'SHOWPRICELISTITEMS'
 }
 
 // REDUCERS
@@ -70,6 +72,10 @@ export const reducer = (state = exampleInitialState, action) => {
     case actionTypes.PRICELISTFILEITEMS:
       return Object.assign({}, state, {
         priceListFileItems: action.priceListFileItems
+      })
+    case actionTypes.SHOWPRICELISTITEMS:
+      return Object.assign({}, state, {
+        showPriceListItems: action.showPriceListItems
       })
 
     default:
@@ -113,6 +119,10 @@ export const userTeam = (usrTeam) => {
 export const priceListFileItems = (priceListFileItems) => {
   console.log("inside priceListFileItems action ");
   return { type: actionTypes.PRICELISTFILEITEMS, priceListFileItems: priceListFileItems }
+}
+export const showPriceListItems = (showPriceListItems) => {
+  console.log("inside showPriceListItems action ");
+  return { type: actionTypes.SHOWPRICELISTITEMS, showPriceListItems: showPriceListItems }
 }
 
 
