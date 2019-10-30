@@ -7,6 +7,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import MUIDataTable from "mui-datatables";
+import { priceListItems } from '../../lib/api/dashboard';
 
 const options = {
     filter: true,
@@ -67,21 +68,29 @@ class PriceListItemTable extends React.Component {
         };
     }
 
-    async componentDidUpdate(prevProps) {
-        console.log("Old props and new props in priceList item table", this.props.priceListFileItems, prevProps.priceListFileItems);
-        if (this.props.priceListFileItems != prevProps.priceListFileItems) {
-            console.log("changing state priceList item table----");
-            //this.setState({ isLoading: true });
-            this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
-            //this.setState({ isLoading: false });
+    /* async componentDidUpdate(prevProps) {
+        try {
+            console.log("Old props and new props in priceList item table", this.props.priceListFileItems, prevProps.priceListFileItems);
+            if (this.props.priceListFileItems != prevProps.priceListFileItems) {
+                console.log("changing state priceList item table----");
+                //this.setState({ isLoading: true });
+                this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
+                //this.setState({ isLoading: false });
+            }
+        } catch (err) {
+            console.log("Inside catch componentDidUpdate priceListItemsTable ", err); // eslint-disable-line
         }
-    }
+    } */
 
     async componentDidMount() {
         try {
-            console.log("Inside componentDidMount pricelist file details", this.props.priceListFileItems);
-            this.setState({ priceListFileItems: await this.priceListFileItems(this.props.priceListFileItems) });
-            //this.setState({ isLoading: false });
+            console.log("Inside componentDidMount priceListItemTable",this.props.priceListName);
+            if (this.props.priceListName != null) {
+                console.log("Inside componentDidMount priceListItemTable", this.props.priceListName);
+                const data = await priceListItems(this.props.priceListName);
+                this.setState({ priceListFileItems: await this.priceListFileItems(data) });
+                //this.setState({ isLoading: false });
+            }
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -97,10 +106,10 @@ class PriceListItemTable extends React.Component {
                 result = priceListData.records.map(record => {
                     return [record.product_id[0], record.product_id[1], record.date_start, record.date_end, record.fixed_price];
                 })
+                return result;
             }
-            return result;
         } catch (err) {
-            console.log(err); // eslint-disable-line
+            console.log("Inside catch priceListFileItems method ", err); // eslint-disable-line
             return [];
         }
     }
@@ -142,14 +151,14 @@ class PriceListItemTable extends React.Component {
         let priceListFileItems = this.state.priceListFileItems;
         let header = "PriceList Items";
         return (
-                <MuiThemeProvider theme={this.getMuiTheme()}>
-                    <MUIDataTable
-                        title={header}
-                        data={priceListFileItems}
-                        columns={columns}
-                        options={options}
-                    />
-                </MuiThemeProvider>
+            <MuiThemeProvider theme={this.getMuiTheme()}>
+                <MUIDataTable
+                    title={header}
+                    data={priceListFileItems}
+                    columns={columns}
+                    options={options}
+                />
+            </MuiThemeProvider>
         )
     }
 };
@@ -161,8 +170,8 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => {
-    console.log("redux fileState form details in mapping", state);
-    return { priceListFileItems: state.priceListFileItems };
+    console.log("redux priceList name in mapping", state);
+    return { priceListName: state.priceListName };
 }
 
 export default connect(

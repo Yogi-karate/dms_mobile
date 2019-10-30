@@ -17,7 +17,7 @@ const exampleInitialState = {
     team: null,
   },
   usrTeam: [],
-  priceListFileItems: null,
+  priceListName: null,
   showPriceListItems: false
 }
 
@@ -30,7 +30,7 @@ export const actionTypes = {
   SHOWDAILYLEADS: 'SHOWDAILYLEADS',
   LOGGEDIN: 'LOGGEDIN',
   USERTEAM: 'USERTEAM',
-  PRICELISTFILEITEMS: 'PRICELISTFILEITEMS',
+  PRICELISTNAME: 'PRICELISTNAME',
   SHOWPRICELISTITEMS: 'SHOWPRICELISTITEMS'
 }
 
@@ -69,9 +69,9 @@ export const reducer = (state = exampleInitialState, action) => {
       return Object.assign({}, state, {
         usrTeam: action.usrTeam
       })
-    case actionTypes.PRICELISTFILEITEMS:
+    case actionTypes.PRICELISTNAME:
       return Object.assign({}, state, {
-        priceListFileItems: action.priceListFileItems
+        priceListName: action.priceListName
       })
     case actionTypes.SHOWPRICELISTITEMS:
       return Object.assign({}, state, {
@@ -116,9 +116,9 @@ export const userTeam = (usrTeam) => {
   console.log("inside userteam action ");
   return { type: actionTypes.USERTEAM, usrTeam: usrTeam }
 }
-export const priceListFileItems = (priceListFileItems) => {
-  console.log("inside priceListFileItems action ");
-  return { type: actionTypes.PRICELISTFILEITEMS, priceListFileItems: priceListFileItems }
+export const priceListName = (priceListName) => {
+  console.log("inside priceListName action ");
+  return { type: actionTypes.PRICELISTNAME, priceListName: priceListName }
 }
 export const showPriceListItems = (showPriceListItems) => {
   console.log("inside showPriceListItems action ");

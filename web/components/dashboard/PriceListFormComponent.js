@@ -14,8 +14,8 @@ import {
 } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog, priceListItems } from '../../lib/api/dashboard';
-import { priceListFileItems, showPriceListItems } from '../../lib/store';
+import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog } from '../../lib/api/dashboard';
+import { priceListName, showPriceListItems } from '../../lib/store';
 
 class PriceListFormComponent extends React.Component {
 
@@ -32,7 +32,8 @@ class PriceListFormComponent extends React.Component {
             jobLogID: '',
             jobLogStatus: '',
             submitStatus: false,
-            refreshStatus: ''
+            refreshStatus: '',
+            submitError: ''
         };
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -102,56 +103,64 @@ class PriceListFormComponent extends React.Component {
             const jobMaster = await getJobMaster("PriceList_Status");
 
             /* create job log */
-            const jobLogBody = {
-                "successCount": 0,
-                "failedCount": 0,
-                "status": "pending",
-                "name": "PriceList",
-                "jobMaster": jobMaster[0]._id
-            };
-            const jobLogCreated = await createJobLog(jobLogBody);
-            console.log("The created jobLog ID is ", jobLogCreated._id);
-            this.setState({ jobLogID: jobLogCreated._id });
+            if (Array.isArray(jobMaster) && jobMaster.length > 0) {
+                const jobLogBody = {
+                    "successCount": 0,
+                    "failedCount": 0,
+                    "status": "pending",
+                    "name": "PriceList",
+                    "jobMaster": jobMaster[0]._id
+                };
+                const jobLogCreated = await createJobLog(jobLogBody);
+                if (jobLogCreated._id != null && jobLogCreated._id != undefined) {
+                    console.log("The created jobLog ID is ", jobLogCreated._id);
+                    this.setState({ jobLogID: jobLogCreated._id });
 
-            const formData = new FormData();
-            formData.append('file', this.state.file);
-            formData.append("name", this.state.name);
-            formData.append("company", this.state.company[1]);
-            formData.append("jobLogID", this.state.jobLogID);
-            console.log("The formdata is ", formData);
-            this.setState({ submitStatus: true });
-            const data = await priceListUpload(formData);
+                    const formData = new FormData();
+                    formData.append('file', this.state.file);
+                    formData.append("name", this.state.name);
+                    formData.append("company", this.state.company[1]);
+                    formData.append("jobLogID", this.state.jobLogID);
+                    console.log("The formdata is ", formData);
+                    this.setState({ submitStatus: true });
+                    const data = await priceListUpload(formData);
+                } else {
+                    console.log("Error creating job log in submitPriceListForm method");
+                    this.setState({ submitError: "Something went wrong" });
+                }
+            } else {
+                console.log("Error fetching job master in submitPriceListForm method");
+                this.setState({ submitError: "Something went wrong" });
+            }
         } catch (err) {
-            console.log(err); // eslint-disable-line
+            console.log("inside catch submitPriceListForm", err); // eslint-disable-line
+            this.setState({ submitError: "Something went wrong" });
         }
     }
 
     /* on refresh check the status for jobLog stored in state and if (state = success) fetch data from db */
     async fetchPriceListItems() {
-        const formDataJobLogId = this.state.jobLogID;
-        const fileName = this.state.name;
-        console.log("The formDataJobLogId and fileName is ", formDataJobLogId, fileName);
-        if (formDataJobLogId != null && formDataJobLogId != '' && fileName != null && fileName != '') {
-            const jobLog = await getJobLog(formDataJobLogId);
-            const jobLogStatus = jobLog[0].status;
-            this.setState({ jobLogStatus: jobLogStatus });
-            console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
-            if (jobLogStatus === 'pending') {
-                const data = await priceListItems(fileName);
-                console.log("The result after submitPriceListForm from dataBase is  ", data);
-                console.log("The arguments for priceListItems are ", this.state.name);
-                if (data != null) {
+        try {
+            const formDataJobLogId = this.state.jobLogID;
+            const fileName = this.state.name;
+            if (formDataJobLogId != null && formDataJobLogId != '' && fileName != null && fileName != '') {
+                this.props.priceListName(fileName);//saving name to redux store
+                console.log("The formDataJobLogId and fileName is ", formDataJobLogId, fileName);
+                const jobLog = await getJobLog(formDataJobLogId);
+                const jobLogStatus = jobLog[0].status;
+                this.setState({ jobLogStatus: jobLogStatus });
+                console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
+                if (jobLogStatus === 'pending') {
                     this.setState({ refreshStatus: "success" });
-                    this.props.priceListFileItems(data);
                     this.props.showPriceListItems(true);//show pricelist table
                 } else {
-                    this.setState({ refreshStatus: "No Data Found" });
+                    this.setState({ refreshStatus: "pending..." });
                 }
             } else {
-                this.setState({ refreshStatus: "pending" });
+                this.setState({ refreshStatus: "JobLog or FileName empty" });
             }
-        } else {
-            this.setState({ refreshStatus: "JobLog or FileName empty" });
+        } catch (err) {
+            this.setState({ refreshStatus: "Something went wrong" });
         }
     }
 
@@ -321,6 +330,7 @@ class PriceListFormComponent extends React.Component {
                                         </Button>
                                             )}
                                     </div>
+                                    <span className={classes.submitError}><b>{this.state.submitError}</b></span>
                                 </React.Fragment>
                             </div>
                         )}
@@ -360,7 +370,7 @@ const styles = theme => ({
         boxShadow: "4px 4px 9px 0 rgb(9, 89, 165)",
 
         "&:hover": {
-            boxShadow: "-2px -3px 9px 0 rgb(230, 27, 27)",
+            boxShadow: "-2px -3px 9px 0 rgb(9, 89, 165)",
         }
     },
     formTab: {
@@ -443,6 +453,12 @@ const styles = theme => ({
         right: "146px",
         color: "#3b46d1",
         float: "right"
+    },
+    submitError: {
+        position: "relative",
+        top: "20px",
+        right: "-136px",
+        color: "#d92424",
     }
 });
 const mapStateToProps = state => {
@@ -451,7 +467,7 @@ const mapStateToProps = state => {
     return { user: state.user };
 }
 
-const mapDispatchToProps = { priceListFileItems, showPriceListItems }
+const mapDispatchToProps = { priceListName, showPriceListItems }
 
 export default connect(
     mapStateToProps,
