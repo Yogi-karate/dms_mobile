@@ -1,5 +1,5 @@
 import 'isomorphic-unfetch';
-import { getPriceListApiUrl } from '../../lib/api/config';
+import { getPriceListApiUrl } from './config';
 
 export default async function sendPricelistRequest(path, opts = {}) {
   console.log("The path are", path);

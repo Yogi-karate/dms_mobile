@@ -1,24 +1,21 @@
 import React from "react";
 
 import { Zoom } from "@material-ui/core";
-import GridItem from "../components/common/Grid/GridItem.js";
-import GridContainer from "../components/common/Grid/GridContainer.js";
+import GridItem from "../common/Grid/GridItem.js";
 import Grid from "@material-ui/core/Grid";
-import PriceListFormComponent from '../components/dashboard/PriceListFormComponent';
-import PriceListItemTable from '../components/dashboard/PriceListItemTable';
+import PriceListFormComponent from './PriceListFormComponent';
+import PriceListItemTable from './PriceListItemTable';
 import { connect } from 'react-redux';
-import withLayout from '../lib/withLayout';
-import withAuth from '../lib/withAuth';
 
-class PriceListForm extends React.Component {
+class PriceListMainComponent extends React.Component {
     constructor(props) {
         super(props);
-        console.log("The props are in dasboar", props);
+        console.log("The props are in dasboard", props);
         this.props = props;
     }
 
     render() {
-        console.log("The showPriceListItemssssss in priceList form is ", this.props.showPriceListItems);
+        console.log("The showPriceListItemssssss in PriceListMainComponent is ", this.props.showPriceListItems);
         return (
             <Grid direction="column">
                 <GridItem xs={12} sm={12} md={12}>
@@ -39,11 +36,11 @@ class PriceListForm extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("state in mapping in priceListForm main page", state);
+    console.log("state in mapping in priceListImport main page", state);
     return { showPriceListItems: state.showPriceListItems };
 }
 
 export default connect(
     mapStateToProps,
     null
-)(withAuth(withLayout(PriceListForm)));
+)(PriceListMainComponent);

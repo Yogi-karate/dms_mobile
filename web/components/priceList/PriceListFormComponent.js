@@ -150,7 +150,7 @@ class PriceListFormComponent extends React.Component {
                 const jobLogStatus = jobLog[0].status;
                 this.setState({ jobLogStatus: jobLogStatus });
                 console.log("The fetchPriceListItems jobLogStatus is ", jobLogStatus);
-                if (jobLogStatus === 'pending') {
+                if (jobLogStatus === 'success') {
                     this.setState({ refreshStatus: "success" });
                     this.props.showPriceListItems(true);//show pricelist table
                 } else {

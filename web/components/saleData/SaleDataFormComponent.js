@@ -13,7 +13,6 @@ import {
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { getCompanies, createJobLog, getJobMaster, getJobLog, priceListItems, saleDataUpload } from '../../lib/api/dashboard';
-import { priceListFileItems } from '../../lib/store';
 
 class SaleDataFormComponent extends React.Component {
 
@@ -335,9 +334,7 @@ const mapStateToProps = state => {
     return { user: state.user };
 }
 
-const mapDispatchToProps = { priceListFileItems }
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    null
 )(withStyles(styles)(SaleDataFormComponent));

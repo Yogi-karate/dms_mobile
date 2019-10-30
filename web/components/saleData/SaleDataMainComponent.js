@@ -1,13 +1,11 @@
 import React from "react";
 
-import GridItem from "../components/common/Grid/GridItem.js";
+import GridItem from "../common/Grid/GridItem.js";
 import Grid from "@material-ui/core/Grid";
-import SaleDataFormComponent from '../components/dashboard/SaleDataFormComponent';
+import SaleDataFormComponent from './SaleDataFormComponent';
 import { connect } from 'react-redux';
-import withLayout from '../lib/withLayout';
-import withAuth from '../lib/withAuth';
 
-class SaleData extends React.Component {
+class SaleDataMainComponent extends React.Component {
     constructor(props) {
         super(props);
         console.log("The props are in dasboar", props);
@@ -26,4 +24,4 @@ class SaleData extends React.Component {
 }
 
 
-export default withAuth(withLayout(SaleData));
+export default SaleDataMainComponent;
