@@ -103,7 +103,7 @@ class Jobs {
         console.log("The admins are ", admins, admins.length);
         for (let i = 0; i < admins.length; i++) {
             let adminMobile = admins[i].mobile;
-            messageResponse = await sms("9840021822", encodeURIComponent(message));
+            messageResponse = await sms("7795659269", encodeURIComponent(message));
         }
         return messageResponse;
     }
@@ -118,7 +118,9 @@ class Jobs {
             let newJobLogs = await JobLog.add(NewJobLog);
             let templateString = jobMaster[0].msgTemplate.value;
             let result = await this[`execute${jobMaster[0].action}`](user);
+            console.log("Inside executeSMS result count is ",result.records.length);
             if (result && result.records) {
+                console.log("records are present of length",result.records.length);
                 for (let i = 0; i < result.records.length; i++) {
                     let record = result.records[i];
                     let message = '';

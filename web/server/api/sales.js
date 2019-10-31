@@ -39,7 +39,7 @@ router.get('/dashboard', async (req, res) => {
 });
 router.get('/search', async (req, res) => {
     try {
-        let result = await sale.searchOrderByState(req.user, { state: req.query.state,invoice_status:req.query.invoice_status});
+        let result = await sale.searchOrderByState(req.user, { state: req.query.state, invoice_status: req.query.invoice_status });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
@@ -59,6 +59,15 @@ router.get('/priceListItems', async (req, res) => {
     try {
         let result = await sale.priceListItem(req.user, { name: req.query.name });
         res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/saleOrderCountByState', async (req, res) => {
+    try {
+        let result = await sale.getOrderCountByState(req.user, { state: req.query.state });
+        res.json({ "length": result });
     } catch (err) {
         res.json({ error: err.message || err.toString() });
     }
