@@ -108,8 +108,12 @@ class SaleDataFormComponent extends React.Component {
             formData.append("company", this.state.company[1]);
             formData.append("jobLogID", this.state.jobLogID);
             console.log("The formdata is ", formData);
-            this.setState({ fileSubmit: "SUBMIT SUCCESSFULL" });
             const data = await saleDataUpload(formData);
+            if(data.status != undefined && data.status == "success"){
+                this.setState({ fileSubmit: "UPLOAD SUCCESSFUL" });
+            }else{
+                this.setState({ fileSubmit: "UPLOAD ERROR" });
+            }
         } catch (err) {
             console.log(err); // eslint-disable-line
         }
@@ -196,7 +200,8 @@ class SaleDataFormComponent extends React.Component {
                                             disabled={
                                                 this.state.companies.length === 0 ||
                                                 this.state.fileName.length === 0 ||
-                                                this.state.fileSubmit === "SUBMIT SUCCESSFULL"
+                                                this.state.fileSubmit === "UPLOAD SUCCESSFUL" || 
+                                                this.state.fileSubmit === "UPLOAD ERROR"
                                             }
                                             onClick={this.onSubmitHandler}
                                             variant="contained"
