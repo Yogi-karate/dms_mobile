@@ -88,9 +88,9 @@ Odoo.prototype.get = async function (model, id, callback) {
 };
 
 // Update record
-Odoo.prototype.update = function (model, id, params, callback) {
+Odoo.prototype.update = async function (model, id, params, callback) {
     if (id) {
-        this._request('/web/dataset/call_kw', {
+        let result = await this.request('/web/dataset/call_kw', {
             kwargs: {
                 context: this.context
             },
@@ -98,6 +98,7 @@ Odoo.prototype.update = function (model, id, params, callback) {
             method: 'write',
             args: [[id], params]
         }, callback);
+        return result;
     }
 };
 

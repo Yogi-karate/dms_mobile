@@ -77,11 +77,13 @@ router.post('/odoo/:model/:id', async (req, res) => {
     id = parseInt(req.params.id);
     model = req.params.model;
     // Get a partner
-    server.update(model, id, req.body, function (err, result) {
+    let updatedCompany = await server.update(model, server.uid, req.body);
+    /* server.update(model, id, req.body, function (err, result) {
       if (err) { return console.log(err); }
       let model_new = result[0];
       res.json({ "success": result });
-    });
+    }); */
+    res.json({ "success": updatedCompany });
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
@@ -155,6 +157,24 @@ router.post('/register_token', async (req, res) => {
   try {
     let user = req.user;
     let result = await User.updateDeviceToken(user,req.body);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+router.get('/updateCompany/:id', async (req, res) => {
+  try {
+    let roles = null;
+    let companies = null;
+    let result = {};
+    let server = odoo.getOdoo(req.user.email);
+    id = parseInt(req.params.id);
+    model = 'res.users';
+    // update user company
+    let updatedCompany = await server.update(model, server.uid, {"company_id": id});
+    roles = await base.getUserRole(req.user);
+    companies = await base.getUserCompanies(req.user);
+    result.role = roles.role; result.teams = roles.teams; result.module = roles.module; result.company_id = companies.company_id; result.company_ids = companies.company_ids;
     res.json(result);
   } catch (err) {
     res.json({ error: err.message || err.toString() });
