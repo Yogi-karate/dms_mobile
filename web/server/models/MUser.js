@@ -36,12 +36,6 @@ const muserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    company_id: {
-        type: Array,
-    },
-    company_ids: {
-        type: Array,
-    },
     displayName: String,
     address: [addressSchema],
 });
@@ -63,7 +57,7 @@ class MUserClass {
         return adminUsers;
     }
 
-    static async add({ name, email, mobile, partner_id, address, isAdmin, company_id, company_ids}) {
+    static async add({ name, email, mobile, partner_id, address, isAdmin }) {
         console.log(mobile);
         console.log(name);
         if (mobile) {
@@ -77,9 +71,7 @@ class MUserClass {
                 mobile,
                 partner_id,
                 address,
-                isAdmin,
-                company_id,
-                company_ids
+                isAdmin
             });
             return newUser;
         } else {

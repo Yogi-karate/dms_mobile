@@ -72,16 +72,23 @@ class Base {
     }
 
     async getUserCompanies(user) {
-        console.log("inside getUserCompanies ", user);
-        let server = odoo.getOdoo(user.email);
-        let companies = null;
-        let model = 'res.company';
-        let domain = [];
-        domain.push(["id", "in", user.company_ids]);
         if (user != null && user != undefined) {
+            let finalResult = {};
+            console.log("inside getUserCompanies ", user);
+            let server = odoo.getOdoo(user.email);
+            console.log("the server inside getUserCompanies ", server.uid);
+            let result = await server.search_read("res.users", { domain: [["id", "=", server.uid]], fields: ["company_id", "company_ids"] });
+            console.log("The companies for logged in user is ", result.records[0].company_ids);
+            let companies = null;
+            let model = 'res.company';
+            let domain = [];
+            domain.push(["id", "in", result.records[0].company_ids]);
             companies = await server.search_read(model, { domain: domain, fields: ["name", "id"] });
             console.log("the companies are ", companies);
-            return companies;
+            finalResult.company_id = result.records[0].company_id;
+            finalResult.company_ids = companies.records;
+            console.log("the getUserCompanies final result is are ", finalResult);
+            return finalResult;
         } else {
             return { "result": "user undefined" };
         }

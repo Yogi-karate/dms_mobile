@@ -36,7 +36,7 @@ class Odoo_Server {
         }
     }
     async createUsers(server) {
-        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id", "company_id", "company_ids"] });
+        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
         let userList = result.records;
         let newUserArray = [];
         for (const user of userList) {
@@ -45,15 +45,13 @@ class Odoo_Server {
                 let name = user.partner_id[1];
                 let partner_id = user.partner_id[0];
                 let isAdmin = true;
-                let company_id = user.company_id;
-                let company_ids = user.company_ids;
                 if (user.login === "admin") {
                     mobile = '1111111111';
                 }
                 let localUser = await User.findOne({ mobile: mobile });
                 if (localUser === null && mobile != null && mobile != false) {
                     console.log("This is new user and localuser is", user);
-                    let newUser = { name: name, partner_id: partner_id, email: user.login, mobile: mobile, company_id: company_id, company_ids: company_ids }
+                    let newUser = { name: name, partner_id: partner_id, email: user.login, mobile: mobile }
                     if (user.login == 'admin') {
                         console.log("Admin user is added");
                         newUser.isAdmin = true;
