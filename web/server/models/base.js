@@ -39,7 +39,7 @@ class Base {
             let server = odoo.getOdoo(user.email);
             let model = 'crm.team';
             let domain = [];
-            if (user.email === "admin") {
+            if (user.email === odoo.admin_user) {
                 result = await server.search_read(model, { domain: domain, fields: ["name", "id", "team_type"] });
                 let moduleType = this.checkForTeamType(result.records);
                 return { role: "Admin", teams: result, module: moduleType };

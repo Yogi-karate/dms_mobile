@@ -30,7 +30,7 @@ class Odoo_Server {
                 self.initDatabase(odoo);
                 console.log("Result:", odoo);
             });
-            this.connections['admin'] = odoo;
+            this.connections[this.admin_user] = odoo;
         } catch (err) {
             console.log("Error", err);
         }
@@ -45,14 +45,14 @@ class Odoo_Server {
                 let name = user.partner_id[1];
                 let partner_id = user.partner_id[0];
                 let isAdmin = true;
-                if (user.login === "admin") {
+                if (user.login === this.admin_user) {
                     mobile = '1111111111';
                 }
                 let localUser = await User.findOne({ mobile: mobile });
                 if (localUser === null && mobile != null && mobile != false) {
                     console.log("This is new user and localuser is", user);
                     let newUser = { name: name, partner_id: partner_id, email: user.login, mobile: mobile }
-                    if (user.login == 'admin') {
+                    if (user.login == this.admin_user) {
                         console.log("Admin user is added");
                         newUser.isAdmin = true;
                     }
