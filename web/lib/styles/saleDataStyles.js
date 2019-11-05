@@ -33,7 +33,7 @@ const saleDataStyles = theme => ({
     },
     formTab: {
         fontWeight: 400,
-        fontSize: 48,
+        fontSize: 40,
         background: "linear-gradient(45deg, #0066cc 30%, #0099ff 90%)",
         borderradius: "3px",
         border: 0,
@@ -41,7 +41,7 @@ const saleDataStyles = theme => ({
         height: "88px",
         padding: "0 30px",
         boxshadow: "0 3px 5px 2px rgba(255, 105, 135, 0.3)",
-        minWidth: 900
+        minWidth: 395
     },
     errorMessage: {
         textAlign: "center",
@@ -64,7 +64,7 @@ const saleDataStyles = theme => ({
     },
     textField: {
         borderBottomColor: theme.palette.background.light,
-        marginBottom: "10px"
+        marginTop: "26px"
     },
     formButtons: {
         width: "100%",
@@ -117,6 +117,12 @@ const saleDataStyles = theme => ({
         top: "20px",
         right: "-136px",
         color: "#d92424",
+    },
+    reloadButton: {
+        display: "flex",
+        float: "right",
+        bottom: "-38px",
+        right: "-33px"
     }
 });
 
