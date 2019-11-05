@@ -19,10 +19,17 @@ const saleDataStyles = theme => ({
         alignItems: "center",
         [theme.breakpoints.down("md")]: {
             width: "50%"
-        }
+        },
+        margin: "50px"
     },
     form: {
-        width: 500
+        width: 500,
+        padding: 50,
+        boxShadow: "4px 4px 9px 0 rgb(9, 89, 165)",
+
+        "&:hover": {
+            boxShadow: "-2px -3px 9px 0 rgb(9, 89, 165)",
+        }
     },
     formTab: {
         fontWeight: 400,
@@ -57,12 +64,12 @@ const saleDataStyles = theme => ({
     },
     textField: {
         borderBottomColor: theme.palette.background.light,
-        marginTop: "40px"
+        marginBottom: "10px"
     },
     formButtons: {
         width: "100%",
         marginTop: theme.spacing(4),
-        marginLeft: theme.spacing(25),
+        marginLeft: theme.spacing(20),
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -98,17 +105,18 @@ const saleDataStyles = theme => ({
         background: "#ffffff",
         float: "right"
     },
-    statusName: {
+    refreshStatusName: {
         position: "relative",
-        top: "34px",
+        top: "10px",
+        right: "146px",
         color: "#3b46d1",
         float: "right"
     },
-    submitMessage: {
+    submitError: {
         position: "relative",
-        left: "178px",
-        color: "#168a1f",
-        fontSize: "15px"
+        top: "20px",
+        right: "-136px",
+        color: "#d92424",
     }
 });
 
