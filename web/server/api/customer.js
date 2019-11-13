@@ -77,13 +77,8 @@ router.post('/odoo/:model/:id', async (req, res) => {
     id = parseInt(req.params.id);
     model = req.params.model;
     // Get a partner
-    let updatedCompany = await server.update(model, server.uid, req.body);
-    /* server.update(model, id, req.body, function (err, result) {
-      if (err) { return console.log(err); }
-      let model_new = result[0];
-      res.json({ "success": result });
-    }); */
-    res.json({ "success": updatedCompany });
+    let result = await server.update(model, id, req.body);
+    res.json({ "success": result });
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
