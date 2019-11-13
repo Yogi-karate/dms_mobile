@@ -10,8 +10,10 @@ import {
     Fade,
     MenuItem,
     Slide,
-    Icon
+    Icon,
+    Fab
 } from "@material-ui/core";
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { getCompanies, priceListUpload, createJobLog, getJobMaster, getJobLog } from '../../lib/api/dashboard';
@@ -45,6 +47,12 @@ class PriceListFormComponent extends React.Component {
         console.log("Inside onSubmitHandler");
         e.preventDefault();
         this.submitPriceListForm();
+    }
+
+    onReloadHandler = (e) => {
+        console.log("Inside onReloadHandler");
+        e.preventDefault();
+        window.location.reload();
     }
 
     handleNameChange(evt) {
@@ -176,14 +184,7 @@ class PriceListFormComponent extends React.Component {
                         <Slide direction="left" in={true} mountOnEnter unmountOnExit>
 
                             <div className={classes.form}>
-                                <Tabs
-                                    onChange={props.handleTabChange}
-                                    indicatorColor="white"
-                                    textColor="white"
-                                    centered
-                                >
-                                    <Tab label="FORM DETAILS" className={classes.formTab} />
-                                </Tabs>
+                                <Tab label="FORM DETAILS" className={classes.formTab} />
                                 <React.Fragment>
                                     <TextField
                                         id="name"
@@ -241,7 +242,7 @@ class PriceListFormComponent extends React.Component {
                                                     }
                                                     onClick={this.onRefreshHandler}
                                                     variant="contained"
-                                                    color="secondary"
+                                                    color="primary"
                                                     size="small"
                                                 >
                                                     REFRESH
@@ -252,19 +253,23 @@ class PriceListFormComponent extends React.Component {
                                         (<span className={classes.refreshStatusName}><b>STATUS:</b> {this.state.refreshStatus}</span>) :
                                         (<span> </span>)
                                     }
+                                    <Fab
+                                        className={classes.reloadButton}
+                                        color="secondary"
+                                        aria-label="refresh"
+                                        size="small"
+                                        title="reload form"
+                                        onClick={this.onReloadHandler}
+                                    >
+                                        <RefreshIcon />
+                                    </Fab>
                                 </React.Fragment>
                             </div>
                         </Slide>) : (
 
                             <div className={classes.form}>
-                                <Tabs
-                                    onChange={props.handleTabChange}
-                                    indicatorColor="white"
-                                    textColor="white"
-                                    centered
-                                >
-                                    <Tab label="PRICELIST FORM" className={classes.formTab} />
-                                </Tabs>
+                                <Tab label="PRICELIST FORM" className={classes.formTab}
+                                />
                                 <React.Fragment>
                                     <TextField
                                         id="name"
@@ -332,6 +337,16 @@ class PriceListFormComponent extends React.Component {
                                             )}
                                     </div>
                                     <span className={classes.submitError}><b>{this.state.submitError}</b></span>
+                                    <Fab
+                                        className={classes.reloadButton}
+                                        color="secondary"
+                                        aria-label="refresh"
+                                        size="small"
+                                        title="reload form"
+                                        onClick={this.onReloadHandler}
+                                    >
+                                        <RefreshIcon />
+                                    </Fab>
                                 </React.Fragment>
                             </div>
                         )}

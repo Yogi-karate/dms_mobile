@@ -14,7 +14,7 @@ class SaleDataMainComponent extends React.Component {
 
     render() {
         return (
-            <Grid direction="column">
+            <Grid>
                 <GridItem xs={12} sm={12} md={12}>
                     <SaleDataFormComponent {... this.props} />
                 </GridItem>

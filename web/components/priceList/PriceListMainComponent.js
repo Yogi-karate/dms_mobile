@@ -17,7 +17,7 @@ class PriceListMainComponent extends React.Component {
     render() {
         console.log("The showPriceListItemssssss in PriceListMainComponent is ", this.props.showPriceListItems);
         return (
-            <Grid direction="column">
+            <Grid>
                 <GridItem xs={12} sm={12} md={12}>
                     <PriceListFormComponent {... this.props} />
                 </GridItem>

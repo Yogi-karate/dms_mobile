@@ -19,14 +19,21 @@ const saleDataStyles = theme => ({
         alignItems: "center",
         [theme.breakpoints.down("md")]: {
             width: "50%"
-        }
+        },
+        margin: "50px"
     },
     form: {
-        width: 500
+        width: 500,
+        padding: 50,
+        boxShadow: "4px 4px 9px 0 rgb(9, 89, 165)",
+
+        "&:hover": {
+            boxShadow: "-2px -3px 9px 0 rgb(9, 89, 165)",
+        }
     },
     formTab: {
         fontWeight: 400,
-        fontSize: 48,
+        fontSize: 40,
         background: "linear-gradient(45deg, #0066cc 30%, #0099ff 90%)",
         borderradius: "3px",
         border: 0,
@@ -34,7 +41,7 @@ const saleDataStyles = theme => ({
         height: "88px",
         padding: "0 30px",
         boxshadow: "0 3px 5px 2px rgba(255, 105, 135, 0.3)",
-        minWidth: 900
+        minWidth: 395
     },
     errorMessage: {
         textAlign: "center",
@@ -57,12 +64,12 @@ const saleDataStyles = theme => ({
     },
     textField: {
         borderBottomColor: theme.palette.background.light,
-        marginTop: "40px"
+        marginTop: "26px"
     },
     formButtons: {
         width: "100%",
         marginTop: theme.spacing(4),
-        marginLeft: theme.spacing(25),
+        marginLeft: theme.spacing(20),
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -98,17 +105,24 @@ const saleDataStyles = theme => ({
         background: "#ffffff",
         float: "right"
     },
-    statusName: {
+    refreshStatusName: {
         position: "relative",
-        top: "34px",
+        top: "10px",
+        right: "146px",
         color: "#3b46d1",
         float: "right"
     },
-    submitMessage: {
+    submitError: {
         position: "relative",
-        left: "178px",
-        color: "#168a1f",
-        fontSize: "15px"
+        top: "20px",
+        right: "-136px",
+        color: "#d92424",
+    },
+    reloadButton: {
+        display: "flex",
+        float: "right",
+        bottom: "-38px",
+        right: "-33px"
     }
 });
 
