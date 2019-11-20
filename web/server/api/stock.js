@@ -47,7 +47,7 @@ router.get('/vehicles', async (req, res) => {
 router.get('/vehicleCount', async (req, res) => {
     try {
         let result = await stock.vehicleCount(req.user);
-        res.json(result);
+        res.json({ length: result });
     } catch (err) {
         res.json({ error: err.message || err.toString() });
     }
