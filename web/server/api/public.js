@@ -44,7 +44,7 @@ router.get('/messageLogsBasedOnDate', async (req, res) => {
         status: "Incorrect Start or End date formats, please provide valid date formats YYYY-MM-DD and StartDate less than today"
       }
       res.xls(`${req.query.name}_InValidDates.xlsx`, emptyExcel);
-    } else if (result.length <= 0 && result === null) {
+    } else if (result.length <= 0 || result === null) {
       let emptyExcel = {
         templateName: req.query.name,
         status: "No Messages sent today,because leads generated is zero"
