@@ -7,6 +7,7 @@ const tasksApi = require('./tasks');
 const dashboardApi = require('./dashboard');
 const adminApi = require('./admin');
 const vehicleLeadApi = require('./vehicleLeads');
+const stockApi = require('./stock');
 //const adminApi = require('./admin');
 
 function api(server) {
@@ -19,6 +20,7 @@ function api(server) {
   server.use('/api/v1/dashboard', dashboardApi);
   server.use('/api/v1/admin', adminApi);
   server.use('/api/v1/vehicleLeads', vehicleLeadApi);
+  server.use('/api/v1/stock', stockApi);
 }
 
 module.exports = api;
