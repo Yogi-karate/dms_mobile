@@ -10,9 +10,20 @@ class Stock {
         let model = 'vehicle';
         let domain = [];
         domain.push(["state", "!=", "sold"]);
-        vehicles = await server.search_read(model, { domain: domain, fields: ["model", "color", "variant", "name", "location_id", "state", "age", "allocation_state","partner_id"] });
+        vehicles = await server.search_read(model, { domain: domain, fields: ["model", "color", "variant", "name", "location_id", "state", "age", "allocation_state", "partner_id"] });
         vehicles.records = base.cleanModels(vehicles.records);
         return vehicles;
+    }
+
+    async vehicleCount(user) {
+        console.log("Inside vehicleList in stock js ", user);
+        let vehicleCount = null;
+        let server = odoo.getOdoo(user.email);
+        let model = 'vehicle';
+        let domain = [];
+        domain.push(["state", "!=", "sold"]);
+        vehicleCount = await server.search(model, { domain: domain }, true);
+        return vehicleCount;
     }
 }
 

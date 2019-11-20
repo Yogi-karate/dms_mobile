@@ -44,4 +44,13 @@ router.get('/vehicles', async (req, res) => {
     }
 });
 
+router.get('/vehicleCount', async (req, res) => {
+    try {
+        let result = await stock.vehicleCount(req.user);
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
 module.exports = router;
