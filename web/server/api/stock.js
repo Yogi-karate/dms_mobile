@@ -34,6 +34,7 @@ router.use((req, res, next) => {
     }
 });
 
+/* to get all vehicles present in stock */
 router.get('/vehicles', async (req, res) => {
     try {
         let result = await stock.vehicleList(req.user);
@@ -44,6 +45,7 @@ router.get('/vehicles', async (req, res) => {
     }
 });
 
+/* to get the vehicle count */
 router.get('/vehicleCount', async (req, res) => {
     try {
         let result = await stock.vehicleCount(req.user);

@@ -115,9 +115,9 @@ Odoo.prototype.delete = function (model, id, callback) {
 };
 
 // Search records
-Odoo.prototype.search = async function (model, domain, count,callback) {
+Odoo.prototype.search = async function (model, domain, count, callback) {
     console.log(domain.domain);
-    let method_name='search';
+    let method_name = 'search';
     if (count == true) method_name = 'search_count';
     let result = await this.request('/web/dataset/call_kw', {
         kwargs: {
@@ -148,7 +148,7 @@ Odoo.prototype.search_read = async function (model, { domain = [], fields = [], 
 };
 // Added fields_get method
 Odoo.prototype.read_group = async function (model, { domain = [], fields = [], groupby = [] }, callback) {
-    let result = await this.request('/web/dataset/call_kw/'+model+'/read_group', {
+    let result = await this.request('/web/dataset/call_kw/' + model + '/read_group', {
         args: [],
         kwargs: {
             context: this.context,
@@ -162,8 +162,8 @@ Odoo.prototype.read_group = async function (model, { domain = [], fields = [], g
     return result
 };
 // Added fields_get method
-Odoo.prototype.action_feedback = async function (model, { id,feedback}, callback) {
-    let result = await this.request('/web/dataset/call_kw/'+model+'/activity_feedback', {
+Odoo.prototype.action_feedback = async function (model, { id, feedback }, callback) {
+    let result = await this.request('/web/dataset/call_kw/' + model + '/activity_feedback', {
         args: [[id]],
         kwargs: {
             context: this.context,
@@ -174,8 +174,8 @@ Odoo.prototype.action_feedback = async function (model, { id,feedback}, callback
     }, callback);
     return result
 };
-Odoo.prototype.action_feedback_disposition = async function (model, { id,feedback, disposition_id}, callback) {
-    let result = await this.request('/web/dataset/call_kw/'+model+'/activity_feedback_disposition', {
+Odoo.prototype.action_feedback_disposition = async function (model, { id, feedback, disposition_id }, callback) {
+    let result = await this.request('/web/dataset/call_kw/' + model + '/activity_feedback_disposition', {
         args: [[id]],
         kwargs: {
             context: this.context,
@@ -262,4 +262,14 @@ Odoo.prototype._request = function (path, params, callback) {
         return callback(null, res);
     });
 };
+
+Odoo.prototype.action_apply = async function (model, { id }, callback) {
+    let result = await this.request('/web/dataset/call_button/', {
+        args: [[id], this.context],
+        model,
+        method: 'action_apply',
+    }, callback);
+    return result
+};
+
 module.exports = Odoo;

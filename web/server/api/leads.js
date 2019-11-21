@@ -148,4 +148,13 @@ router.get('/lostReasons', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.post('/quotation/create', async (req, res) => {
+  try {
+    let result = await lead.createQuotation(req.user, req.body);
+    res.json({ result: result });
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
 module.exports = router;
+

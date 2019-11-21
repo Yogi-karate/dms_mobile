@@ -93,7 +93,7 @@ class Lead {
             if (userId != null && !isNaN(userId) && userId != '') {
                 domain.push(["user_id", "=", parseInt(userId)]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id", "email_from","sale_number"] });
             result.records.sort(function (record1, record2) {
                 var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
                 return dateA - dateB //sort by date ascending
@@ -312,6 +312,21 @@ class Lead {
         }
 
     }
+
+    async createQuotation(user, req) {
+        let newQuotation = null;
+        let actionResult = null;
+        let server = odoo.getOdoo(user.email);
+        let model = 'dms.enquiry2sale.order';
+        newQuotation = await server.create(model, req);
+        console.log("The new quotation created id ", newQuotation);
+        if (newQuotation != null) {
+            actionResult = await server.action_apply(model, { id: newQuotation });
+            console.log("the action_apply result is ", actionResult);
+        }
+        return actionResult;
+    }
+
 }
 
 module.exports = new Lead();
