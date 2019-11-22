@@ -24,6 +24,12 @@ if [ $? -eq 0 ];then
    if [ $? -eq 0 ];then
         echo "Backup Completed Successfully at $timestamp"  >> "$2"
         aws sns publish --topic-arn $topic --message "Backup Completed Successfully at $timestamp"  >> "$2"
+        echo "creating temp directory"
+        mkdir temp
+        echo "moving zip file into temp"
+        mv $new_file.gz ./temp/
+        echo "deleting temp folder"
+        rm -fr temp
    else
         echo "Backup Failed !!!!"  >> "$2" 
         aws sns publish --topic-arn $topic --message $notification_failure
