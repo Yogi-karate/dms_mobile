@@ -151,7 +151,11 @@ router.get('/lostReasons', async (req, res) => {
 router.post('/quotation/create', async (req, res) => {
   try {
     let result = await lead.createQuotation(req.user, req.body);
-    res.json({ result: result });
+    if (result == false) {
+      res.json({ message: "success" });
+    } else {
+      res.status(500).send({ message: "failed" });
+    }
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
