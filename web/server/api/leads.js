@@ -160,5 +160,14 @@ router.post('/quotation/create', async (req, res) => {
     res.json({ error: err.message || err.toString() });
   }
 });
+router.get('/leadDetails', async (req, res) => {
+  try {
+    let result = await lead.leadDetails(req.user, { leadId: req.query.leadId });
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message || err.toString() });
+  }
+});
+
 module.exports = router;
 

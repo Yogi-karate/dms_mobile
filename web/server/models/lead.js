@@ -93,7 +93,7 @@ class Lead {
             if (userId != null && !isNaN(userId) && userId != '') {
                 domain.push(["user_id", "=", parseInt(userId)]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id", "email_from","sale_number"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "activity_date_deadline", "mobile", "partner_name", "user_id", "team_id", "stage_id", "email_from", "sale_number"] });
             result.records.sort(function (record1, record2) {
                 var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
                 return dateA - dateB //sort by date ascending
@@ -325,6 +325,43 @@ class Lead {
             console.log("the action_apply result is ", actionResult);
         }
         return actionResult;
+    }
+
+    /* get lead details which contains enquiry data */
+    async leadDetails(user, { leadId }) {
+        let leadDetails = [];
+        let server = odoo.getOdoo(user.email);
+        let model = 'crm.lead';
+        let domain = [];
+        domain.push(["id", "=", parseInt(leadId)])
+        let fields = ["source_id", "name", "team_id", "partner_name", "mobile", "enquiry_id"];
+        leadDetails = await server.search_read(model, { domain: domain, fields: fields });
+        console.log("The lead details areeeeee ", leadDetails);
+        if (leadDetails == null || leadDetails == undefined || leadDetails.records.length < 1) {
+            return { length: 0, records: [] };
+        } else {
+            if (leadDetails.records[0].enquiry_id != false) {
+                let enquiryDetails = [];
+                let enquiryId = leadDetails.records[0].enquiry_id[0];
+                let model1 = 'dms.enquiry';
+                let domain1 = [];
+                domain1.push(["id", "=", parseInt(enquiryId)]);
+                let fields1 = ["product_id", "product_color", "product_variant"];
+                enquiryDetails = await server.search_read(model1, { domain: domain1, fields: fields1 });
+                const finalEnquiry = enquiryDetails.records.map(enquiry => {
+                    return enquiry;
+                })
+                leadDetails.records[0].enquiry = finalEnquiry[0];
+            } else {
+                leadDetails.records[0].enquiry = {
+                    product_id: "",
+                    product_color: "",
+                    product_variant: ""
+                }
+            }
+            leadDetails.records = base.cleanModels(leadDetails.records);
+            return leadDetails;
+        }
     }
 
 }
