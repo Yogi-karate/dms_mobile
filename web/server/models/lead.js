@@ -356,7 +356,8 @@ class Lead {
                 leadDetails.records[0].enquiry = {
                     product_id: "",
                     product_color: "",
-                    product_variant: ""
+                    product_variant: "",
+                    id: ""
                 }
             }
             leadDetails.records = base.cleanModels(leadDetails.records);
