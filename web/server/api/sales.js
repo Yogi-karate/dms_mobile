@@ -73,4 +73,40 @@ router.get('/saleOrderCountByState', async (req, res) => {
     }
 });
 
+router.get('/saleOrder', async (req, res) => {
+    try {
+        let result = await sale.saleOrder(req.user, { leadId: req.query.leadId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/saleOrderPrice', async (req, res) => {
+    try {
+        let result = await sale.saleOrderPrice(req.user, { orderId: req.query.orderId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/quotationCount', async (req, res) => {
+    try {
+        let result = await sale.quotationCount(req.user);
+        res.json({ "length": result });
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+
+/* middleware to handle errors (this should be present at the end of all api's always) */
+/* router.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.json({
+        message: err.message
+    });
+}); */
+
 module.exports = router;

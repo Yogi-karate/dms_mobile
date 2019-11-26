@@ -92,6 +92,39 @@ class Sale {
         return result;
     }
 
+    /* to get quotation's price details based on lead id */
+    async saleOrder(user, { leadId }) {
+        let orderDetails = [];
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        domain.push(["opportunity_id", "=", parseInt(leadId)]);
+        orderDetails = await server.search_read(model, { domain: domain, fields: ["name", "partner_id", "amount_untaxed", "amount_tax", "amount_total", "team_id", "opportunity_id"] });
+        return orderDetails;
+    }
+
+    /* to get sale order price details based on order id */
+    async saleOrderPrice(user, { orderId }) {
+        let priceDetails = [];
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order.line';
+        let domain = [];
+        domain.push(["order_id", "=", parseInt(orderId)]);
+        priceDetails = await server.search_read(model, { domain: domain, fields: ["name", "order_id", "price_unit", "price_subtotal", "price_tax", "price_total", "price_reduce", "product_id"] });
+        return priceDetails;
+    }
+
+    /* to get total quotation count */
+    async quotationCount(user) {
+        console.log("Inside quotationCount in stock js ");
+        let quotationCount = null;
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        quotationCount = await server.search(model, { domain: domain }, true);
+        return quotationCount;
+    }
+
 }
 
 module.exports = new Sale();
