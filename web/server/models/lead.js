@@ -334,7 +334,7 @@ class Lead {
         let model = 'crm.lead';
         let domain = [];
         domain.push(["id", "=", parseInt(leadId)])
-        let fields = ["source_id", "name", "team_id", "partner_name", "mobile", "enquiry_id"];
+        let fields = ["name", "team_id", "partner_name", "mobile", "enquiry_id", "user_id", "sale_number", "stage_id"];
         leadDetails = await server.search_read(model, { domain: domain, fields: fields });
         console.log("The lead details areeeeee ", leadDetails);
         if (leadDetails == null || leadDetails == undefined || leadDetails.records.length < 1) {
@@ -346,7 +346,7 @@ class Lead {
                 let model1 = 'dms.enquiry';
                 let domain1 = [];
                 domain1.push(["id", "=", parseInt(enquiryId)]);
-                let fields1 = ["product_id", "product_color", "product_variant"];
+                let fields1 = ["product_id", "product_color", "product_variant", "source_id"];
                 enquiryDetails = await server.search_read(model1, { domain: domain1, fields: fields1 });
                 const finalEnquiry = enquiryDetails.records.map(enquiry => {
                     return enquiry;
@@ -357,7 +357,8 @@ class Lead {
                     product_id: "",
                     product_color: "",
                     product_variant: "",
-                    id: ""
+                    id: "",
+                    source_id: ""
                 }
             }
             leadDetails.records = base.cleanModels(leadDetails.records);
