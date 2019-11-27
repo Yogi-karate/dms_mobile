@@ -31,7 +31,7 @@ class Sale {
             if (leadId != null) {
                 domain.push(["opportunity_id", "=", parseInt(leadId)]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "product_name", "product_variant", "product_color", "state", "finance_type", "financier_name", "payment_date", "delivery_date", "stock_status", "balance_amount", "partner_id", "amount_untaxed", "amount_tax", "amount_total", "team_id", "opportunity_id", "user_id", "booking_amt"] });
+            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "partner_id", "team_id", "user_id", "booking_amt"] });
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
