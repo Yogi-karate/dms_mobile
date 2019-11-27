@@ -16,7 +16,7 @@ class Sale {
         }
     }
 
-    async searchOrderByState(user, { state, invoice_status }) {
+    async searchOrderByState(user, { state, invoice_status, leadId }) {
         let result = null;
         try {
             let server = odoo.getOdoo(user.email);
@@ -28,7 +28,10 @@ class Sale {
             if (invoice_status != null) {
                 domain.push(["invoice_status", "ilike", invoice_status]);
             }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "product_name", "product_variant", "product_color", "state", "finance_type", "financier_name", "payment_date", "delivery_date", "stock_status", "balance_amount"] });
+            if (leadId != null) {
+                domain.push(["opportunity_id", "=", parseInt(leadId)]);
+            }
+            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "product_name", "product_variant", "product_color", "state", "finance_type", "financier_name", "payment_date", "delivery_date", "stock_status", "balance_amount", "partner_id", "amount_untaxed", "amount_tax", "amount_total", "team_id", "opportunity_id", "user_id", "booking_amt"] });
             result.records = base.cleanModels(result.records);
             return result;
         } catch (err) {
@@ -93,7 +96,7 @@ class Sale {
     }
 
     /* to get quotation's price details based on lead id */
-    async saleOrder(user, { leadId }) {
+    /* async saleOrder(user, { leadId }) {
         let orderDetails = [];
         let server = odoo.getOdoo(user.email);
         let model = 'sale.order';
@@ -101,7 +104,7 @@ class Sale {
         domain.push(["opportunity_id", "=", parseInt(leadId)]);
         orderDetails = await server.search_read(model, { domain: domain, fields: ["name", "partner_id", "amount_untaxed", "amount_tax", "amount_total", "team_id", "opportunity_id"] });
         return orderDetails;
-    }
+    } */
 
     /* to get sale order price details based on order id */
     async saleOrderPrice(user, { orderId }) {
