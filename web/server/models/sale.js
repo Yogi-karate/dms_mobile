@@ -96,22 +96,19 @@ class Sale {
     }
 
     /* to get sale order price details based on order id */
-    async saleOrderPrice(user, { leadId }) {
+    async saleOrderPrice(user, { orderId }) {
         let orderDetails = [];
         let server = odoo.getOdoo(user.email);
         let model = 'sale.order';
         let domain = [];
-        domain.push(["opportunity_id", "=", parseInt(leadId)]);
+        domain.push(["id", "=", parseInt(orderId)]);
         orderDetails = await server.search_read(model, { domain: domain, fields: ["amount_untaxed", "amount_tax", "amount_total"] });
-        console.log("The order details are ", orderDetails);
         if (orderDetails != null && orderDetails != undefined && orderDetails.records.length > 0) {
-            console.log("The order Id issss ", orderDetails.records[0].id);
             let priceDetails = [];
             let model1 = 'sale.order.line';
             let domain1 = [];
-            domain1.push(["order_id", "=", orderDetails.records[0].id]);
+            domain1.push(["order_id", "=", parseInt(orderId)]);
             priceDetails = await server.search_read(model1, { domain: domain1, fields: ["name", "price_total"] });
-            console.log("The priceDetails are ", priceDetails);
             priceDetails.saleorder = orderDetails.records[0];
             return priceDetails;
         } else {

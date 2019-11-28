@@ -75,7 +75,7 @@ router.get('/saleOrderCountByState', async (req, res) => {
 
 router.get('/saleOrderPrice', async (req, res) => {
     try {
-        let result = await sale.saleOrderPrice(req.user, { leadId: req.query.leadId });
+        let result = await sale.saleOrderPrice(req.user, { orderId: req.query.orderId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
