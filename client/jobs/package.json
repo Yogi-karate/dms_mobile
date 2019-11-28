@@ -1,0 +1,20 @@
+{
+  "name": "dms-client",
+  "version": "1.0.0",
+  "description": "client for invoking dms apis",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon server/app.js --watch .",
+    "start": "node app.js",
+    "processes": "ss -lptn 'sport = :8000'",
+    "kill-pud": "kill -9 <pid>"
+  },
+  "author": "rammohan",
+  "license": "MIT",
+  "keywords": [],
+  "dependencies": {
+    "simple-ssh": "1.0.0",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {}
+}
