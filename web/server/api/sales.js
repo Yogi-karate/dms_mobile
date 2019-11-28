@@ -39,7 +39,7 @@ router.get('/dashboard', async (req, res) => {
 });
 router.get('/search', async (req, res) => {
     try {
-        let result = await sale.searchOrderByState(req.user, { state: req.query.state, invoice_status: req.query.invoice_status, leadId: req.query.leadId});
+        let result = await sale.searchOrderByState(req.user, { state: req.query.state, invoice_status: req.query.invoice_status, leadId: req.query.leadId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
@@ -73,18 +73,9 @@ router.get('/saleOrderCountByState', async (req, res) => {
     }
 });
 
-/* router.get('/saleOrder', async (req, res) => {
-    try {
-        let result = await sale.saleOrder(req.user, { leadId: req.query.leadId });
-        res.json(result);
-    } catch (err) {
-        res.json({ error: err.message || err.toString() });
-    }
-}); */
-
 router.get('/saleOrderPrice', async (req, res) => {
     try {
-        let result = await sale.saleOrderPrice(req.user, { orderId: req.query.orderId });
+        let result = await sale.saleOrderPrice(req.user, { leadId: req.query.leadId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
