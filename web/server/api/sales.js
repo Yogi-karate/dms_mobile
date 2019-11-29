@@ -100,6 +100,20 @@ router.get('/quotationCount', async (req, res) => {
     }
 });
 
+router.get('/confirmQuotation', async (req, res) => {
+    try {
+        let result = await sale.confirmQuotation(req.user, { orderId: req.query.orderId });
+        if (result == false) {
+            res.json({ message: "success" });
+        } else {
+            res.status(500).send({ message: "failed" });
+        }
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+
 
 /* middleware to handle errors (this should be present at the end of all api's always) */
 /* router.use((err, req, res, next) => {

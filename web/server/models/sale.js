@@ -143,6 +143,20 @@ class Sale {
         return quotationCount;
     }
 
+    /* confirm quotations */
+    async confirmQuotation(user, { orderId }) {
+        let actionResult = null;
+        console.log("Inside confirmQuotation in stock js ");
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        if (orderId != null) {
+            actionResult = await server.action_confirm(model, { id: parseInt(orderId) });
+            console.log("the action_confirm result is ", actionResult);
+        }
+        return actionResult;
+    }
+
 }
 
 module.exports = new Sale();

@@ -272,4 +272,13 @@ Odoo.prototype.action_apply = async function (model, { id }, callback) {
     return result
 };
 
+Odoo.prototype.action_confirm = async function (model, { id }, callback) {
+    let result = await this.request('/web/dataset/call_button/', {
+        args: [[id], this.context],
+        model,
+        method: 'action_confirm',
+    }, callback);
+    return result
+};
+
 module.exports = Odoo;
