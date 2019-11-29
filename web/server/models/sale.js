@@ -116,6 +116,22 @@ class Sale {
         }
     }
 
+    /* get the customer details for sale order */
+    async saleOrderCustomer(user, { orderId }) {
+        let orderDetails = [];
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        domain.push(["id", "=", parseInt(orderId)]);
+        orderDetails = await server.search_read(model, { domain: domain, fields: ["partner_id", "product_name", "product_variant", "product_color", "date_order", "delivery_date", "warehouse_id"] });
+        if (orderDetails != null && orderDetails != undefined && orderDetails.records.length > 0) {
+            orderDetails.records = base.cleanModels(orderDetails.records);
+            return orderDetails;
+        } else {
+            return { length: 0, records: [] };
+        }
+    }
+
     /* to get total quotation count */
     async quotationCount(user) {
         console.log("Inside quotationCount in stock js ");

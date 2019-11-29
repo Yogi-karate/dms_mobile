@@ -82,6 +82,15 @@ router.get('/saleOrderPrice', async (req, res) => {
     }
 });
 
+router.get('/saleOrderCustomer', async (req, res) => {
+    try {
+        let result = await sale.saleOrderCustomer(req.user, { orderId: req.query.orderId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
 router.get('/quotationCount', async (req, res) => {
     try {
         let result = await sale.quotationCount(req.user);
