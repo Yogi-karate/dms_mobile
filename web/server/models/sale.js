@@ -197,10 +197,10 @@ class Sale {
         orderDetails = await server.search_read(model, { domain: domain, fields: ["finance_type", "finance_payment_date", "financier_name", "margin_payment_date", "delivery_date", "booking_amt", "dob", "priority", "finance_pmt", "margin_pmt", "balance_amount", "stock_status"] });
         if (orderDetails != null && orderDetails != undefined && orderDetails.records.length > 0) {
             orderDetails.records = base.cleanModels(orderDetails.records);
-            return orderDetails;
+            return orderDetails.records[0];
         } else {
             console.log("order details records are empty");
-            return { length: 0, records: [] };
+            return {};
         }
     }
 
