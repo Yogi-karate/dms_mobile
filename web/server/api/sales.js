@@ -122,6 +122,15 @@ router.get('/orderPaymentDetails', async (req, res) => {
     }
 });
 
+router.get('/orderBookingDetails', async (req, res) => {
+    try {
+        let result = await sale.updateOrderBookingDetails(req.user, { orderId: req.query.orderId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
 
 
 /* middleware to handle errors (this should be present at the end of all api's always) */
