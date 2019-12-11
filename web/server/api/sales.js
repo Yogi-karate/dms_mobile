@@ -100,7 +100,7 @@ router.get('/quotationCount', async (req, res) => {
     }
 });
 
-router.get('/confirmQuotation', async (req, res) => {
+router.get('/confirmQuotation', async (req, res) => { 
     try {
         let result = await sale.confirmQuotation(req.user, { orderId: req.query.orderId });
         if (result == false) {
@@ -108,6 +108,15 @@ router.get('/confirmQuotation', async (req, res) => {
         } else {
             res.status(500).send({ message: "failed" });
         }
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/orderPaymentDetails', async (req, res) => {
+    try {
+        let result = await sale.saleOrderPaymentDetails(req.user, { orderId: req.query.orderId });
+        res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
     }

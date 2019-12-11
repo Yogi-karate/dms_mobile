@@ -157,6 +157,37 @@ class Sale {
         return actionResult;
     }
 
+    /* get the payment details for sale order */
+    async saleOrderPaymentDetails(user, { orderId }) {
+        let orderDetails = [];
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        domain.push(["id", "=", parseInt(orderId)]);
+        orderDetails = await server.search_read(model, { domain: domain, fields: ["invoice_ids"] });
+        if (orderDetails != null && orderDetails != undefined && orderDetails.records.length > 0) {
+            let invoiceIds = orderDetails.records[0].invoice_ids;
+            console.log("The invoice ids are ", invoiceIds);
+            let paymentDetails = [];
+            let model1 = 'account.payment';
+            let domain1 = [];
+            domain1.push(["id", "in", invoiceIds]);
+            paymentDetails = await server.search_read(model1, { domain: domain1, fields: ["payment_type", "communication", "payment_date", "amount"] });
+            if (paymentDetails.records.length > 0) {
+                paymentDetails.records = base.cleanModels(paymentDetails.records);
+                return paymentDetails;
+            }
+            else {
+                console.log("payment details records are empty");
+                return { length: 0, records: [] };
+            }
+        } else {
+            console.log("order details records are empty");
+            return { length: 0, records: [] };
+        }
+    }
+
+
 }
 
 module.exports = new Sale();
