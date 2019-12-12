@@ -124,7 +124,6 @@ class Sale {
         let server = odoo.getOdoo(user.email);
         let model = 'sale.order';
         let domain = [];
-        domain.push(["state","=","draft"]);
         quotationCount = await server.search(model, { domain: domain }, true);
         return quotationCount;
     }
