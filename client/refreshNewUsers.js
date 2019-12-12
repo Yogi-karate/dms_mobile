@@ -8,7 +8,7 @@ exports.handler = async () => {
             method: 'POST',
             body:JSON.stringify({
                 "mobile":"1111111111",
-                "password":"SDM$123"
+                "password":"admin:01"
             })
         });
         console.log("Hello after login");
@@ -21,7 +21,7 @@ exports.handler = async () => {
                 'Authorization':"JWT "+user.token
             }
         });
-        console.log("The new users are ",res);
+        console.log("The response is ",res);
         return res;
     } catch (err) {
         

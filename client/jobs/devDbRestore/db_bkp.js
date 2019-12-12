@@ -12,7 +12,7 @@ let ssh = new SSH({
 });
 console.log("This is after ssh variable");
 try{
-let dbbkpCommand = '/opt/backup/postgres_bkp.sh'
+let dbbkpCommand = '/opt/backup/dev_recreate.sh'
 let dbname = 'hyundai'
 let filename = 'sample.sql'
 console.log("Inside try")
