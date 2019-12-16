@@ -1,5 +1,5 @@
 #!/bin/bash
-export PGPASSWORD=odoo
+export PGPASSWORD=odoo_stage123
 export DBNAME=localhost
 topic=arn:aws:sns:ap-south-1:845374285743:dev-ops
 timestamp=$(date +"%F %r")
@@ -22,21 +22,21 @@ if [ $? -eq 0 ]
     then
         gunzip -f  $new_file.gz
         echo "completed the gunzip"
-        docker stop db
+        docker stop stage_db
         echo "docker stopped"
-        docker rm db
+        docker rm stage_db
         echo "docker removed"
         echo "docker running"
-        docker run -p 5432:5432  -e POSTGRES_PASSWORD=odoo -e POSTGRES_USER=odoo -e POSTGRES_DB=postgres --name db -d postgres
+        docker run -p 5433:5432  -e POSTGRES_PASSWORD=odoo_stage123 -e POSTGRES_USER=odoo -e POSTGRES_DB=postgres --name stage_db -d postgres
         echo "sleep for 15 seconds"
         sleep 15
         echo "creating the db"
-        createdb -U odoo -h $DBNAME $1 -p 5432 -T template0
+        createdb -U odoo -h $DBNAME $1 -p 5433 -T template0
         if [ $? -eq 0 ]
             then
                 echo "db created and importing the new file"
-                psql -U odoo -h $DBNAME -p 5432 -d $1  < $new_file
-                psql -U odoo -h $DBNAME -p 5432 -d $1  < /opt/backup/clear_odoo_js.sql
+                psql -U odoo -h $DBNAME -p 5433 -d $1  < $new_file
+                psql -U odoo -h $DBNAME -p 5433 -d $1  < /opt/backup/clear_odoo_js.sql
                 if [ $? -eq 0 ]
                     then
                         echo "db recreate and  importing successfull message success"

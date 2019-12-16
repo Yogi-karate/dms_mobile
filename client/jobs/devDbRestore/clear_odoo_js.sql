@@ -1,0 +1,1 @@
+DELETE FROM ir_attachment WHERE datas_fname SIMILAR TO '%.(js|css)';
