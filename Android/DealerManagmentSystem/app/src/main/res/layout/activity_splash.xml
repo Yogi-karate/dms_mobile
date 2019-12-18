@@ -19,7 +19,7 @@
         android:padding="10dp"
         android:text="Dealer Management Systems "
         android:textColor="@color/ice"
-        android:textSize="34sp" />
+        android:textSize="30sp" />
 
 
     <ImageView

@@ -4,6 +4,7 @@ package com.dealermanagmentsystem.ui.home;
 import com.dealermanagmentsystem.data.model.appupdate.AppUpdateResponse;
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
+import com.dealermanagmentsystem.data.model.login.LoginResponse;
 import com.dealermanagmentsystem.data.model.payment.PaymentDetailResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
 import com.dealermanagmentsystem.data.model.serviceoverview.ServiceLeadOverviewResponse;
@@ -18,7 +19,10 @@ public interface IHomeView {
     public void onSuccessSalesOverview(List<SaleOverviewResponse> saleOverviewResponses);
     public void onSuccessTasks(List<TasksResponse> tasksResponses);
     public void onSuccessDeliveryCount(String count);
-    public void onSuccessInvoiceCount(String count);
+    public void onSuccessToBeBookedCount(String count);
+    public void onSuccessBookedCount(String count);
+    public void onSuccessStockCount(String count);
+    public void onSuccessQuotationCount(String count);
 
     public void onError(String message);
     public void onSuccessToken();
@@ -37,5 +41,7 @@ public interface IHomeView {
     public void onSuccessInsuranceBookingCount(List<ServiceLeadOverviewResponse> response);
 
     public void onSuccessAppUpdate(AppUpdateResponse response);
+
+    public void onSuccessSetCompany(LoginResponse response, String id, String name);
 
 }

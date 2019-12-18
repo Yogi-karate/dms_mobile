@@ -9,15 +9,15 @@ public class ConstantsUrl {
 
     //private static String ROOT_URL = "http://prod-api.turnright.tech/";
 
-  // public static String ROOT_URL = "http://dev.api.turnright.tech/";
+     public static String ROOT_URL = "http://dev.api.turnright.tech/";
 
-   public static String ROOT_URL =  DMSPreference.getString(KEY_URL);
+    //public static String ROOT_URL = DMSPreference.getString(KEY_URL);
 
-   //public static String ROOT_URL = "http://192.168.0.45:8000/";
+    //public static String ROOT_URL = "http://192.168.0.45:8000/";
 
     private static String BASE_URL = ROOT_URL + "api/v1/customer/odoo/";
 
-    public static String END_POINT_URL = "https://290dupbwpk.execute-api.ap-south-1.amazonaws.com/stage/devapp";
+    public static String END_POINT_URL = "https://fthm9hqo83.execute-api.ap-south-1.amazonaws.com/prod";
 
     public static String ENQUIRY = BASE_URL + "dms.enquiry";
 
@@ -127,5 +127,35 @@ public class ConstantsUrl {
     public static String APP_UPDATE = ROOT_URL + "api/v1/public/appVersion";
 
     public static String DISPOSITION = ROOT_URL + "api/v1/customer/odoo/dms.lead.disposition";
+
+    public static String TO_BE_BOOKED_COUNT = ROOT_URL + "api/v1/sales/saleOrderCountByState?state=sale";
+
+    public static String BOOKED_COUNT = ROOT_URL + "api/v1/sales/saleOrderCountByState?state=booked";
+
+    public static String EDIT_SALE_ORDER = ROOT_URL + "api/v1/customer/odoo/sale.order/";
+
+    public static String SET_COMPANY = ROOT_URL + "api/v1/customer/updateCompany/";
+
+    public static String STOCK_COUNT = ROOT_URL + "api/v1/stock/vehicleCount";
+
+    public static String STOCK_LIST = ROOT_URL + "api/v1/stock/vehicles";
+
+    public static String PRICE_LIST = ROOT_URL + "api/v1/customer/odoo/product.pricelist";
+
+    public static String CREATE_QUOTATION = ROOT_URL + "api/v1/leads/quotation/create";
+
+    public static String SUB_ENQUIRY_DETAILS = ROOT_URL + "api/v1/leads/leadDetails?leadId=";
+
+    public static String QUOTATION_COUNT = ROOT_URL + "api/v1/sales/quotationCount";
+
+    public static String SALE_ORDER_CUSTOMER = ROOT_URL + "api/v1/sales/saleOrderCustomer?orderId=";
+
+    public static String SALE_ORDER_PRICE = ROOT_URL + "api/v1/sales/saleOrderPrice?orderId=";
+
+    public static String SALE_ORDER_CONFIRM_QUOTATION = ROOT_URL + "api/v1/sales/confirmQuotation?orderId=";
+
+    public static String SALE_ORDER_PAYMENTS = ROOT_URL + "api/v1/sales/orderPaymentDetails?orderId=";
+
+    public static String SALE_ORDER_BOOKING = ROOT_URL + "api/v1/sales/orderBookingDetails?orderId=";
 
 }

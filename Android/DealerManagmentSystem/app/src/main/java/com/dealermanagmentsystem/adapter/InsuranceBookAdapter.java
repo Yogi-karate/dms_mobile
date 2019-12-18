@@ -53,7 +53,7 @@ public class InsuranceBookAdapter extends RecyclerView.Adapter<InsuranceBookAdap
         itemViewHolder.mNCB.setText(mRecords.get(i).getCurNcb());
         itemViewHolder.mNilDip.setText(mRecords.get(i).getCurDipOrComp());
         itemViewHolder.mPolicyNo.setText(mRecords.get(i).getPolicyNo());
-        itemViewHolder.mPolicyAmount.setText(mRecords.get(i).getCurFinalPremium());
+        itemViewHolder.mPolicyAmount.setText("\u20B9 " + mRecords.get(i).getCurFinalPremium());
 
         final Object userId = mRecords.get(i).getRolloverCompany();
         if (userId instanceof List) {

@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -21,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -29,7 +28,8 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -37,18 +37,18 @@
                     android:background="@color/card_bg"
                     android:orientation="vertical">
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:text="Enquiries"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/bg" />
+                        android:background="@drawable/navigation_line" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -180,7 +180,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:visibility="gone"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="15dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -207,7 +208,7 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -232,7 +233,7 @@
                                 android:padding="5dp"
                                 android:text="100"
                                 android:textColor="@color/textPrimary"
-                                android:textSize="22sp" />
+                                android:textSize="16sp" />
 
                             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                                 android:layout_width="match_parent"
@@ -240,7 +241,7 @@
                                 android:gravity="center"
                                 android:text="Cold"
                                 android:textColor="@color/textSecondary"
-                                android:textSize="16sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -260,7 +261,7 @@
                                 android:padding="5dp"
                                 android:text="20"
                                 android:textColor="@color/textPrimary"
-                                android:textSize="22sp" />
+                                android:textSize="16sp" />
 
                             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                                 android:layout_width="match_parent"
@@ -268,7 +269,7 @@
                                 android:gravity="center"
                                 android:text="Warm"
                                 android:textColor="@color/textSecondary"
-                                android:textSize="16sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -288,7 +289,7 @@
                                 android:padding="5dp"
                                 android:text="29"
                                 android:textColor="@color/textPrimary"
-                                android:textSize="22sp" />
+                                android:textSize="16sp" />
 
                             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                                 android:layout_width="match_parent"
@@ -296,7 +297,7 @@
                                 android:gravity="center"
                                 android:text="Hot"
                                 android:textColor="@color/textSecondary"
-                                android:textSize="16sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -316,7 +317,7 @@
                                 android:padding="5dp"
                                 android:text="18"
                                 android:textColor="@color/textPrimary"
-                                android:textSize="22sp" />
+                                android:textSize="16sp" />
 
                             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                                 android:layout_width="match_parent"
@@ -324,13 +325,18 @@
                                 android:gravity="center"
                                 android:text="Booked"
                                 android:textColor="@color/textSecondary"
-                                android:textSize="16sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -345,7 +351,8 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="5dp">
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -361,14 +368,9 @@
                             android:padding="10dp"
                             android:text="Today's Tasks"
                             android:textColor="@color/textPrimary"
-                            android:textSize="16sp" />
+                            android:textSize="12sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/bg" />
-
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                             android:id="@+id/tasks_more"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -381,51 +383,251 @@
 
                 </android.support.v7.widget.CardView>
 
-                <!--  <android.support.v7.widget.CardView
-                      android:id="@+id/cardView_payment"
-                      android:layout_width="0dp"
-                      android:layout_height="wrap_content"
-                      android:layout_margin="10dp"
-                      android:layout_weight="1"
-                      android:clickable="true"
-                      android:foreground="?android:attr/selectableItemBackground"
-                      app:cardCornerRadius="5dp">
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/navigation_line" />
 
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:background="@color/card_bg"
-                          android:orientation="vertical">
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardView_booked"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
 
-                          <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
-                              android:id="@+id/payment_title"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:gravity="center"
-                              android:padding="10dp"
-                              android:text="Payments"
-                              android:textColor="@color/textPrimary"
-                              android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_bg"
+                        android:orientation="vertical">
 
-                          <View
-                              android:layout_width="match_parent"
-                              android:layout_height="1dp"
-                              android:background="@color/bg" />
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:id="@+id/booked_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Booked"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="12sp" />
 
-                          <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
-                              android:id="@+id/txt_payment_amount"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:gravity="center"
-                              android:padding="10dp"
-                              android:textColor="@color/rust"
-                              android:textSize="16sp" />
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                            android:id="@+id/booked_more"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textColor="@color/greenDark"
+                            android:textSize="16sp" />
 
-                      </LinearLayout>
+                    </LinearLayout>
 
-                  </android.support.v7.widget.CardView>-->
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_delivery_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_bg"
+                        android:orientation="vertical">
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Yet to be delivered"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="12sp" />
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:id="@+id/txt_delivery_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textColor="@color/rust"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/navigation_line" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_to_be_booked_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_bg"
+                        android:orientation="vertical">
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="To be booked"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="12sp" />
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:id="@+id/txt_to_be_booked_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textColor="@color/rust"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_stock_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_bg"
+                        android:orientation="vertical">
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Stock"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="12sp" />
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:id="@+id/txt_stock_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textColor="@color/greenDark"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/navigation_line" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_quotation_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_bg"
+                        android:orientation="vertical">
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="Quotation"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="12sp" />
+
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                            android:id="@+id/quotation_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textColor="@color/rust"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView_teams"
@@ -433,7 +635,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -441,18 +644,18 @@
                     android:background="@color/card_bg"
                     android:orientation="vertical">
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:text="Team Performance"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/bg" />
+                        android:background="@drawable/navigation_line" />
 
                     <LinearLayout
                         android:id="@+id/ll_team_dialog"
@@ -461,14 +664,6 @@
                         android:gravity="left|center"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginStart="10dp"
-                            android:src="@drawable/ic_team"
-                            android:tint="@color/ic_color"
-                            android:visibility="gone" />
-
                         <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                             android:id="@+id/txt_team_title"
                             android:layout_width="wrap_content"
@@ -476,7 +671,7 @@
                             android:padding="10dp"
                             android:text="Team Vehicle"
                             android:textColor="@color/textPrimary"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:layout_width="15dp"
@@ -486,42 +681,51 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/dotted" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/textPrimary"
                         android:orientation="horizontal">
 
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="Name"
-                            android:textColor="@color/header_title"
-                            android:textSize="16sp" />
+                            android:textColor="@color/textPrimary"
+                            android:textSize="14sp" />
 
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="Count"
-                            android:textColor="@color/header_title"
-                            android:textSize="16sp" />
+                            android:textColor="@color/textPrimary"
+                            android:textSize="14sp" />
 
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="Booked"
-                            android:textColor="@color/header_title"
-                            android:textSize="16sp" />
+                            android:textColor="@color/textPrimary"
+                            android:textSize="14sp" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/dotted" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_teams"
@@ -532,48 +736,48 @@
 
             </android.support.v7.widget.CardView>
 
-            <!--  <android.support.v7.widget.CardView
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:foreground="?android:attr/selectableItemBackground"
-                  app:cardCornerRadius="5dp">
+            <!-- <android.support.v7.widget.CardView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="10dp"
+                 android:foreground="?android:attr/selectableItemBackground"
+                 app:cardCornerRadius="5dp">
 
-                  <RelativeLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      tools:context="test.io.feeeei.circleseekbar.UnionActivity">
+                 <RelativeLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent">
 
-                      <io.feeeei.circleseekbar.CircleSeekBar
-                          android:id="@+id/seek_minute"
-                          android:layout_width="300dp"
-                          android:layout_height="300dp"
-                          android:layout_centerInParent="true"
-                          app:wheel_max_process="59"
-                          app:wheel_unreached_width="32dp" />
+                     <com.dealermanagmentsystem.utils.ui.CustomProgressBar
+                         android:id="@+id/pb"
+                         style="?android:attr/progressBarStyleHorizontal"
+                         android:layout_width="300dp"
+                         android:layout_height="300dp"
+                         android:layout_centerInParent="true"
+                         android:indeterminate="false"
+                         android:max="100"
+                         android:progress="60"
+                         android:progressDrawable="@drawable/progress_circle" />
 
-                      &lt;!&ndash;     300-32-32 = 236   &ndash;&gt;
-                      <io.feeeei.circleseekbar.CircleSeekBar
-                          android:id="@+id/seek_hour"
-                          android:layout_width="236dp"
-                          android:layout_height="236dp"
-                          android:layout_centerInParent="true"
-                          app:wheel_max_process="11"
-                          app:wheel_pointer_color="@color/colorPrimaryDark"
-                          app:wheel_pointer_radius="8dp"
-                          app:wheel_reached_color="@color/colorAccent"
-                          app:wheel_reached_width="32dp"
-                          app:wheel_unreached_color="@color/colorPrimary" />
+                     <com.dealermanagmentsystem.utils.ui.CustomProgressBar
+                         style="?android:attr/progressBarStyleHorizontal"
+                         android:layout_width="250dp"
+                         android:layout_height="250dp"
+                         android:layout_centerInParent="true"
+                         android:indeterminate="false"
+                         android:max="100"
+                         android:progress="70"
+                         android:progressDrawable="@drawable/progress_circle" />
 
-                      <TextView
-                          android:id="@+id/textview"
-                          android:layout_width="100dp"
-                          android:layout_height="100dp"
-                          android:layout_centerInParent="true"
-                          android:gravity="center"
-                          android:textSize="18sp" />
-                  </RelativeLayout>
-              </android.support.v7.widget.CardView>-->
+
+                     <TextView
+                         android:id="@+id/textview"
+                         android:layout_width="100dp"
+                         android:layout_height="100dp"
+                         android:layout_centerInParent="true"
+                         android:gravity="center"
+                         android:textSize="18sp" />
+                 </RelativeLayout>
+             </android.support.v7.widget.CardView>-->
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -582,7 +786,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:visibility="gone"
-                app:cardCornerRadius="5dp">
+                app:cardElevation="0dp"
+                app:cardCornerRadius="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -611,79 +816,7 @@
 
             </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="visible">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cv_delivery_count"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/card_bg"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
-                            android:id="@+id/txt_delivery_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/textPrimary"
-                            android:textSize="24sp" />
-
-                        <com.dealermanagmentsystem.utils.ui.DMSTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Yet to be delivered"
-                            android:textColor="@color/textPrimary"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cv_invoice_count"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/card_bg"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
-                            android:id="@+id/txt_invoice_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/textPrimary"
-                            android:textSize="24sp" />
-
-                        <com.dealermanagmentsystem.utils.ui.DMSTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="To be invoiced"
-                            android:textColor="@color/textPrimary"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -699,7 +832,8 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -707,18 +841,18 @@
                     android:background="@color/card_bg"
                     android:orientation="vertical">
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:text="Service Leads"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="14sp"  />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/bg" />
+                        android:background="@drawable/navigation_line" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -842,6 +976,11 @@
 
             </android.support.v7.widget.CardView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
+
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView_service_bookings"
                 android:layout_width="match_parent"
@@ -850,7 +989,8 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -866,25 +1006,25 @@
                         android:padding="10dp"
                         android:text="Service Booking"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/bg" />
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                         android:id="@+id/txt_service_booking_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:textColor="@color/rust"
+                        android:textColor="@color/greenDark"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
 
         </LinearLayout>
 
@@ -900,8 +1040,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:clickable="true"
+                app:cardElevation="0dp"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                app:cardCornerRadius="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -909,18 +1050,18 @@
                     android:background="@color/card_bg"
                     android:orientation="vertical">
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:text="Insurance Leads"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/bg" />
+                        android:background="@drawable/navigation_line" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1043,6 +1184,11 @@
 
             </android.support.v7.widget.CardView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
+
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView_insurance_bookings"
                 android:layout_width="match_parent"
@@ -1050,8 +1196,10 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:clickable="true"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="5dp">
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1067,25 +1215,24 @@
                         android:padding="10dp"
                         android:text="Insurance Booking"
                         android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/bg" />
-
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                         android:id="@+id/txt_insurance_booking_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:textColor="@color/rust"
+                        android:textColor="@color/greenDark"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/navigation_line" />
 
         </LinearLayout>
 

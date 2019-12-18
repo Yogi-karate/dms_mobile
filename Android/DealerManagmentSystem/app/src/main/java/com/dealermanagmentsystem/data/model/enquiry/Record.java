@@ -56,6 +56,14 @@ public class Record {
     @Expose
     private Object disposition;
 
+    @SerializedName("email_from")
+    @Expose
+    private String emailFrom;
+
+    @SerializedName("sale_number")
+    @Expose
+    private Integer saleNumber;
+
     public String getPartnerMobile() {
         return partnerMobile;
     }
@@ -160,5 +168,21 @@ public class Record {
 
     public void setDisposition(Object disposition) {
         this.disposition = disposition;
+    }
+
+    public String getEmailFrom() {
+        return emailFrom;
+    }
+
+    public void setEmailFrom(String emailFrom) {
+        this.emailFrom = emailFrom;
+    }
+
+    public Integer getSaleNumber() {
+        return saleNumber;
+    }
+
+    public void setSaleNumber(Integer saleNumber) {
+        this.saleNumber = saleNumber;
     }
 }

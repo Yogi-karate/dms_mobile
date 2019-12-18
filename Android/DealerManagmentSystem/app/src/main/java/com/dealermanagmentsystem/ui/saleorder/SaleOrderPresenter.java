@@ -1,6 +1,7 @@
 package com.dealermanagmentsystem.ui.saleorder;
 
 import android.app.Activity;
+import android.text.TextUtils;
 
 import com.dealermanagmentsystem.data.model.saleorder.SaleOrderResponse;
 import com.dealermanagmentsystem.network.AsyncTaskConnection;
@@ -23,12 +24,18 @@ public class SaleOrderPresenter implements ISaleOrderPresenter {
     }
 
     @Override
-    public void getSaleOrder(Activity activity, String strSaleType) {
+    public void getSaleOrder(Activity activity, String strSaleType, String leadId) {
         String url;
-        if ("to invoice".equalsIgnoreCase(strSaleType)) {
+       /* if ("to invoice".equalsIgnoreCase(strSaleType)) {
             url = SALE_ORDER_SEARCH + "invoice_status=" + strSaleType;
-        } else {
+        } else {*/
+
+        //}
+
+        if (TextUtils.isEmpty(leadId)) {
             url = SALE_ORDER_SEARCH + "state=" + strSaleType;
+        } else {
+            url = SALE_ORDER_SEARCH + "leadId=" + leadId;
         }
         AsyncTaskConnection asyncTaskConnection = new AsyncTaskConnection(url, activity, GET, new IConnectionListener() {
             @Override

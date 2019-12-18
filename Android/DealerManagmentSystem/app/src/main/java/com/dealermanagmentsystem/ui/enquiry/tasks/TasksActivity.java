@@ -25,6 +25,7 @@ import com.dealermanagmentsystem.data.model.common.Record;
 import com.dealermanagmentsystem.data.model.common.Response;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.event.TasksCompleteEvent;
+import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseActivity;
 import com.dealermanagmentsystem.utils.ui.DMSToast;
 import com.squareup.otto.Subscribe;
@@ -40,6 +41,7 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMIN
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_CREATE_ACTIVITY;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USER_ID;
 
 public class TasksActivity extends BaseActivity implements ITasksView {
 
@@ -226,7 +228,7 @@ public class TasksActivity extends BaseActivity implements ITasksView {
     public void openCreateTasks() {
         Intent intent = new Intent(this, TaskCreateActivity.class);
         intent.putExtra(EXTRA_LEAD_ID, strLeadId);
-        intent.putExtra(EXTRA_USER_ID, strUserId);
+        intent.putExtra(EXTRA_USER_ID, DMSPreference.getInt(KEY_USER_ID));
         intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_CREATE_ACTIVITY);
         intent.putExtra(EXTRA_ACTIVITY_COMING_FROM_MODULE, strFrom);
         startActivity(intent);

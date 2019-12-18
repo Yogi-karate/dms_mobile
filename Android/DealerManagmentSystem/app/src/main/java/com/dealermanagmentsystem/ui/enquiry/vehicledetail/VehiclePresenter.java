@@ -135,5 +135,4 @@ public class VehiclePresenter implements IVehiclePresenter {
         asyncTaskConnection.execute();
     }
 
-
 }

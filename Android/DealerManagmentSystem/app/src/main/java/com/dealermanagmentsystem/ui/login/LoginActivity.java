@@ -26,6 +26,7 @@ import com.dealermanagmentsystem.constants.Constants;
 import com.dealermanagmentsystem.constants.ConstantsUrl;
 import com.dealermanagmentsystem.data.model.endpoint.Body;
 import com.dealermanagmentsystem.data.model.endpoint.EndPointResponse;
+import com.dealermanagmentsystem.data.model.login.Company;
 import com.dealermanagmentsystem.data.model.login.LoginResponse;
 import com.dealermanagmentsystem.data.model.login.Record;
 import com.dealermanagmentsystem.preference.DMSPreference;
@@ -44,6 +45,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dealermanagmentsystem.constants.Constants.KEY_COMPANIES;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CURRENT_COMPANY_ID;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CURRENT_COMPANY_NAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_IS_ADMIN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_MODULES;
 import static com.dealermanagmentsystem.constants.Constants.KEY_ROLE;
@@ -73,10 +77,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     TextView mLink;
     @BindView(R.id.txt_app_version)
     TextView mAppVersion;
-    @BindView(R.id.sp_end_point)
+   /* @BindView(R.id.sp_end_point)
     Spinner spEndPoint;
     @BindView(R.id.btn_recreate)
-    Button btnRecreate;
+    Button btnRecreate;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +98,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
         mAppVersion.setText(Utils.getAppVersionName(this));
 
-        if (BuildConfig.DEBUG) {
+      /*  if (BuildConfig.DEBUG) {
             spEndPoint.setVisibility(View.VISIBLE);
             btnRecreate.setVisibility(View.VISIBLE);
             loginPresenter.getEndPoint(activity);
@@ -102,14 +106,11 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             spEndPoint.setVisibility(View.GONE);
             btnRecreate.setVisibility(View.GONE);
             DMSPreference.setString(KEY_URL, "http://prod-api.turnright.tech/");
-        }
+        }*/
     }
 
     @OnClick(R.id.btn_sign_in) //ButterKnife uses.
     public void launchHomePage() {
-       /* Intent intent = new Intent(this, Home
-       Activity.class);
-        startActivity(intent);*/
         final String strMobileNo = etMobileNo.getText().toString();
         final String strPin = etPin.getText().toString();
         loginPresenter.doLogin(activity, strMobileNo, strPin);
@@ -136,6 +137,19 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             Gson gsonModule = new Gson();
             String jsonModule = gsonModule.toJson(module);
             DMSPreference.setString(KEY_MODULES, jsonModule);
+
+            final List<Company> companyList = response.getCompanyList();
+            Gson gsonCompany = new Gson();
+            String jsonCompany = gsonCompany.toJson(companyList);
+            DMSPreference.setString(KEY_COMPANIES, jsonCompany);
+
+            //Set the current company in login
+            final Object companyId = response.getCompanyId();
+            if (companyId instanceof List) {
+                DMSPreference.setString(KEY_CURRENT_COMPANY_NAME, String.valueOf(((List) companyId).get(1)));
+                DMSPreference.setString(KEY_CURRENT_COMPANY_ID, String.valueOf(((List) companyId).get(0)));
+            }
+
             startActivity(intent);
             DMSToast.showLong(activity, "Logged in successfully");
         }
@@ -144,7 +158,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @Override
     public void onSuccessEndPoint(EndPointResponse response) {
 
-        final List<Body> list = response.getBody();
+       /* final List<Body> list = response.getBody();
 
         SpinnerEndPointAdapter customAdapter = new SpinnerEndPointAdapter(activity, list);
         spEndPoint.setAdapter(customAdapter);
@@ -168,7 +182,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
     }
 
     @OnClick(R.id.btn_recreate) //ButterKnife uses.

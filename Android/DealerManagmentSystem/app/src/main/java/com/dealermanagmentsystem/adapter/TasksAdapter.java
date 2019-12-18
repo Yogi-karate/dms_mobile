@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.data.model.tasks.TasksResponse;
 import com.dealermanagmentsystem.event.TasksCompleteEvent;
+import com.dealermanagmentsystem.preference.DMSPreference;
 import com.dealermanagmentsystem.ui.base.BaseApplication;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TaskCreateActivity;
 
@@ -26,6 +27,7 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_DATE_
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_SUMMARY;
 import static com.dealermanagmentsystem.constants.Constants.KEY_EDIT_ACTIVITY;
+import static com.dealermanagmentsystem.constants.Constants.KEY_USER_ID;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemViewHolder> {
 
@@ -80,16 +82,26 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.AdapterItemV
             }
         });
 
+        int strUserId = 0;
+        Double d;
+        if (userId instanceof List) {
+            d = (Double) ((List) userId).get(0);
+            strUserId = d.intValue();
+        }
+
+        final int finalStrUserId = strUserId;
         itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, TaskCreateActivity.class);
-                intent.putExtra(EXTRA_ACTIVITY_ID, String.valueOf(mRecords.get(i).getId()));
-                intent.putExtra(EXTRA_ACTIVITY_SUMMARY, mRecords.get(i).getSummary());
-                intent.putExtra(EXTRA_ACTIVITY_DATE_DEADLINE, mRecords.get(i).getDateDeadline());
-                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_EDIT_ACTIVITY);
-                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM_MODULE, mStrFrom);
-                activity.startActivity(intent);
+                if (DMSPreference.getInt(KEY_USER_ID) == finalStrUserId){
+                    Intent intent = new Intent(activity, TaskCreateActivity.class);
+                    intent.putExtra(EXTRA_ACTIVITY_ID, String.valueOf(mRecords.get(i).getId()));
+                    intent.putExtra(EXTRA_ACTIVITY_SUMMARY, mRecords.get(i).getSummary());
+                    intent.putExtra(EXTRA_ACTIVITY_DATE_DEADLINE, mRecords.get(i).getDateDeadline());
+                    intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, KEY_EDIT_ACTIVITY);
+                    intent.putExtra(EXTRA_ACTIVITY_COMING_FROM_MODULE, mStrFrom);
+                    activity.startActivity(intent);
+                }
             }
         });
     }

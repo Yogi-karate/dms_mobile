@@ -25,8 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-
-                app:cardElevation="4dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -35,16 +35,19 @@
                     android:background="@color/card_bg"
                     android:orientation="vertical">
 
-                    <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+                    <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center|start"
                         android:padding="15dp"
                         android:text="Vehicle"
                         android:textColor="@color/textPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
+                        android:textSize="14sp"
+                        />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/navigation_line" />
 
                     <Spinner
                         android:id="@+id/sp_product"
@@ -90,14 +93,13 @@
             <com.dealermanagmentsystem.utils.ui.DMSButton
                 android:id="@+id/save_vehicle"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="45dp"
                 android:layout_margin="16dp"
                 android:padding="10dp"
-                android:background="@drawable/btn_purple_rounded"
+                android:background="@drawable/btn_purple"
                 android:text="Save"
-                android:textSize="18sp"
-                android:drawableRight="@drawable/button_sigin_purple"
-                android:textColor="@color/white" />
+                android:textSize="14sp"
+                  android:textColor="@color/white" />
 
 
         </LinearLayout>

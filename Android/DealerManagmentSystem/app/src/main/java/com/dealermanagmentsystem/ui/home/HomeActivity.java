@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +23,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +42,8 @@ import com.dealermanagmentsystem.constants.Constants;
 import com.dealermanagmentsystem.data.model.appupdate.AppUpdateResponse;
 import com.dealermanagmentsystem.data.model.common.CommonResponse;
 import com.dealermanagmentsystem.data.model.leadoverview.LeadOverviewResponse;
+import com.dealermanagmentsystem.data.model.login.Company;
+import com.dealermanagmentsystem.data.model.login.LoginResponse;
 import com.dealermanagmentsystem.data.model.login.Record;
 import com.dealermanagmentsystem.data.model.payment.PaymentDetailResponse;
 import com.dealermanagmentsystem.data.model.saleorder.saleoverview.SaleOverviewResponse;
@@ -61,9 +61,11 @@ import com.dealermanagmentsystem.ui.enquiry.lead.LeadActivity;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
 import com.dealermanagmentsystem.ui.insurance.booking.InsuranceBookingActivity;
 import com.dealermanagmentsystem.ui.insurance.lead.InsuranceLeadActivity;
+import com.dealermanagmentsystem.ui.login.LoginActivity;
 import com.dealermanagmentsystem.ui.saleorder.SaleOrderActivity;
 import com.dealermanagmentsystem.ui.service.booking.ServiceBookingActivity;
 import com.dealermanagmentsystem.ui.service.lead.ServiceLeadActivity;
+import com.dealermanagmentsystem.ui.stock.StockActivity;
 import com.dealermanagmentsystem.ui.users.UserActivity;
 import com.dealermanagmentsystem.utils.ImageLoad;
 import com.dealermanagmentsystem.utils.Utils;
@@ -95,6 +97,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
+import static com.dealermanagmentsystem.constants.Constants.BOOKED;
 import static com.dealermanagmentsystem.constants.Constants.CREATE_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
@@ -103,6 +106,9 @@ import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE_ID;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STAGE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_STATE;
+import static com.dealermanagmentsystem.constants.Constants.KEY_COMPANIES;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CURRENT_COMPANY_ID;
+import static com.dealermanagmentsystem.constants.Constants.KEY_CURRENT_COMPANY_NAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN;
 import static com.dealermanagmentsystem.constants.Constants.KEY_FCM_TOKEN_SET;
 import static com.dealermanagmentsystem.constants.Constants.KEY_IS_ADMIN;
@@ -114,6 +120,7 @@ import static com.dealermanagmentsystem.constants.Constants.KEY_TEAMS;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USERNAME;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_EMAIL_ID;
 import static com.dealermanagmentsystem.constants.Constants.KEY_USER_IMAGE;
+import static com.dealermanagmentsystem.constants.Constants.QUOTATION;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_BOOKED;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_COLD;
 import static com.dealermanagmentsystem.constants.Constants.STAGE_HOT;
@@ -122,7 +129,7 @@ import static com.dealermanagmentsystem.constants.Constants.STATE_COMPLETED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_OVERDUE;
 import static com.dealermanagmentsystem.constants.Constants.STATE_PLANNED;
 import static com.dealermanagmentsystem.constants.Constants.STATE_TODAY;
-import static com.dealermanagmentsystem.constants.Constants.TO_INVOICE;
+import static com.dealermanagmentsystem.constants.Constants.TO_BE_BOOKED;
 
 public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, IHomeView {
     Activity activity;
@@ -170,12 +177,25 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     CardView cardViewTasks;
     @BindView(R.id.txt_delivery_count)
     TextView txtDeliveryCount;
-    @BindView(R.id.txt_invoice_count)
-    TextView txtInvoiceCount;
+    @BindView(R.id.txt_to_be_booked_count)
+    TextView txtToBeBookedCount;
     @BindView(R.id.cv_delivery_count)
     CardView cvDeliveryCount;
-    @BindView(R.id.cv_invoice_count)
-    CardView cvInvoiceCount;
+    @BindView(R.id.cv_to_be_booked_count)
+    CardView cvToBeBookedCount;
+    @BindView(R.id.cardView_booked)
+    CardView cvBookedCount;
+    @BindView(R.id.booked_more)
+    TextView txtBookedCount;
+
+    @BindView(R.id.txt_stock_count)
+    TextView txtStockCount;
+    @BindView(R.id.cv_stock_count)
+    CardView cvStockCount;
+    @BindView(R.id.quotation_count)
+    TextView txtQuotationCount;
+    @BindView(R.id.cv_quotation_count)
+    CardView cvQuotationCount;
 
     @BindView(R.id.no_activities)
     TextView txtLegendNoActivities;
@@ -197,6 +217,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     Integer plannedCold, plannedWarm, plannedHot, plannedBooked;
     Integer noActivityCold, noActivityWarm, noActivityHot, noActivityBooked;
     List<Record> recordsTeamList;
+    List<Company> recordsCompanyList;
     String strRole, strModule;
     TeamAdapter teamAdapter;
 
@@ -256,8 +277,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         activity = HomeActivity.this;
 
-       // float density = getResources().getDisplayMetrics().density;
-      //  DMSToast.showLong(activity, Utils.getDeviceDensityString(getApplicationContext()) + String.valueOf(density));
+        // float density = getResources().getDisplayMetrics().density;
+        //  DMSToast.showLong(activity, Utils.getDeviceDensityString(getApplicationContext()) + String.valueOf(density));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -319,6 +340,13 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             m.findItem(R.id.users).setVisible(false);
         }
 
+
+        Gson gsonCompany = new Gson();
+        String jsonCompany = DMSPreference.getString(KEY_COMPANIES);
+        Type typeCompany = new TypeToken<List<Company>>() {
+        }.getType();
+        recordsCompanyList = gsonCompany.fromJson(jsonCompany, typeCompany);
+
         Gson gson = new Gson();
         String json = DMSPreference.getString(KEY_MODULES);
         Type type = new TypeToken<List<String>>() {
@@ -367,11 +395,76 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         View headerView = navigationView.getHeaderView(0);
         TextView tvName = (TextView) headerView.findViewById(R.id.txt_name);
         TextView tvEmail = (TextView) headerView.findViewById(R.id.txt_email);
+        TextView txtCompanyName = (TextView) headerView.findViewById(R.id.txt_company_name);
         ImageView imgUser = (ImageView) headerView.findViewById(R.id.img_user);
+        ImageView imgArrowDown = (ImageView) headerView.findViewById(R.id.ic_arrow_down_company);
+        LinearLayout llCompanyName = (LinearLayout) headerView.findViewById(R.id.ll_company_dialog);
+
+        txtCompanyName.setText(DMSPreference.getString(KEY_CURRENT_COMPANY_NAME));
+
+        llCompanyName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCompanyDialog();
+            }
+        });
 
         tvName.setText(DMSPreference.getString(KEY_USERNAME));
         tvEmail.setText(DMSPreference.getString(KEY_USER_EMAIL_ID));
         ImageLoad.loadImageBase64(DMSPreference.getString(KEY_USER_IMAGE), imgUser);
+    }
+
+    private void showCompanyDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Select a company");
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (int i = 0; i < recordsCompanyList.size(); i++) {
+            list.add(recordsCompanyList.get(i).getName());
+        }
+
+        final CharSequence[] reason = list.toArray(new String[list.size()]);
+
+        builder.setItems(reason, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int pos) {
+                presenter.setCurrentCompany(activity, String.valueOf(recordsCompanyList.get(pos).getId()), recordsCompanyList.get(pos).getName());
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void onSuccessSetCompany(LoginResponse response, String id, String name) {
+        final List<Record> records = response.getTeams().getRecords();
+        Gson gson = new Gson();
+        String json = gson.toJson(records);
+        DMSPreference.setString(KEY_TEAMS, json);
+
+        final List<String> module = response.getModule();
+        Gson gsonModule = new Gson();
+        String jsonModule = gsonModule.toJson(module);
+        DMSPreference.setString(KEY_MODULES, jsonModule);
+
+        DMSPreference.setString(KEY_ROLE, response.getRole());
+
+        DMSPreference.setString(KEY_CURRENT_COMPANY_NAME, name);
+        DMSPreference.setString(KEY_CURRENT_COMPANY_ID, id);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        // recreate();
+        Intent intent = new Intent(activity, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void sendIdToServer() {
@@ -454,7 +547,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             strMenuSelected = "";
             Intent intent = new Intent(this, UserActivity.class);
             startActivity(intent);
-        } else if (id == R.id.logout) {
+        } /*else if (id == R.id.upload_price_list) {
+            showFileChooser();
+        }*/ else if (id == R.id.logout) {
             strMenuSelected = "";
             logOutDialog(activity);
         }
@@ -463,6 +558,52 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+   /* private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    1);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(activity, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }*/
+
+  /*  @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri selectedFileURI = data.getData();
+                File file = new File(selectedFileURI.getPath().toString());
+                Log.d("", "File : " + file.getName());
+                *//*String uploadedFileName = file.getName().toString();
+                StringTokenizer tokens = new StringTokenizer(uploadedFileName, ":");
+                tokens.nextToken();
+                tokens.nextToken().trim();
+*//*
+                String charset = "UTF-8";
+                String requestURL = "http://192.168.0.12:5000/upload";
+
+                MultipartUtility multipart = null;
+                try {
+                    multipart = new MultipartUtility(requestURL, charset);
+                    multipart.addFormField("name", "nikhilsample");
+                    multipart.addFormField("company", "1");
+                    multipart.addFilePart("file", new File(file.getPath()));
+                    String response = multipart.finish(); // response from server.
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }*/
 
     public void showServiceLeads() {
         presenter.getServiceLeadsOverview(activity);
@@ -479,7 +620,10 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         presenter.getLeadsOverview(activity);
         presenter.getTasksOverview(activity);
         presenter.getDeliveryCount(activity);
-        presenter.getInvoiceCount(activity);
+        presenter.getToBeBookedCount(activity);
+        presenter.getBookedCount(activity);
+        presenter.getStockCount(activity);
+        presenter.getQuotationCount(activity);
         if (!strRole.equalsIgnoreCase("user")) {
             txtTeamTitle.setText(recordsTeamList.get(0).getName());
             //get Team Details
@@ -495,7 +639,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         llService.setVisibility(View.GONE);
         fabCreateEnquiry.setVisibility(View.VISIBLE);
         strRole = DMSPreference.getString(KEY_ROLE, "user");
-        if (!strRole.equalsIgnoreCase("user")) {
+        if (!strRole.equalsIgnoreCase("user")) {//shows for managers and team leads
             Gson gson = new Gson();
             String json = DMSPreference.getString(KEY_TEAMS);
             Type type = new TypeToken<List<Record>>() {
@@ -544,11 +688,11 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onSuccessTasks(final List<TasksResponse> tasks) {
 
-        if (tasks.size() == 0) {
+       /* if (tasks.size() == 0) {
             cardViewTasks.setVisibility(View.GONE);
-        } else {
-            cardViewTasks.setVisibility(View.VISIBLE);
-            //txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
+        } else {*/
+        cardViewTasks.setVisibility(View.VISIBLE);
+        //txtTasksTitle.setText("Tasks (" + String.valueOf(tasks.size()) + ")");
 
    /*         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             recyclerViewTasks.setHasFixedSize(true);
@@ -558,16 +702,16 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 recyclerViewTasks.setAdapter(tasksAdapter);
             }*/
 
-            txtTasksMore.setText(String.valueOf(tasks.size()));
-            txtTasksMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(activity, TasksActivity.class);
-                    intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Home");
-                    activity.startActivity(intent);
-                }
-            });
-        }
+        txtTasksMore.setText(String.valueOf(tasks.size()));
+        cardViewTasks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, TasksActivity.class);
+                intent.putExtra(EXTRA_ACTIVITY_COMING_FROM, "Home");
+                activity.startActivity(intent);
+            }
+        });
+        //   }
     }
 
     @SuppressWarnings("unused") //Otto uses.
@@ -630,7 +774,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         txtDeliveryCount.setText(count);
         cvDeliveryCount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {//Yet to be delivered
                 Intent intent = new Intent(activity, DeliveryActivity.class);
                 startActivity(intent);
             }
@@ -638,18 +782,59 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    public void onSuccessInvoiceCount(String count) {
-        txtInvoiceCount.setText(count);
-        cvInvoiceCount.setOnClickListener(new View.OnClickListener() {
+    public void onSuccessToBeBookedCount(String count) {
+        txtToBeBookedCount.setText(count);
+        cvToBeBookedCount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {//Booked
                 Intent intent = new Intent(activity, SaleOrderActivity.class);
-                intent.putExtra(EXTRA_SALE_TYPE, TO_INVOICE);
-                intent.putExtra(EXTRA_SALE_TYPE_ID, "to invoice");
+                intent.putExtra(EXTRA_SALE_TYPE, TO_BE_BOOKED);
+                intent.putExtra(EXTRA_SALE_TYPE_ID, "sale");
                 startActivity(intent);
             }
         });
     }
+
+    @Override
+    public void onSuccessBookedCount(String count) {
+        txtBookedCount.setText(count);
+        cvBookedCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//To be Booked
+                Intent intent = new Intent(activity, SaleOrderActivity.class);
+                intent.putExtra(EXTRA_SALE_TYPE, BOOKED);
+                intent.putExtra(EXTRA_SALE_TYPE_ID, "booked");
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onSuccessStockCount(String count) {
+        txtStockCount.setText(count);
+        cvStockCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//Stocks
+                Intent intent = new Intent(activity, StockActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onSuccessQuotationCount(String count) {
+        txtQuotationCount.setText(count);
+        cvQuotationCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//Quotation
+                Intent intent = new Intent(activity, SaleOrderActivity.class);
+                intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
+                intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
+                startActivity(intent);
+            }
+        });
+    }
+
 
     @Override
     public void onError(String message) {
@@ -1312,6 +1497,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                     .show();
         }
     }
+
 
     ////////////////////////////////////////Insurance/////////////////////////
     @Override

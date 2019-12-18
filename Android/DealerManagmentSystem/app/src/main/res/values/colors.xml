@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#C7C4E9</color>
-    <color name="colorPrimaryDark">#736CC7</color>
-    <color name="colorAccent">#736CC7</color>
+    <color name="colorPrimaryDark">#E91E63</color>
+    <color name="colorAccent">#E91E63</color>
 
-
-    <color name="bg">#F0F6FF</color>
-    <color name="textPrimary">#4d5a68</color>
-    <color name="textSecondary">#839bb3</color>
     <color name="white">#FFFFFF</color>
 
     <color name="chrome_green">#3cba54</color>
@@ -42,18 +38,26 @@
     <color name="slate">#6e8ca0</color>
     <color name="snow">#ffffff</color>
 
-
+    <color name="pink_70">#E71561</color>
     <color name="fossil">#c8d1d3</color>
     <color name="sand">#b9b0a2</color>
 
     <color name="rustDarker">#c55b2c</color>
     <color name="black">#000000</color>
 
-
-    <color name="toolbar">#F0F6FF</color>
+    <color name="toolbar">#FFFFFF</color>
+    <color name="textPrimary">#4d5a68</color>
+    <color name="textSecondary">#839bb3</color>
+    <color name="bg">#FFFFFF</color>
     <color name="card_bg">#ffffff</color>
-    <color name="ic_color">#324755</color>
+    <color name="ic_color">#0d1113</color>
     <color name="header_title">#ffffff</color>
     <color name="nav_header_bg">#ffffff</color>
+    <color name="bg_secondary">#f8f8f8</color>
+    <color name="tab_bg">#eeeeee</color>
+    <color name="filter_btn">#eeeeee</color>
 
+    <color name="start">#ffff00</color>
+    <color name="end">#455a64</color>
+    <color name="centre">#ff5722</color>
 </resources>

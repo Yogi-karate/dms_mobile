@@ -4,6 +4,6 @@ import android.app.Activity;
 
 public interface ISaleOrderPresenter {
 
-    public void getSaleOrder(Activity activity, String strSaleType);
+    public void getSaleOrder(Activity activity, String strSaleType, String leadId);
 
 }

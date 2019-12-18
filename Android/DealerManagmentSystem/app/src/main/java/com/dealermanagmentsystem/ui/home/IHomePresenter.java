@@ -14,7 +14,13 @@ public interface IHomePresenter {
 
     public void getDeliveryCount(Activity activity);
 
-    public void getInvoiceCount(Activity activity);
+    public void getToBeBookedCount(Activity activity);
+
+    public void getBookedCount(Activity activity);
+
+    public void getStockCount(Activity activity);
+
+    public void getQuotationCount(Activity activity);
 
     public void sendFcmToken(Activity activity, String token);
 
@@ -31,4 +37,6 @@ public interface IHomePresenter {
     public void getInsuranceBookingCount(Activity activity);
 
     public void getAppUpdate(Activity activity);
+
+    public void setCurrentCompany(Activity activity, String id, String name);
 }

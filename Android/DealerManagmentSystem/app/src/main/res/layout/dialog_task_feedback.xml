@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textPrimary"
             android:text="Feedback"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
 
     </LinearLayout>
@@ -58,7 +58,7 @@
         android:padding="15dp"
         android:textColorHint="@color/textSecondary"
         android:textColor="@color/textSecondary"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

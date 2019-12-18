@@ -20,6 +20,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 
+import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.preference.DMSPreference;
 
 import java.text.ParseException;
@@ -28,6 +29,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import butterknife.OnClick;
 
 import static com.dealermanagmentsystem.constants.Constants.KEY_URL;
 
@@ -59,6 +62,15 @@ public class Utils {
         return version;
     }
 
+    public static void callMobile(String strMobile, Activity activity) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + strMobile));
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        } else {
+            activity.startActivity(callIntent);
+        }
+    }
     /* public static void onAddEventClicked(Activity activity) {
      *//* Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");

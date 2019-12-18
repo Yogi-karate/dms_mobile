@@ -12,46 +12,68 @@
         android:id="@+id/ll_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/textPrimary"
-        android:gravity="center|right"
+        android:background="@color/tab_bg"
         android:orientation="horizontal">
 
-        <com.dealermanagmentsystem.utils.ui.DMSTextView
-            android:id="@+id/txt_my_leads"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_filter_state"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="My Leads"
-            android:textColor="@color/header_title" />
+            android:layout_weight="1"
+            android:paddingStart="5dp"
+            android:gravity="start|center"
+            android:orientation="horizontal">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/sw_filter"
-            style="@style/ColorSwitchStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textColor="@color/white"
-            app:theme="@style/ColorSwitchStyle" />
-      <!--  <com.dealermanagmentsystem.utils.ui.DMSCheckBox
-            android:id="@+id/cb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Leads"
-            android:textColor="@color/textPrimary" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_filter"
+                android:tint="@color/ic_color" />
 
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:text="Filter"
 
-        <com.dealermanagmentsystem.utils.ui.DMSTextView
-            android:id="@+id/txt_apply"
-            android:layout_width="wrap_content"
+                android:textColor="@color/ic_color"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/btn_insurance"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Apply"
-            android:textColor="@color/white" />-->
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/txt_my_leads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="My Leads"
+                android:textColor="@color/ic_color"
+                android:textSize="14sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/sw_filter"
+                style="@style/ColorSwitchStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                app:theme="@style/ColorSwitchStyle" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

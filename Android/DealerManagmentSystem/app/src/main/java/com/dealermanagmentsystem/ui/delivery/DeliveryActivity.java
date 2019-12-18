@@ -36,7 +36,7 @@ public class DeliveryActivity extends BaseActivity implements IDeliveryView{
 
 
         setStatusBarColor(getResources().getColor(R.color.bg));
-        showTile("To be Allocated");
+        showTile("Yet to be Delivered");
         showBackButton();
 
         presenter = new DeliveryPresenter(this);

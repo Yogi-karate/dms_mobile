@@ -3,9 +3,14 @@ package com.dealermanagmentsystem.ui.saleorder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.dealermanagmentsystem.R;
 import com.dealermanagmentsystem.adapter.EnquiryAdapter;
@@ -31,6 +36,8 @@ public class SaleOrderActivity extends BaseActivity implements ISaleOrderView {
     SaleOrderAdapter saleOrderAdapter;
     String strSaleType;
     String strSaleTypeID;
+    String leadId;
+    SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +53,24 @@ public class SaleOrderActivity extends BaseActivity implements ISaleOrderView {
         if (intent != null) {
             strSaleType = intent.getStringExtra(EXTRA_SALE_TYPE);
             strSaleTypeID = intent.getStringExtra(EXTRA_SALE_TYPE_ID);
+            leadId = intent.getStringExtra(EXTRA_LEAD_ID);
         }
 
-        if ("to invoice".equalsIgnoreCase(strSaleType)) {
+       /* if ("to invoice".equalsIgnoreCase(strSaleType)) {
             showTile("To be Invoiced" + "/" + strSaleType);
-        }else{
-            showTile("Sale Order" + "/" + strSaleType);
-        }
+        } else {*/
+        showTile(strSaleType);
+        //}
 
         setStatusBarColor(getResources().getColor(R.color.bg));
         showBackButton();
 
-        presenter.getSaleOrder(activity, strSaleTypeID);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getSaleOrder(activity, strSaleTypeID, leadId);
     }
 
     @Override
@@ -67,7 +79,7 @@ public class SaleOrderActivity extends BaseActivity implements ISaleOrderView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManagerCategories);
         if (saleOrderResponse.getRecords() != null) {
-            saleOrderAdapter = new SaleOrderAdapter(this, saleOrderResponse.getRecords());
+            saleOrderAdapter = new SaleOrderAdapter(this, saleOrderResponse.getRecords(), strSaleTypeID);
             recyclerView.setAdapter(saleOrderAdapter);
         }
     }
@@ -76,4 +88,36 @@ public class SaleOrderActivity extends BaseActivity implements ISaleOrderView {
     public void onError(String message) {
         DMSToast.showLong(activity, message);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.textPrimary));
+        searchEditText.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary));
+
+        mSearchView.setQueryHint("Search by order no");
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                saleOrderAdapter.filter(newText);
+                return true;
+            }
+        });
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 }

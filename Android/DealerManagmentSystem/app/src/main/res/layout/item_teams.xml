@@ -17,7 +17,7 @@
             android:padding="10dp"
             android:text="Name"
             android:textColor="@color/textPrimary"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <com.dealermanagmentsystem.utils.ui.DMSTextView
             android:id="@+id/txt_count"
@@ -28,7 +28,7 @@
             android:padding="10dp"
             android:text="Count"
             android:textColor="@color/textPrimary"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <com.dealermanagmentsystem.utils.ui.DMSTextView
             android:id="@+id/txt_booked"
@@ -39,12 +39,13 @@
             android:padding="10dp"
             android:text="Booked"
             android:textColor="@color/textPrimary"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/bg" />
+        android:background="@drawable/navigation_line" />
+
 </LinearLayout>

@@ -69,16 +69,20 @@ public class InsuranceLeadAdapter extends RecyclerView.Adapter<InsuranceLeadAdap
         final String callState = mRecords.get(i).getCallState();
         if (callState.equalsIgnoreCase("fresh")) {
             itemViewHolder.mStatus.setText("Fresh");
-            itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.white));
+          //  itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.light_blue));
+            itemViewHolder.llStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.light_blue));
         } else if (callState.equalsIgnoreCase("done")) {
             itemViewHolder.mStatus.setText("Completed");
-            itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.green));
+          //  itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.green));
+            itemViewHolder.llStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.green));
         } else if (callState.equalsIgnoreCase("progress")) {
             itemViewHolder.mStatus.setText("In-Progress");
-            itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.yellow));
+          //  itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.yellow));
+            itemViewHolder.llStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.yellow));
         } else if (callState.equalsIgnoreCase("call-back")) {
             itemViewHolder.mStatus.setText("Callback");
-            itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.red));
+          //  itemViewHolder.mStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.red));
+            itemViewHolder.llStatusColor.setBackgroundColor(activity.getResources().getColor(R.color.red));
         }
 
       /*  itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +189,7 @@ public class InsuranceLeadAdapter extends RecyclerView.Adapter<InsuranceLeadAdap
         TextView mUserName;
         TextView mTeamName;
         TextView mStatus;
-        TextView mStatusColor;
+        //TextView mStatusColor;
         LinearLayout llParent;
         LinearLayout llCall;
         LinearLayout llLost;
@@ -194,6 +198,7 @@ public class InsuranceLeadAdapter extends RecyclerView.Adapter<InsuranceLeadAdap
         TextView mTxtActions;
         TextView mDisposition;
         LinearLayout llBook;
+        LinearLayout llStatusColor;
 
         public AdapterItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -203,7 +208,7 @@ public class InsuranceLeadAdapter extends RecyclerView.Adapter<InsuranceLeadAdap
             mTeamName = (TextView) itemView.findViewById(R.id.team_name);
             mTxtActions = (TextView) itemView.findViewById(R.id.txt_actions);
             mStatus = (TextView) itemView.findViewById(R.id.status);
-            mStatusColor = (TextView) itemView.findViewById(R.id.status_color);
+           // mStatusColor = (TextView) itemView.findViewById(R.id.status_color);
             mDisposition = (TextView) itemView.findViewById(R.id.disposition);
             llParent = (LinearLayout) itemView.findViewById(R.id.ll_parent);
             llCall = (LinearLayout) itemView.findViewById(R.id.ll_call);
@@ -211,6 +216,7 @@ public class InsuranceLeadAdapter extends RecyclerView.Adapter<InsuranceLeadAdap
             llTasks = (LinearLayout) itemView.findViewById(R.id.tasks);
             llActions = (LinearLayout) itemView.findViewById(R.id.ll_actions);
             llBook = (LinearLayout) itemView.findViewById(R.id.book);
+            llStatusColor = (LinearLayout) itemView.findViewById(R.id.status_color_ll);
         }
     }
 }

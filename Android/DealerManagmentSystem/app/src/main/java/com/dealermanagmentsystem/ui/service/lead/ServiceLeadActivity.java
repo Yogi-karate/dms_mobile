@@ -18,6 +18,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -56,6 +57,9 @@ public class ServiceLeadActivity extends BaseActivity implements IServiceLeadVie
     @BindView(R.id.ll_filter)
     LinearLayout llFilter;
     boolean isCheckedMyLeads = false;
+    @BindView(R.id.ll_filter_state)
+    LinearLayout llFilterState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,8 @@ public class ServiceLeadActivity extends BaseActivity implements IServiceLeadVie
         setStatusBarColor(getResources().getColor(R.color.bg));
         showTile("Service Leads");
         showBackButton();
+
+        llFilterState.setVisibility(View.GONE);
 
         final Intent intent = getIntent();
         if (intent != null) {

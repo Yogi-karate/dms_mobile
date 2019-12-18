@@ -1,5 +1,6 @@
 package com.dealermanagmentsystem.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,19 @@ public class SpinnerVehicleAdapter extends BaseAdapter {
     Context context;
     LayoutInflater inflter;
     List<Record> list = new ArrayList<>();
+    boolean mIsWithoutDisplayName;
 
     public SpinnerVehicleAdapter(Context applicationContext, List<Record> list) {
         this.context = applicationContext;
         this.list = list;
         inflter = (LayoutInflater.from(applicationContext));
+    }
+
+    public SpinnerVehicleAdapter(Context applicationContext, List<Record> priceListRecords, boolean isWithoutDisplayName) {
+        this.context = applicationContext;
+        this.list = priceListRecords;
+        inflter = (LayoutInflater.from(applicationContext));
+        mIsWithoutDisplayName = isWithoutDisplayName;
     }
 
     @Override
@@ -43,7 +52,12 @@ public class SpinnerVehicleAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflter.inflate(R.layout.custom_spinner_items, null);
         TextView txtNames = (TextView) view.findViewById(R.id.textView);
-        txtNames.setText(list.get(i).getDisplay_name());
+        if (mIsWithoutDisplayName) {
+            txtNames.setText(list.get(i).getName());
+        } else {
+            txtNames.setText(list.get(i).getDisplay_name());
+        }
+
         return view;
     }
 }

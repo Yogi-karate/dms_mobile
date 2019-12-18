@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Nikhil Vivaan"
-                android:textColor="@color/textPrimary" />
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/txt_email"
@@ -44,7 +45,33 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="nikhil@gmail.com"
-                android:textColor="@color/textSecondary" />
+                android:textColor="@color/textSecondary"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/ll_company_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:orientation="horizontal">
+
+                <com.dealermanagmentsystem.utils.ui.DMSTextView
+                    android:id="@+id/txt_company_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Saboo Suzuki"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/ic_arrow_down_company"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_arrow_down"
+                    android:tint="@color/textSecondary" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -54,6 +81,5 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/navigation_line" />
-
 
 </LinearLayout>

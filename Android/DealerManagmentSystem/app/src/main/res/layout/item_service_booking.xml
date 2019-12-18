@@ -2,8 +2,11 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
     android:clickable="true"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
@@ -12,24 +15,16 @@
         android:layout_height="wrap_content"
         android:background="@color/card_bg"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_partner"
-                android:tint="@color/drab"
-                android:visibility="gone" />
-
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -39,7 +34,7 @@
                 android:paddingBottom="5dp"
                 android:text="Customer"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/customer_name"
@@ -51,20 +46,19 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="nikhil"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -74,7 +68,7 @@
                 android:paddingBottom="5dp"
                 android:text="Model"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -87,7 +81,7 @@
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/vehicle_model"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.6"
                 android:gravity="center|start"
@@ -95,28 +89,20 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Creta"
                 android:textColor="@color/textPrimary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_date_follow"
-                android:tint="@color/drab"
-                android:visibility="gone" />
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -126,7 +112,7 @@
                 android:paddingBottom="5dp"
                 android:text="Booking Type"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/booking_type"
@@ -138,28 +124,20 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Pick Up"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_call"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:padding="3dp"
-                android:src="@drawable/ic_mobile"
-                android:tint="@color/drab"
-                android:visibility="gone" />
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -169,7 +147,7 @@
                 android:paddingBottom="5dp"
                 android:text="Mobile No"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
                 android:id="@+id/mobile"
@@ -181,19 +159,18 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="9739797397"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -203,7 +180,7 @@
                 android:paddingBottom="5dp"
                 android:text="Date pickup"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/date_pick_up"
@@ -215,19 +192,18 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="2019-08-24 13:32:41"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -237,7 +213,7 @@
                 android:paddingBottom="5dp"
                 android:text="Service type"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/service_type"
@@ -249,17 +225,16 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="first"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -271,7 +246,7 @@
                 android:paddingBottom="5dp"
                 android:text="Telecaller name"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/telecaller_name"
@@ -283,17 +258,16 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Anish"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -305,7 +279,7 @@
                 android:paddingBottom="5dp"
                 android:text="Location of service"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/location"
@@ -317,11 +291,13 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="Physical Locations/Mettuguda"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/navigation_line" />
     </LinearLayout>
 
 

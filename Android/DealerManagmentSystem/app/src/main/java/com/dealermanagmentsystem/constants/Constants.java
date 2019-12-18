@@ -63,6 +63,9 @@ public class Constants {
     public static String KEY_ROLE = "role";
     public static String KEY_IS_ADMIN = "is_admin";
     public static String KEY_TEAMS = "teams";
+    public static String KEY_COMPANIES = "companies";
+    public static String KEY_CURRENT_COMPANY_NAME = "company_name";
+    public static String KEY_CURRENT_COMPANY_ID = "company_id";
     public static String KEY_MODULES = "module";
     public static String KEY_URL = "url";
     public static String KEY_FCM_TOKEN = "fcm_token";
@@ -72,6 +75,7 @@ public class Constants {
     public static String BOOKED = "Booked";
     public static String CANCEL = "Cancel";
     public static String TO_INVOICE = "To Invoice";
+    public static String TO_BE_BOOKED = "To be booked";
 
     public static String KEY_EDIT_ACTIVITY = "edit_activity";
     public static String KEY_CREATE_ACTIVITY = "create_activity";
@@ -97,13 +101,23 @@ public class Constants {
     public static String EXTRA_ACTIVITY_COMING_FROM_MODULE = "activity_coming_from_module";
     public static String EXTRA_ENQUIRY = "extra_enquiry";
     public static String EXTRA_USER_ID = "extra_user_id";
+    public static String EXTRA_MOBILE = "extra_mobile";
+    public static String EXTRA_EMAIL = "extra_email";
+    public static String EXTRA_PARTNER_NAME = "extra_partner_name";
+    public static String EXTRA_NAME = "extra_name";
     public static String EXTRA_USER_NAME = "extra_user_name";
+    public static String EXTRA_TEAM_NAME = "extra_team_name";
+    public static String EXTRA_QUOTATION_COUNT = "extra_quotation_count";
+    public static String EXTRA_FOLLOWUP_DATE = "extra_follow_up_date";
+    public static String EXTRA_MODEL_ID = "extra_model_id";
+
     public static String ENQUIRY = "enquiry";
     public static String SUB_ENQUIRY = "sub_enquiry";
     public static String CREATE_ENQUIRY = "create_enquiry";
     public static String EDIT_ENQUIRY = "edit_enquiry";
     public static String LEAD_EDIT_ENQUIRY = "lead_edit_enquiry";
     public static String EXTRA_ENQUIRY_ID = "id_enquiry";
+    public static String EXTRA_TEAM_ID = "id_team";
     public static String EXTRA_STATE = "state";
     public static String EXTRA_STAGE = "stage";
     public static String EXTRA_FROM = "from";
@@ -115,12 +129,29 @@ public class Constants {
     public static String STAGE_WARM = "warm";
     public static String STAGE_HOT = "hot";
     public static String STAGE_BOOKED = "booked";
+    public static String EXTRA_BOOKING_ID = "booking_id";
+    public static String EXTRA_PAYMENT_DATE = "payment_date";
+    public static String EXTRA_DELIVERY_DATE = "delivery_date";
+    public static String EXTRA_FINANCE_TYPE = "finance_type";
+    public static String EXTRA_FINANCIER = "financier";
+    public static String EXTRA_FINANCIER_NAME = "financier_name";
+    public static String EXTRA_SALE_ORDER_ID = "sale_order_id";
+    public static String EXTRA_SALE_ORDER_NAME = "sale_order_name";
+    public static String EXTRA_SALES_CONSULTANT_NAME = "sale_consultant_name";
+    public static String EXTRA_SALE_ORDER_STATE = "sale_order_state";
+
+    public static String KEY_FINANCE_TYPE_ID = "finance_type";
+    public static String KEY_FINANCIER_ID = "financier_name";
+    public static String KEY_FINANCE_PMT = "finance_pmt";
+    public static String KEY_FINANCE_PAYMENT_DATE = "finance_payment_date";
+    public static String KEY_DELIVERY_DATE = "delivery_date";
+    public static String KEY_MARGIN_PMT = "margin_pmt";
+    public static String KEY_MARGIN_PAYMENT_DATE = "margin_payment_date";
+
+
 
 
     public static String SUCCESS = "success";
-
-
-
     public static String NO_INTERNET_CONNECTION = "No internet connection, please connect to active internet";
 
 

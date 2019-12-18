@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/border_line_solid"
+    >
 
     <com.dealermanagmentsystem.utils.ui.DMSTextView
         android:id="@+id/textView"
@@ -10,6 +12,5 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:textColor="@color/textSecondary"
-        android:textSize="16sp"
-         />
+        android:textSize="14sp" />
 </LinearLayout>

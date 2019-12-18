@@ -156,7 +156,6 @@ public class TaskCreateActivity extends BaseActivity implements ITasksCreateView
             } else {
                 DMSToast.showLong(activity, "Activity edited successfully");
             }
-
             finish();
         } else {
             DMSToast.showLong(activity, "Failed to create activity");

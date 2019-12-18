@@ -1,0 +1,191 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center"
+            android:text="Filter"
+            android:textColor="@color/textPrimary"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/navigation_line" />
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:text="State"
+            android:textColor="@color/textPrimary"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/state_overdue"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+                android:text="Overdue"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/state_today"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Today"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/state_planned"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Planned"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/state_no_activities"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+                android:text="No Activities"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Stage"
+            android:textColor="@color/textPrimary"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/stage_cold"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Cold"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/stage_warm"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Warm"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/stage_hot"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Hot"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+
+            <com.dealermanagmentsystem.utils.ui.DMSTextView
+                android:id="@+id/stage_booked"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_white"
+                android:gravity="center"
+
+                android:text="Booked"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="GO"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_anchor="@id/fab_go"
+        app:layout_anchorGravity="center" />
+</android.support.design.widget.CoordinatorLayout>

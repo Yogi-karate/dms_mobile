@@ -2,8 +2,11 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
     android:clickable="true"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="0dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
@@ -15,12 +18,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -30,7 +33,7 @@
                 android:paddingBottom="5dp"
                 android:text="Name"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/name"
@@ -43,19 +46,19 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <com.dealermanagmentsystem.utils.ui.DMSTextViewRegular
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.4"
                 android:gravity="center|start"
@@ -65,7 +68,7 @@
                 android:paddingBottom="5dp"
                 android:text="Scheduled Date"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <com.dealermanagmentsystem.utils.ui.DMSTextView
                 android:id="@+id/scheduled_date"
@@ -78,10 +81,13 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/textPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/navigation_line" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

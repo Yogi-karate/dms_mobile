@@ -43,7 +43,12 @@ public class LoginResponse {
     @SerializedName("module")
     @Expose
     private List<String> module;
-
+    @SerializedName("company_id")
+    @Expose
+    private Object companyId ;
+    @SerializedName("company_ids")
+    @Expose
+    private List<Company> companyList = null;
 
     public String getName() {
         return name;
@@ -131,5 +136,21 @@ public class LoginResponse {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Object getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Object companyId) {
+        this.companyId = companyId;
+    }
+
+    public List<Company> getCompanyList() {
+        return companyList;
+    }
+
+    public void setCompanyList(List<Company> companyList) {
+        this.companyList = companyList;
     }
 }

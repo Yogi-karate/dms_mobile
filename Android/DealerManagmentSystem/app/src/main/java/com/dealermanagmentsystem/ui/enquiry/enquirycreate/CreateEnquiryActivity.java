@@ -135,7 +135,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
                 } else {
                     url = ENQUIRY + "/" + strEnquiryId;//From enquiry edit it
                 }
-                txtEnquiryId.setText("Enquiry id : " + strEnquiryId);
+
                 enquiryCreatePresenter.getEnquiryDetail(activity, url);
             }
         }
@@ -401,6 +401,7 @@ public class CreateEnquiryActivity extends BaseActivity implements ICreateEnquir
 
     @Override
     public void onSuccessEnquiryDetail(EnquiryDetailResponse enquiryDetailResponse) {
+        txtEnquiryId.setText("Enquiry id : " + String.valueOf(enquiryDetailResponse.getId()));
         enquiryDetailRequest = new EnquiryEditRequest();
         detailResponse = new EnquiryDetailResponse();
         detailResponse = enquiryDetailResponse;

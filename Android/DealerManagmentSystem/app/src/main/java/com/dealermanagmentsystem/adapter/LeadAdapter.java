@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,7 +25,11 @@ import com.dealermanagmentsystem.event.LeadActionMoveEvent;
 import com.dealermanagmentsystem.event.LeadActionWonEvent;
 import com.dealermanagmentsystem.ui.base.BaseApplication;
 import com.dealermanagmentsystem.ui.enquiry.enquirycreate.CreateEnquiryActivity;
+import com.dealermanagmentsystem.ui.enquiry.subenquirydetail.SubEnquiryDetailActivity;
 import com.dealermanagmentsystem.ui.enquiry.tasks.TasksActivity;
+import com.dealermanagmentsystem.ui.quotation.QuotationCreateActivity;
+import com.dealermanagmentsystem.ui.saleorder.SaleOrderActivity;
+import com.dealermanagmentsystem.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +37,23 @@ import java.util.Locale;
 
 import static com.dealermanagmentsystem.constants.Constants.EDIT_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ACTIVITY_COMING_FROM;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_EMAIL;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_ENQUIRY_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_FOLLOWUP_DATE;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_LEAD_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_MOBILE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_NAME;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_PARTNER_NAME;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_QUOTATION_COUNT;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_SALE_TYPE_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_TEAM_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_TEAM_NAME;
 import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_ID;
+import static com.dealermanagmentsystem.constants.Constants.EXTRA_USER_NAME;
 import static com.dealermanagmentsystem.constants.Constants.LEAD_EDIT_ENQUIRY;
+import static com.dealermanagmentsystem.constants.Constants.QUOTATION;
 
 public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemViewHolder> {
 
@@ -65,14 +83,28 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         itemViewHolder.mPartnerName.setText(mRecords.get(i).getPartnerName());
         itemViewHolder.mUserName.setText(mRecords.get(i).getActivityDateDeadLine());
         itemViewHolder.mTeamName.setText(mRecords.get(i).getMobile());
+        itemViewHolder.quotationCount.setText(String.valueOf(mRecords.get(i).getSaleNumber()));
+        itemViewHolder.quotationCount.setPaintFlags(itemViewHolder.quotationCount.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        itemViewHolder.quotationCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, SaleOrderActivity.class);
+                intent.putExtra(EXTRA_SALE_TYPE, QUOTATION);
+                intent.putExtra(EXTRA_SALE_TYPE_ID, "draft");
+                intent.putExtra(EXTRA_LEAD_ID, String.valueOf(mRecords.get(i).getId()));
+                activity.startActivity(intent);
+            }
+        });
+
 
         itemViewHolder.llParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, CreateEnquiryActivity.class);
-                intent.putExtra(EXTRA_ENQUIRY, LEAD_EDIT_ENQUIRY);
-                intent.putExtra(EXTRA_ENQUIRY_ID, String.valueOf(mRecords.get(i).getId()));
-                activity.startActivityForResult(intent, 2);
+                Intent intent = new Intent(activity, SubEnquiryDetailActivity.class);
+                intent.putExtra(EXTRA_ENQUIRY_ID, mRecords.get(i).getId());
+                activity.startActivity(intent);
+
             }
         });
 
@@ -97,15 +129,9 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         itemViewHolder.llCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number;
-                number = mRecords.get(i).getMobile();
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + number));
-                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, 1);
-                } else {
-                    activity.startActivity(callIntent);
-                }
+                String strMobile;
+                strMobile = mRecords.get(i).getMobile();
+                Utils.callMobile(strMobile, activity);
             }
         });
 
@@ -180,6 +206,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
         TextView mPartnerName;
         TextView mUserName;
         TextView mTeamName;
+        TextView quotationCount;
+
         LinearLayout llParent;
         LinearLayout llCall;
         LinearLayout llWon;
@@ -195,6 +223,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.AdapterItemVie
             mPartnerName = (TextView) itemView.findViewById(R.id.partner_name);
             mUserName = (TextView) itemView.findViewById(R.id.user_name);
             mTeamName = (TextView) itemView.findViewById(R.id.team_name);
+            quotationCount = (TextView) itemView.findViewById(R.id.quotation_count);
+
             llParent = (LinearLayout) itemView.findViewById(R.id.ll_parent);
             llCall = (LinearLayout) itemView.findViewById(R.id.ll_call);
             llWon = (LinearLayout) itemView.findViewById(R.id.won);

@@ -1,78 +1,78 @@
 
 package com.dealermanagmentsystem.data.model.saleorder;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Record {
 
-    @SerializedName("id")
+    @SerializedName("finance_type")
     @Expose
-    private Integer id;
-    @SerializedName("name")
+    private String financeType;
+    @SerializedName("financier_name")
     @Expose
-    private String name;
-
-    @SerializedName("amount_total")
-    @Expose
-    private String amountTotal;
+    private Object financierName;
     @SerializedName("state")
     @Expose
     private String state;
-    @SerializedName("invoice_status")
+    @SerializedName("product_variant")
     @Expose
-    private String invoiceStatus;
-    @SerializedName("date_order")
+    private String productVariant;
+    @SerializedName("dob")
     @Expose
-    private String dateOrder;
-
-    public Object getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Object userId) {
-        this.userId = userId;
-    }
-
-    public Object getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Object teamId) {
-        this.teamId = teamId;
-    }
+    private String dob;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("product_name")
+    @Expose
+    private String productName;
+    @SerializedName("balance_amount")
+    @Expose
+    private Double balanceAmount;
+    @SerializedName("product_color")
+    @Expose
+    private String productColor;
+    @SerializedName("stock_status")
+    @Expose
+    private String stockStatus;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("payment_date")
+    @Expose
+    private String paymentDate;
+    @SerializedName("delivery_date")
+    @Expose
+    private String deliveryDate;
 
     @SerializedName("user_id")
     @Expose
-    private Object userId = null;
+    private Object userId;
+    @SerializedName("partner_id")
+    @Expose
+    private Object partnerId;
+    @SerializedName("booking_amt")
+    @Expose
+    private Double bookingAmt;
     @SerializedName("team_id")
     @Expose
-    private Object teamId = null;
+    private Object teamId;
 
-    public Integer getId() {
-        return id;
+    public String getFinanceType() {
+        return financeType;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFinanceType(String financeType) {
+        this.financeType = financeType;
     }
 
-    public String getName() {
-        return name;
+    public Object getFinancierName() {
+        return financierName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public String getAmountTotal() {
-        return amountTotal;
-    }
-
-    public void setAmountTotal(String amountTotal) {
-        this.amountTotal = amountTotal;
+    public void setFinancierName(Object financierName) {
+        this.financierName = financierName;
     }
 
     public String getState() {
@@ -83,19 +83,115 @@ public class Record {
         this.state = state;
     }
 
-    public String getInvoiceStatus() {
-        return invoiceStatus;
+    public String getProductVariant() {
+        return productVariant;
     }
 
-    public void setInvoiceStatus(String invoiceStatus) {
-        this.invoiceStatus = invoiceStatus;
+    public void setProductVariant(String productVariant) {
+        this.productVariant = productVariant;
     }
 
-    public String getDateOrder() {
-        return dateOrder;
+    public String getDob() {
+        return dob;
     }
 
-    public void setDateOrder(String dateOrder) {
-        this.dateOrder = dateOrder;
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Double getBalanceAmount() {
+        return balanceAmount;
+    }
+
+    public void setBalanceAmount(Double balanceAmount) {
+        this.balanceAmount = balanceAmount;
+    }
+
+    public String getProductColor() {
+        return productColor;
+    }
+
+    public void setProductColor(String productColor) {
+        this.productColor = productColor;
+    }
+
+    public String getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus(String stockStatus) {
+        this.stockStatus = stockStatus;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(String deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public Object getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Object userId) {
+        this.userId = userId;
+    }
+
+    public Object getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(Object partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public Double getBookingAmt() {
+        return bookingAmt;
+    }
+
+    public void setBookingAmt(Double bookingAmt) {
+        this.bookingAmt = bookingAmt;
+    }
+
+    public Object getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Object teamId) {
+        this.teamId = teamId;
     }
 }
