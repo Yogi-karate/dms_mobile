@@ -172,7 +172,7 @@ class Sale {
             let paymentDetails = [];
             let model1 = 'account.payment';
             let domain1 = [];
-            domain1.push(["id", "in", invoiceIds]);
+            domain1.push(["invoice_ids", "in", invoiceIds]);
             paymentDetails = await server.search_read(model1, { domain: domain1, fields: ["payment_type", "communication", "payment_date", "amount"] });
             if (paymentDetails.records.length > 0) {
                 paymentDetails.records = base.cleanModels(paymentDetails.records);
