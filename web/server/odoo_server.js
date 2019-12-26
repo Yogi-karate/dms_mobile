@@ -48,7 +48,7 @@ class Odoo_Server {
                 if (user.login === this.admin_user) {
                     mobile = '1111111111';
                 }
-                let localUser = await User.findOne({ mobile: mobile });
+                let localUser = await User.findOne({ mobile: mobile }); 
                 if (localUser === null && mobile != null && mobile != false) {
                     console.log("This is new user and localuser is", user);
                     let newUser = { name: name, partner_id: partner_id, email: user.login, mobile: mobile }
