@@ -75,7 +75,7 @@ router.get('/users', async (req, res) => {
       new_users = await odoo.refreshUsers(odoo.getOdoo(req.user.email));
     }
     let users = await User.list();
-    res.json({ new_user_count: new_users, users });
+    res.json({ new_user_count: new_users[0], updated_user_count: new_users[1], users });
   } catch (err) {
     res.json({ error: err.message || err.toString() });
   }
