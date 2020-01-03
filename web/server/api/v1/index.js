@@ -8,7 +8,8 @@ const dashboardApi = require('./dashboard');
 const adminApi = require('./admin');
 const vehicleLeadApi = require('./vehicleLeads');
 const stockApi = require('./stock');
-//const adminApi = require('./admin');
+const searchApi = require('./search');
+//const adminApi = require('./v1/admin');
 
 function api(server) {
   server.use('/api/v1/public', publicApi);
@@ -21,6 +22,7 @@ function api(server) {
   server.use('/api/v1/admin', adminApi);
   server.use('/api/v1/vehicleLeads', vehicleLeadApi);
   server.use('/api/v1/stock', stockApi);
+  server.use('/api/v1/search', searchApi);
 }
 
 module.exports = api;

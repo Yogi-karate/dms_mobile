@@ -13,10 +13,8 @@
   "license": "MIT",
   "keywords": [],
   "dependencies": {
-    "fs": "0.0.1-security",
-    "isomorphic-unfetch": "3.0.0",
-    "serverless": "^1.59.3",
-    "simple-ssh": "^1.0.0"
+    "simple-ssh": "1.0.0",
+    "fs": "0.0.1-security"
   },
   "devDependencies": {}
 }

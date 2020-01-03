@@ -2,8 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 const mongoose = require('mongoose');
+const compression = require('compression');
 const auth_pass = require('./passport');
-const api = require('./api');
+const api = require('./api/v1');
 require('dotenv').config();
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -32,9 +33,20 @@ const sess = {
 };
 const server = express();
 server.use(express.json());
+server.use(compression());
 server.use(session(sess));
 auth_pass({ server });
+
+server.use((req, res, next) => {
+    console.log("Api being called ",req.path);
+    next();
+});
+  
 api(server);
+server.use((req, res, next) => {
+    console.log("After Api being called ",req.path);
+    next();
+});
 // starting express server
 server.listen(port, (err) => {
     if (err) throw err;

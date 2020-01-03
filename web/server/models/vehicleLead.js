@@ -8,7 +8,7 @@ class VehicleLead {
         try {
             let server = odoo.getOdoo(user.email);
             let model = 'dms.vehicle.lead';
-            let states = ["overdue", "today", "planned", "completed"];
+            let states = ["completed"];
             let self = this;
             for (let i = 0; i < states.length; i++) {
                 let group = await server.search(model, { domain: this.getActivityDomain(states[i], callType) }, true);
@@ -67,17 +67,17 @@ class VehicleLead {
         var today = new Date().toISOString().slice(0, 10);
         switch (state) {
             case "planned":
-                domain.push(["activity_date_deadline", ">", today]);
+                domain.push(["current_due_date", ">", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
             case "today":
-                domain.push(["activity_date_deadline", "=", today]);
+                domain.push(["current_due_date", "=", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
             case "overdue":
-                domain.push(["activity_date_deadline", "<", today]);
+                domain.push(["current_due_date", "<", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
@@ -102,12 +102,12 @@ class VehicleLead {
                 domain.push(["user_id", "=", parseInt(userId)]);
             }
             result = await server.search_read(model, { domain: domain, fields: ["name", "id", "current_due_date", "mobile", "partner_name", "user_id", "team_id", "stage_id", "call_state","disposition"] });
-            result.records.forEach(record => {
-                record.activity_date_deadline = record.current_due_date;
-                delete record.current_due_date;
-            });
+            // result.records.forEach(record => {
+            //     record.activity_date_deadline = record.current_due_date;
+            //     delete record.current_due_date;
+            // });
             result.records.sort(function (record1, record2) {
-                var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
+                var dateA = new Date(record1.current_due_date), dateB = new Date(record2.current_due_date)
                 return dateA - dateB //sort by date ascending
             });
             result.records = base.cleanModels(result.records);
