@@ -36,7 +36,7 @@ class Odoo_Server {
         }
     }
     async createUsers(server) {
-        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id"] });
+        let result = await server.search_read("res.users", { domain: [], fields: ["login", "phone", "mobile", "partner_id", "create_date"] });
         let userList = result.records;
         let modifiedUserCountArray = [];
         let newUserArray = [];
@@ -67,16 +67,19 @@ class Odoo_Server {
                         let dupUsers = null;
                         let mostRecentDate = [];
                         let mostRecentUser = [];
-                        console.log("ge the duplicate users of passed mobile number from odoo");
-                        let domain = [];
+                        console.log("get the duplicate users of passed mobile number from odoo db result");
+                        /* let domain = [];
                         domain.push(["phone", "=", mobile]);
                         dupUsers = await server.search_read("res.users", { domain: domain, fields: ["login", "phone", "mobile", "partner_id", "create_date"] });
+                        console.log("The dupUsers areeeeeeeeeeeeeeeeeeeeeee",dupUsers); */
+                        dupUsers = userList.filter(user => user.phone === mobile);
+                        console.log("The dupUsers are", dupUsers, dupUsers.length);
                         if (dupUsers !== null && dupUsers.length > 0) {
                             console.log("find the latest user from odoo for updating mongoDB existing user");
-                            mostRecentDate = new Date(Math.max.apply(null, dupUsers.records.map(function (e) {
+                            mostRecentDate = new Date(Math.max.apply(null, dupUsers.map(function (e) {
                                 return new Date(e.create_date);
                             })));
-                            mostRecentUser = dupUsers.records.filter(e => {
+                            mostRecentUser = dupUsers.filter(e => {
                                 var d = new Date(e.create_date);
                                 return d.getTime() == mostRecentDate.getTime();
                             })[0];
