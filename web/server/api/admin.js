@@ -70,7 +70,9 @@ router.post('/sendapk', async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     let action = req.query.action;
-    let new_users = 0;
+    let new_users = [];
+    new_users[0] = 0;
+    new_users[1] = 0;
     if (action == "refresh") {
       new_users = await odoo.refreshUsers(odoo.getOdoo(req.user.email));
     }
