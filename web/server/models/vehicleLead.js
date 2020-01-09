@@ -83,7 +83,7 @@ class VehicleLead {
                 break;
             case "completed":
                 domain.push(["opportunity_type", "ilike", callType]);
-                domain.push(["activity_ids", "=", false]);
+                domain.push(["call_state", "=", 'done']);
                 domain.push(["type", "=", "lead"]);
                 break;
         }
