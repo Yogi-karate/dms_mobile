@@ -67,17 +67,17 @@ class VehicleLead {
         var today = new Date().toISOString().slice(0, 10);
         switch (state) {
             case "planned":
-                domain.push(["activity_date_deadline", ">", today]);
+                domain.push(["current_due_date", ">", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
             case "today":
-                domain.push(["activity_date_deadline", "=", today]);
+                domain.push(["current_due_date", "=", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
             case "overdue":
-                domain.push(["activity_date_deadline", "<", today]);
+                domain.push(["current_due_date", "<", today]);
                 domain.push(["opportunity_type", "ilike", callType]);
                 domain.push(["type", "=", "lead"]);
                 break;
