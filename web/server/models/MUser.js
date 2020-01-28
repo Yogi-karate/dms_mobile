@@ -52,7 +52,7 @@ class MUserClass {
     }
 
     static async listByAdmin() {
-        const adminUsers = await this.find({"isAdmin": true})
+        const adminUsers = await this.find({ "isAdmin": true })
             .sort({ createdAt: -1 });
         return adminUsers;
     }
@@ -79,6 +79,12 @@ class MUserClass {
             throw new Error('User cannot be created without mobile number');
         }
     };
+
+    static async updateUser(id, req) {
+        const updUser = await this.findByIdAndUpdate(id, { $set: req }, { new: true });
+        return updUser;
+    }
+
     static async updateDeviceToken(user, { device_token }) {
         if (user) {
             user.device_token = device_token;

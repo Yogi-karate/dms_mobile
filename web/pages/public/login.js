@@ -14,7 +14,7 @@ import { getLoginCreds } from '../../lib/api/admin';
 import Router from 'next/router';
 import { login } from '../../lib/store';
 import { connect } from 'react-redux';
-import {withStyles} from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 
 class Login extends React.Component {
 
@@ -25,10 +25,11 @@ class Login extends React.Component {
             mobile: '',
             password: '',
             error: '',
-            isLoading:false,
+            isLoading: false,
         };
         this.handleMobileChange = this.handleMobileChange.bind(this);
         this.handlePinChange = this.handlePinChange.bind(this);
+        this.handleEnterKey = this.handleEnterKey.bind(this);
     }
 
     static async getInitialProps(ctx) {
@@ -40,6 +41,14 @@ class Login extends React.Component {
         return props;
     }
 
+    handleEnterKey = (e) => {
+        if (e.key === 'Enter') {
+            console.log("Inside handleEnterKey");
+            e.preventDefault();
+            this.checkForLoginUser();
+        }
+    }
+
     onSubmitHandler = (e) => {
         console.log("Inside onSubmitHandler");
         e.preventDefault();
@@ -47,16 +56,16 @@ class Login extends React.Component {
     }
 
     handleMobileChange(evt) {
-        this.setState({ mobile: evt.target.value,error:"" });
+        this.setState({ mobile: evt.target.value, error: "" });
     }
 
     handlePinChange(evt) {
-        this.setState({ password: evt.target.value,error:""});
+        this.setState({ password: evt.target.value, error: "" });
     }
 
     async checkForLoginUser() {
         try {
-            this.setState({isLoading:true});
+            this.setState({ isLoading: true });
             const data = await getLoginCreds(this.state);
             console.log("The result is ", data);
             if (data.error === undefined || data.error === null || data.error === "") {
@@ -68,9 +77,9 @@ class Login extends React.Component {
             }
         } catch (err) {
             console.log(err); // eslint-disable-line
-            this.setState({mobile:"",error:"Invalid Username or Password"});
+            this.setState({ error: "Invalid Username or Password" });
         }
-        this.setState({isLoading:false});
+        this.setState({ isLoading: false });
     }
 
     render() {
@@ -105,6 +114,7 @@ class Login extends React.Component {
                                     }}
                                     defaultValue={this.state.mobile}
                                     onChange={this.handleMobileChange}
+                                    onKeyDown={this.handleEnterKey}
                                     margin="normal"
                                     placeholder="Mobile Number"
                                     type="number"
@@ -120,6 +130,7 @@ class Login extends React.Component {
                                     }}
                                     defaultValue={this.state.password}
                                     onChange={this.handlePinChange}
+                                    onKeyDown={this.handleEnterKey}
                                     margin="normal"
                                     placeholder="Password"
                                     type="password"
@@ -131,10 +142,10 @@ class Login extends React.Component {
                                         <CircularProgress size={26} className={classes.loginLoader} />
                                     ) : (
                                             <Button
-                                                 disabled={
-                                                    this.state.password.length === 0 ||
-                                                    this.state.mobile.length === 0
-                                                } 
+                                                /* disabled={
+                                                   this.state.password.length === 0 ||
+                                                   this.state.mobile.length === 0
+                                               } */
                                                 onClick={this.onSubmitHandler}
                                                 variant="contained"
                                                 color="primary"
@@ -175,7 +186,7 @@ const styles = theme => ({
         left: 0
     },
     logotypeContainer: {
-        backgroundColor:"#212121",
+        backgroundColor: "#212121",
         width: "60%",
         height: "100%",
         display: "flex",

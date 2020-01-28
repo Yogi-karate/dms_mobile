@@ -39,7 +39,7 @@ router.get('/dashboard', async (req, res) => {
 });
 router.get('/search', async (req, res) => {
     try {
-        let result = await sale.searchOrderByState(req.user, { state: req.query.state, invoice_status: req.query.invoice_status, leadId: req.query.leadId});
+        let result = await sale.searchOrderByState(req.user, { state: req.query.state, invoice_status: req.query.invoice_status, leadId: req.query.leadId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
@@ -73,18 +73,18 @@ router.get('/saleOrderCountByState', async (req, res) => {
     }
 });
 
-/* router.get('/saleOrder', async (req, res) => {
+router.get('/saleOrderPrice', async (req, res) => {
     try {
-        let result = await sale.saleOrder(req.user, { leadId: req.query.leadId });
+        let result = await sale.saleOrderPrice(req.user, { orderId: req.query.orderId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
     }
-}); */
+});
 
-router.get('/saleOrderPrice', async (req, res) => {
+router.get('/saleOrderCustomer', async (req, res) => {
     try {
-        let result = await sale.saleOrderPrice(req.user, { orderId: req.query.orderId });
+        let result = await sale.saleOrderCustomer(req.user, { orderId: req.query.orderId });
         res.json(result);
     } catch (err) {
         res.json({ error: err.message || err.toString() });
@@ -99,6 +99,38 @@ router.get('/quotationCount', async (req, res) => {
         res.json({ error: err.message || err.toString() });
     }
 });
+
+router.get('/confirmQuotation', async (req, res) => { 
+    try {
+        let result = await sale.confirmQuotation(req.user, { orderId: req.query.orderId });
+        if (result == false) {
+            res.json({ message: "success" });
+        } else {
+            res.status(500).send({ message: "failed" });
+        }
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/orderPaymentDetails', async (req, res) => {
+    try {
+        let result = await sale.saleOrderPaymentDetails(req.user, { orderId: req.query.orderId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
+router.get('/orderBookingDetails', async (req, res) => {
+    try {
+        let result = await sale.updateOrderBookingDetails(req.user, { orderId: req.query.orderId });
+        res.json(result);
+    } catch (err) {
+        res.json({ error: err.message || err.toString() });
+    }
+});
+
 
 
 /* middleware to handle errors (this should be present at the end of all api's always) */

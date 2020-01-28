@@ -6,23 +6,25 @@ console.log("The event")
 
 
 let ssh = new SSH({
-    host: '13.232.221.182',
-    user: 'admin',
+    host: '52.66.207.145',
+    user: 'ec2-user',
     key: fs.readFileSync("sab_dev.pem")
 });
 console.log("This is after ssh variable");
 try{
-let dbbkpCommand = '/opt/odoo/db_files/postgres_bkp.sh'
-let dbname = 'hyundai'
+let dbbkpCommand = '/opt/backup/dev_recreate.sh'
+let dbname = 'saboo'
+let dbport = 5432
+let contname = 'db'
 let filename = 'sample.sql'
 console.log("Inside try")
-ssh.exec('cd /opt/odoo/db_files').exec('ls -al', {
+ssh.exec('cd /opt/backup').exec('ls -al', {
     out: function (stdout) {
         console.log('ls -al got:');
         console.log(stdout);
         console.log('now launching command');
 }
-}).exec('' + dbbkpCommand + ' '+dbname+' '+filename, {
+}).exec('' + dbbkpCommand + ' '+dbname+' '+dbport+' '+contname, {
     out: console.log.bind(console),
     exit: function(code, stdout, stderr) {
         console.log('operation exited with code: ' + code);
