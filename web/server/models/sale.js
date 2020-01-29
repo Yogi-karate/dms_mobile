@@ -5,93 +5,69 @@ const base = require('./base');
 class Sale {
     async getDashboardCounts(user) {
         let result = [];
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'sale.order';
-            let group = await server.read_group(model, { domain: [], groupby: ["state"] }, true);
-            result.push({ result: group });
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let group = await server.read_group(model, { domain: [], groupby: ["state"] }, true);
+        result.push({ result: group });
+        return result;
     }
 
     async searchOrderByState(user, { state, invoice_status, leadId }) {
         let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'sale.order';
-            let domain = [];
-            if (state != null) {
-                domain.push(["state", "ilike", state]);
-            }
-            if (invoice_status != null) {
-                domain.push(["invoice_status", "ilike", invoice_status]);
-            }
-            if (leadId != null) {
-                domain.push(["opportunity_id", "=", parseInt(leadId)]);
-            }
-            result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "partner_id", "team_id", "user_id", "booking_amt", "state"] });
-            result.records = base.cleanModels(result.records);
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        if (state != null) {
+            domain.push(["state", "ilike", state]);
         }
+        if (invoice_status != null) {
+            domain.push(["invoice_status", "ilike", invoice_status]);
+        }
+        if (leadId != null) {
+            domain.push(["opportunity_id", "=", parseInt(leadId)]);
+        }
+        result = await server.search_read(model, { domain: domain, fields: ["name", "dob", "partner_id", "team_id", "user_id", "booking_amt", "state"] });
+        result.records = base.cleanModels(result.records);
+        return result;
     }
 
     async searchInventoryByState(user, { state }) {
         let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'stock.picking';
-            let domain = [];
-            domain.push(["state", "ilike", state]);
-            domain.push(["picking_type_id.code", "=", 'outgoing']);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        let model = 'stock.picking';
+        let domain = [];
+        domain.push(["state", "ilike", state]);
+        domain.push(["picking_type_id.code", "=", 'outgoing']);
+        result = await server.search_read(model, { domain: domain, fields: ["name", "id", "user_id", "team_id", "state", "scheduled_date", "picking_type_code"] });
+        return result;
     }
 
     async getInventoryStock(user, { model, domain = [], fields = [] }) {
         let result = [];
-        try {
-            let server = odoo.getOdoo(user.email);
-            result = await server.read_group(model, { domain: domain, groupby: ["state"], fields: ["name"] }, true);
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        result = await server.read_group(model, { domain: domain, groupby: ["state"], fields: ["name"] }, true);
         return result;
     }
 
     async priceListItem(user, { name }) {
         let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let model = 'product.pricelist.item';
-            let domain = [];
-            domain.push(["pricelist_id", "=", name]);
-            result = await server.search_read(model, { domain: domain, fields: ["product_id", "date_start", "date_end", "fixed_price"] });
-            result.records = base.cleanModels(result.records);
-            return result;
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        let model = 'product.pricelist.item';
+        let domain = [];
+        domain.push(["pricelist_id", "=", name]);
+        result = await server.search_read(model, { domain: domain, fields: ["product_id", "date_start", "date_end", "fixed_price"] });
+        result.records = base.cleanModels(result.records);
+        return result;
     }
 
     async getOrderCountByState(user, { state }) {
         let result = [];
-        try {
-            console.log("The state is ", state);
-            let server = odoo.getOdoo(user.email);
-            let model = 'sale.order';
-            let domain = [];
-            domain.push(["state", "=", state]);
-            result = await server.search(model, { domain: domain }, true);
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        console.log("The state is ", state);
+        let server = odoo.getOdoo(user.email);
+        let model = 'sale.order';
+        let domain = [];
+        domain.push(["state", "=", state]);
+        result = await server.search(model, { domain: domain }, true);
         return result;
     }
 
@@ -139,7 +115,7 @@ class Sale {
         let server = odoo.getOdoo(user.email);
         let model = 'sale.order';
         let domain = [];
-        domain.push(["state","=","draft"]);
+        domain.push(["state", "=", "draft"]);
         quotationCount = await server.search(model, { domain: domain }, true);
         return quotationCount;
     }

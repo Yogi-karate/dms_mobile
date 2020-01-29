@@ -9,18 +9,14 @@ class Task {
         let self = this;
         let states = ["today"];
         let result = null;
-        try {
 
-            let server = odoo.getOdoo(admin.email);
-            let user_id = await server.search('res.users', { domain: [["login", "=", user.email]] });
-            let model = 'mail.activity';
-            let domain = this.getActivityDomain(states[0]);
-            //  domain.push(["res_model", "=", modelName]);
-            domain.push(["user_id", "=", user_id]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(admin.email);
+        let user_id = await server.search('res.users', { domain: [["login", "=", user.email]] });
+        let model = 'mail.activity';
+        let domain = this.getActivityDomain(states[0]);
+        //  domain.push(["res_model", "=", modelName]);
+        domain.push(["user_id", "=", user_id]);
+        result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
         let firebase_response = await firebase(user, {
             title: 'Hello Good Morning  from DMS',
             message: 'You have ' + result.records.length + ' tasks scheduled today'
@@ -31,16 +27,12 @@ class Task {
         let self = this;
         let states = ["today"];
         let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            console.log("user id", server.context);
-            let model = 'mail.activity';
-            let domain = this.getActivityDomain(states[0]);
-            domain.push(["user_id", "=", server.uid]);
-            result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        console.log("user id", server.context);
+        let model = 'mail.activity';
+        let domain = this.getActivityDomain(states[0]);
+        domain.push(["user_id", "=", server.uid]);
+        result = await server.search_read(model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id", "res_model"] });
         return base.cleanModels(result.records);
     }
     getActivityDomain(state) {
@@ -61,16 +53,12 @@ class Task {
     };
     async getActivities(user, { id, modelName }) {
         let result = null;
-        try {
-            let server = odoo.getOdoo(user.email);
-            let activity_model = 'mail.activity';
-            let domain = [];
-            domain.push(["res_model", "=", modelName]);
-            domain.push(["res_id", "=", id]);
-            result = await server.search_read(activity_model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id"] });
-        } catch (err) {
-            return { error: err.message || err.toString() };
-        }
+        let server = odoo.getOdoo(user.email);
+        let activity_model = 'mail.activity';
+        let domain = [];
+        domain.push(["res_model", "=", modelName]);
+        domain.push(["res_id", "=", id]);
+        result = await server.search_read(activity_model, { domain: domain, fields: ["name", "id", "date_deadline", "summary", "note", "activity_type_id", "user_id"] });
         return base.cleanModels(result.records);
     }
 }
