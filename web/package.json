@@ -6,6 +6,7 @@
     "build": "next build",
     "start": "node server/app.js",
     "dev": "nodemon server/app.js --watch server",
+    "api": "nodemon server/api.js --watch server",
     "now": "now && now alias && now rm builderbook-boilerplate --safe --yes",
     "lint": "eslint components pages lib server"
   },
@@ -30,6 +31,7 @@
     "loadtest": "^3.0.7",
     "lodash": "^4.17.15",
     "mongoose": "5.3.4",
+    "morgan": "^1.9.1",
     "mui-datatables": "^2.7.0",
     "next": "^9.0.0",
     "nprogress": "0.2.0",
