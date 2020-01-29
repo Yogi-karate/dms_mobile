@@ -12,21 +12,21 @@ const stockApi = require('./stock');
 const logger = require('../../logs');
 
 function handleError(err, req, res, next) {
-  logger.error(err.stack);
+  logger.error(err.stack, req.url);
   res.status(err.status || 500);
   res.json({ error: err.message || err.toString() });
 }
 
 function api(server) {
-  server.use('/api/v1/public', publicApi, handleError);
-  server.use('/api/v1/customer', customerApi, handleError);
-  server.use('/api/v1/utils', utilsApi, handleError);
-  server.use('/api/v1/leads', leadsApi, handleError);
-  server.use('/api/v1/sales', salesApi, handleError);
-  server.use('/api/v1/tasks', tasksApi, handleError);
-  server.use('/api/v1/dashboard', dashboardApi, handleError);
-  server.use('/api/v1/admin', adminApi, handleError);
-  server.use('/api/v1/stock', stockApi, handleError);
+  server.use('/api/v2/public', publicApi, handleError);
+  server.use('/api/v2/customer', customerApi, handleError);
+  server.use('/api/v2/utils', utilsApi, handleError);
+  server.use('/api/v2/leads', leadsApi, handleError);
+  server.use('/api/v2/sales', salesApi, handleError);
+  server.use('/api/v2/tasks', tasksApi, handleError);
+  server.use('/api/v2/dashboard', dashboardApi, handleError);
+  server.use('/api/v2/admin', adminApi, handleError);
+  server.use('/api/v2/stock', stockApi, handleError);
   server.use('/api/v2/vehicleLeads', vehicleLeadApi, handleError);
 }
 
