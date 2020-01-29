@@ -1,10 +1,10 @@
 const express = require('express');
 const _ = require('lodash');
-const logger = require('../logs');
+const logger = require('../../logs');
 const router = express.Router();
 const passport = require('passport');
-const odoo = require('../odoo_server');
-const vehicleLead = require('../models/vehicleLead');
+const odoo = require('../../odoo_server');
+const vehicleLead = require('../../models/vehicleLead');
 
 router.use((req, res, next) => {
   console.log("service api authenication ");
@@ -33,62 +33,62 @@ router.use((req, res, next) => {
     })(req, res, next);
   }
 });
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', async (req, res, next) => {
   try {
     let result = await vehicleLead.getDashboardCounts(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
 
-router.get('/search', async (req, res) => {
+router.get('/search', async (req, res, next) => {
   try {
     let result = await vehicleLead.searchLeadsByState(req.user, { state: req.query.state, callType: req.query.callType, userId: req.query.userId });
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
-router.get('/activity/:id', async (req, res) => {
+router.get('/activity/:id', async (req, res, next) => {
   try {
     let result = await vehicleLead.getActivities(req.user, { id: req.params.id });
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
-router.post('/activity/complete', async (req, res) => {
+router.post('/activity/complete', async (req, res, next) => {
   try {
     let id = parseInt(req.body.id);
-    let result = await vehicleLead.setActivities(req.user, { id: id, feedback: req.body.feedback, disposition_id: req.body.disposition_id});
+    let result = await vehicleLead.setActivities(req.user, { id: id, feedback: req.body.feedback, disposition_id: req.body.disposition_id });
     res.json({ message: "success", id: result });
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
-router.post('/activity/create', async (req, res) => {
+router.post('/activity/create', async (req, res, next) => {
   try {
     let result = await vehicleLead.createActivity(req.user, req.body);
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
-router.get('/serviceBookingCount', async (req, res) => {
+router.get('/serviceBookingCount', async (req, res, next) => {
   try {
     let result = await vehicleLead.serviceBookingCount(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
-router.get('/serviceBookingDetails', async (req, res) => {
+router.get('/serviceBookingDetails', async (req, res, next) => {
   try {
     let result = await vehicleLead.serviceBookingDetails(req.user, { callType: req.query.callType });
     res.json(result);
   } catch (err) {
-    res.json({ error: err.message || err.toString() });
+    next(err);
   }
 });
 

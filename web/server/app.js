@@ -4,7 +4,8 @@ const mongoSessionStore = require('connect-mongo');
 const next = require('next');
 const mongoose = require('mongoose');
 const auth_pass = require('./passport');
-const api = require('./api');
+const api_v1 = require('./api/v1');
+const api_v2 = require('./api/v2');
 const admin = require('firebase-admin');
 const firebaseAccount = require("../firebase_dms.json");
 
@@ -52,22 +53,23 @@ app.prepare().then(() => {
 
   server.use(session(sess));
   auth_pass({ server });
-  api(server);
+  api_v1(server);
+  api_v2(server);
 
   admin.initializeApp({
     credential: admin.credential.cert(firebaseAccount),
     databaseURL: "https://dealer-managment-system.firebaseio.com"
   });
 
-    server.get('*', (req, res) => {
-      const url = URL_MAP[req.path];
-      if (url) {
-        app.render(req, res, url);
-      } else {
-        handle(req, res);
-      }
-    });
-    
+  server.get('*', (req, res) => {
+    const url = URL_MAP[req.path];
+    if (url) {
+      app.render(req, res, url);
+    } else {
+      handle(req, res);
+    }
+  });
+
   // starting express server
   server.listen(port, (err) => {
     if (err) throw err;
