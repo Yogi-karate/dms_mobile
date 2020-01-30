@@ -2,7 +2,7 @@ services:
   - docker
 
 script:
-  - docker build ./web -t tramm/dms_mobile:$TRAVIS_BRANCH
+  - docker build ./api -t tramm/dms_mobile:$TRAVIS_BRANCH
   - docker run -d -p 127.0.0.1:80:4567 tramm/dms_mobile:$TRAVIS_BRANCH
   - docker ps -a
    
