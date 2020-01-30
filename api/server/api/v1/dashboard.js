@@ -3,8 +3,8 @@ const _ = require('lodash');
 const logger = require('../../logs');
 const router = express.Router();
 const passport = require('passport');
-const base = require('../../models/base');
-const sale = require('../../models/sale');
+const base = require('../../models/core/base');
+const sale = require('../../models/dms/sale');
 
 router.use((req, res, next) => {
   console.log("dashboard api authenication ");

@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
-const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
@@ -15,7 +14,6 @@ const odoo = require('./models/core/odoo_server');
 const firebase = require('./utils/firebase');
 const base = require('./models/core/base');
 
-const BCRYPT_SALT_ROUNDS = 12;
 require('dotenv').config();
 const STATIC_HOST = process.env.STATIC_WEB_HOST;
 

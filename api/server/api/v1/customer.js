@@ -3,9 +3,9 @@ const _ = require('lodash');
 const logger = require('../../logs');
 const router = express.Router();
 const passport = require('passport');
-const odoo = require('../../odoo_server');
-const base = require('../../models/base');
-const User = require('../../models/MUser');
+const odoo = require('../../models/core/odoo_server');
+const base = require('../../models/core/base');
+const User = require('../../models/core/MUser');
 
 router.use((req, res, next) => {
   console.log("service api authenication  ");

@@ -3,15 +3,15 @@ const _ = require('lodash');
 const logger = require('../../logs');
 const router = express.Router();
 const passport = require('passport');
-const odoo = require('../../../core/odoo_server');
-const base = require('../../models/base');
-const User = require('../../models/MUser');
-const task = require('../../models/tasks');
-const MsgTemplate = require('../../models/MsgTemplate');
-const JobMaster = require('../../models/JobMaster');
-const JobLog = require('../../models/JobLog');
-const smsJobs = require('../../models/smsJobs');
-const sms = require('../../ext/sms_new');
+const odoo = require('../../models/core/odoo_server');
+const base = require('../../models/core/base');
+const User = require('../../models/core/MUser');
+const task = require('../../models/dms/tasks');
+const MsgTemplate = require('../../models/dms/MsgTemplate');
+const JobMaster = require('../../models/dms/JobMaster');
+const JobLog = require('../../models/dms/JobLog');
+const smsJobs = require('../../models/dms/smsJobs');
+const sms = require('../../utils/sms_new');
 
 router.use((req, res, next) => {
   console.log("service api authenication ");

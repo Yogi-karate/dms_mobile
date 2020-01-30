@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const appVersion = require('../../models/appVersion');
-const JobLog = require('../../models/JobLog');
+const appVersion = require('../../models/dms/appVersion');
+const JobLog = require('../../models/dms/JobLog');
 
 router.use((req, res, next) => {
   next();

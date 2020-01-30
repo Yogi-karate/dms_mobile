@@ -3,7 +3,7 @@ const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const auth_pass = require('./passport');
-//const api_v1 = require('./api/v1');
+const api_v1 = require('./api/v1');
 const api_v2 = require('./api/v2');
 // const admin = require('firebase-admin');
 // const firebaseAccount = require("../firebase_dms.json");
@@ -55,7 +55,7 @@ const sess = {
 
 server.use(session(sess));
 auth_pass({ server });
-// //api_v1(server);
+api_v1(server);
 api_v2(server);
 
 // admin.initializeApp({
