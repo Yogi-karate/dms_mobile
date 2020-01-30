@@ -8,6 +8,7 @@ const api_v1 = require('./api/v1');
 const api_v2 = require('./api/v2');
 const admin = require('firebase-admin');
 const firebaseAccount = require("../firebase_dms.json");
+const logger = require('./logs');
 
 require('dotenv').config();
 
@@ -33,6 +34,14 @@ app.prepare().then(() => {
   const server = express();
 
   server.use(express.json());
+
+  logger.stream = {
+    write: function (message, encoding) {
+      logger.info(message);
+    }
+  };
+
+  server.use(require("morgan")("combined", { "stream": logger.stream }));
 
   // confuring MongoDB session store
   const MongoStore = mongoSessionStore(session);
