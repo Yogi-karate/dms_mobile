@@ -1,0 +1,46 @@
+{
+  "name": "dms-enquiry-app",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "nodemon server/app.js --watch server",
+    "lint": "eslint components pages lib server"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "connect-mongo": "2.0.1",
+    "dotenv": "6.1.0",
+    "express": "4.16.4",
+    "express-session": "1.15.6",
+    "firebase-admin": "^8.0.0",
+    "googleapis": "34.0.0",
+    "jayson": "^3.0.1",
+    "loadtest": "^3.0.7",
+    "lodash": "^4.17.15",
+    "mongoose": "5.3.4",
+    "morgan": "^1.9.1",
+    "passport": "0.4.0",
+    "passport-google-oauth": "1.0.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "prop-types": "15.6.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "speakeasy": "^2.0.0",
+    "winston": "3.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.0.1",
+    "eslint": "5.7.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-prettier": "3.3.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jsx-a11y": "6.1.2",
+    "eslint-plugin-prettier": "3.0.0",
+    "eslint-plugin-react": "7.11.1",
+    "nodemon": "1.18.4",
+    "prettier": "1.15.3",
+    "aws-sdk": "2.525.0"
+  }
+}
