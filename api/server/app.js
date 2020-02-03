@@ -70,7 +70,7 @@ odoo.init().then(() => {
         if (err) throw err;
         console.log(`> Ready on ${ROOT_URL}`); // eslint-disable-line no-console
     });
-
+console.log(require('util').inspect(odoo));
 }).catch(() => {
     console.log("Error in setting up server");
     process.exit(1);

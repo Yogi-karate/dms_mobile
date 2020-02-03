@@ -40,31 +40,37 @@ function auth_pass({ server }) {
             }
             console.log("Trying to create Odoo Session");
             oserver = odoo.getOdoo(user.email, password);
-            console.log("The oserver is ",oserver);
+            console.log("The oserver is ", oserver);
             if (oserver.sid) {
               console.log("trying to logout");
               oserver.logout();
             }
-            oserver.connect(async function (err, result) {
-              if (err) {
-                return done(null, false, { message: 'cannot connect to DMS' });
-              }
+            oserver.connect_new().then(async function (err, result) {
               console.log('user found & authenticated');
               model = 'res.partner';
-              let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
-              user.image = im_result.records[0].image;
+              // let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
+              // user.image = im_result.records[0].image;
               role_result = await base.getUserRole(user);
-              company_result = await base.getUserCompanies(user);
+              //company_result = await base.getUserCompanies(user);
               console.log("User role result", role_result);
-              console.log("User company result in passport js", company_result);
+              console.log("User company result in passport js", oserver.companies.allowed_companies);
               user.role = role_result.role;
               user.teams = role_result.teams;
               user.module = role_result.module;
-              user.company_id = company_result.company_id;
-              user.company_ids = company_result.company_ids;
+              user.company_id = oserver.companies.company_id;
+              user.company_ids = oserver.companies.allowed_companies;
               user.uid = oserver.uid;
               return done(null, user);
-            });
+            }).catch(function (error) {
+              console.log("Error in Logging in"+error);
+              done(error);
+            })
+            //   oserver.connect({
+            //     if (err) {
+            //       return done(null, false, { message: 'cannot connect to DMS' });
+            //     }
+
+            //   });
           });
         } catch (err) {
           console.log("Error o: ", err);

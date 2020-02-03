@@ -45,6 +45,11 @@ Odoo.prototype.connect_new = async function () {
             this.sid = response.headers['set-cookie'][0].split(';')[0];
             this.session_id = result.session_id;
             this.context = result.user_context;
+            this.companies = result.user_companies;
+            this.partner_id=result.partner_id;
+            this.is_admin=result.is_admin;
+            this.company_id = result.company_id;
+            console.log("the odoo object is "+util.inspect(this));
             return response;
         }
     } catch (err) {
