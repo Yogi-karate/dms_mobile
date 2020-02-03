@@ -17,7 +17,6 @@ function handleError(err, req, res, next) {
 }
 
 function api(server,URLPrefix) {
-  console.log("the prefix is "+URLPrefix)
   server.use(URLPrefix+'/public', publicApi, handleError);
   server.use(URLPrefix+'/utils', utilsApi, handleError);
   server.use(URLPrefix+'/leads', leadsApi, handleError);

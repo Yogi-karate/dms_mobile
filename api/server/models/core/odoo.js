@@ -177,6 +177,7 @@ Odoo.prototype.search = async function (model, domain, count, callback) {
 // Search_read records
 Odoo.prototype.search_read = async function (model, { domain = [], fields = [], limit = 0, offset = 0, sort = '' }, callback) {
     if (!fields.length) return console.error("The search_read method doesn't support an empty fields array.");
+    console.log("Helloooooooooooo@@@@@");
     console.log(domain);
     console.log(fields);
     let result = await this.request('/web/dataset/search_read', {
@@ -269,7 +270,8 @@ Odoo.prototype.request = async function (path, params, callback, options) {
             'Cookie': this.sid + ';'
         }
     };
-    console.log("options in request", options);
+    console.log("the params are "+util.inspect(params));
+    console.log("options in request!!!!!"+util.inspect(options));
     let client = jayson.client.http(options);
     const { result, error } = await client.request('call', params);
     if (error != null) {
