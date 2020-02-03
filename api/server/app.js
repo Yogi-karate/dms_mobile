@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const auth_pass = require('./passport');
 const api_v1 = require('./api/v1');
 const api_v2 = require('./api/v2');
+const odoo = require('./models/core/odoo_server')
 // const admin = require('firebase-admin');
 // const firebaseAccount = require("../firebase_dms.json");
 const logger = require('./logs');
@@ -29,7 +30,7 @@ const server = express();
 
 server.use(express.json());
 logger.stream = {
-    write: function(message, encoding){
+    write: function (message, encoding) {
         logger.info(message);
     }
 };
@@ -64,7 +65,13 @@ api_v2(server);
 // });
 
 // starting express server
-server.listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> Ready on ${ROOT_URL}`); // eslint-disable-line no-console
+odoo.init().then(() => {
+    server.listen(port, (err) => {
+        if (err) throw err;
+        console.log(`> Ready on ${ROOT_URL}`); // eslint-disable-line no-console
+    });
+
+}).catch(() => {
+    console.log("Error in setting up server");
+    process.exit(1);
 });

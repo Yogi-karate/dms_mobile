@@ -10,9 +10,9 @@ class Odoo_Server {
         this.admin_user = admin_user;
         this.admin_password = admin_password;
         this.connections = {};
-        this.init();
+       // this.init();
     };
-    init() {
+    async init() {
         try {
             console.log("Hello from server init");
             const odoo = new Odoo({
@@ -22,17 +22,13 @@ class Odoo_Server {
                 username: this.admin_user,
                 password: this.admin_password
             });
-            let self = this;
-            odoo.connect(function (err, result) {
-                if (err) {
-                    console.log("Error in connecting to Odoo");
-                }
-                self.initDatabase(odoo);
-                console.log("Result:", odoo);
-            });
+            let result = await odoo.connect_new();
+            let res = await this.initDatabase(odoo);
             this.connections[this.admin_user] = odoo;
+            return odoo;
         } catch (err) {
             console.log("Error", err);
+            throw err;
         }
     }
     async createUsers(server) {

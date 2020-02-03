@@ -1,7 +1,7 @@
 const http = require('http');
 const request = require('request-promise');
 const jayson = require('jayson/promise');
-
+const util = require('util');
 const Odoo = function (config) {
     config = config || {};
 
@@ -13,6 +13,45 @@ const Odoo = function (config) {
 };
 
 // Connect
+Odoo.prototype.connect_new = async function () {
+    let params = {
+        db: this.database,
+        login: this.username,
+        password: this.password
+    };
+    let json = JSON.stringify({ params: params });
+    let options = {
+        uri: 'http://' + this.host + ':' + this.port + '/web/session/authenticate',
+        method: 'POST',
+        body: { params: params },
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Content-Length': json.length
+        },
+        json: true,
+        resolveWithFullResponse: true
+    };
+    console.log("options in request", options);
+    try {
+        const response = await request(options);
+        console.log("The response is" + util.inspect(response.body));
+        let result = response.body.result;
+        if (!result || !response.headers) {
+            console.log("Error in response - cannot connect to Odoo");
+            throw new Error("Invalid response from server");
+        } else {
+            this.uid = result.uid;
+            this.sid = response.headers['set-cookie'][0].split(';')[0];
+            this.session_id = result.session_id;
+            this.context = result.user_context;
+            return response;
+        }
+    } catch (err) {
+        console.log(err.stack);
+        throw new Error("Fatal : Cannot Connect to Backend Odoo System");
+    }
+}
 Odoo.prototype.connect = function (cb) {
     let params = {
         db: this.database,
