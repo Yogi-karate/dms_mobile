@@ -48,7 +48,7 @@ Odoo.prototype.connect_new = async function () {
             this.companies = result.user_companies;
             this.partner_id=result.partner_id;
             this.is_admin=result.is_admin;
-            this.company_id = result.company_id;
+            this.company_id = result.user_companies.current_company;
             console.log("the odoo object is "+util.inspect(this));
             return response;
         }

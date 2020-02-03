@@ -51,14 +51,12 @@ function auth_pass({ server }) {
               // let im_result = await oserver.search_read(model, { domain: [["id", "=", user.partner_id]], fields: ["id", "image"] });
               // user.image = im_result.records[0].image;
               role_result = await base.getUserRole(user);
-              //company_result = await base.getUserCompanies(user);
-              console.log("User role result", role_result);
-              console.log("User company result in passport js", oserver.companies.allowed_companies);
+              company_result = await base.getUserCompanies(user);
               user.role = role_result.role;
               user.teams = role_result.teams;
               user.module = role_result.module;
-              user.company_id = oserver.companies.company_id;
-              user.company_ids = oserver.companies.allowed_companies;
+              user.company_id = company_result.company_id;
+              user.company_ids = company_result.company_ids;
               user.uid = oserver.uid;
               return done(null, user);
             }).catch(function (error) {

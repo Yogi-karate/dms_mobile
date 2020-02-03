@@ -42,7 +42,7 @@ router.get('/roles', async (req, res, next) => {
     next(err);
   }
 });
-router.post('/odoo/:model', async (req, res, next) => {
+router.post('/:model', async (req, res, next) => {
   try {
     let server = odoo.getOdoo(req.user.email);
     model = req.params.model;
@@ -52,7 +52,7 @@ router.post('/odoo/:model', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/odoo/:model', async (req, res, next) => {
+router.get('/:model', async (req, res, next) => {
   try {
     let server = odoo.getOdoo(req.user.email);
     model = req.params.model;
@@ -62,7 +62,7 @@ router.get('/odoo/:model', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/odoo/:model/:id', async (req, res, next) => {
+router.get('/:model/:id', async (req, res, next) => {
   try {
     let result = await base.getModel(req.user, { model: req.params.model, id: req.params.id });
     res.json(result);
@@ -70,7 +70,7 @@ router.get('/odoo/:model/:id', async (req, res, next) => {
     next(err);
   }
 });
-router.post('/odoo/:model/:id', async (req, res, next) => {
+router.post('/:model/:id', async (req, res, next) => {
   console.log(req.user);
   try {
     let server = odoo.getOdoo(req.user.email);

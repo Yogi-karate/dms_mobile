@@ -10,7 +10,7 @@ function handleError(err, req, res, next) {
 
 function api(server,prefix) {
   console.log("the prefix is "+prefix)
-  server.use(prefix+'/common', customerApi, handleError);
+  server.use(prefix+'/odoo', customerApi, handleError);
 }
 
 module.exports = api;
