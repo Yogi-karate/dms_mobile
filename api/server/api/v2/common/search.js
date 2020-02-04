@@ -31,14 +31,6 @@ router.use((req, res, next) => {
     })(req, res, next);
   }
 });
-router.get('/roles', async (req, res, next) => {
-  try {
-    let result = await base.getUserRole(req.user);
-    res.json({ result });
-  } catch (err) {
-    next(err);
-  }
-});
 
 router.get('/products', async (req, res, next) => {
  // console.log(req.user);
@@ -102,33 +94,6 @@ router.post('/variants_old', async (req, res, next) => {
     console.log(variant_ids);
     model = 'product.attribute.value';
     let result = await server.search_read(model, { domain: [["id", "in", variant_ids]], fields: ["id", "name"] });
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
-router.post('/register_token', async (req, res, next) => {
-  try {
-    let user = req.user;
-    let result = await User.updateDeviceToken(user, req.body);
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
-router.get('/updateCompany/:id', async (req, res, next) => {
-  try {
-    let roles = null;
-    let companies = null;
-    let result = {};
-    let server = odoo.getOdoo(req.user.email);
-    id = parseInt(req.params.id);
-    model = 'res.users';
-    // update user company
-    let updatedCompany = await server.update(model, server.uid, { "company_id": id });
-    roles = await base.getUserRole(req.user);
-    companies = await base.getUserCompanies(req.user);
-    result.role = roles.role; result.teams = roles.teams; result.module = roles.module; result.company_id = companies.company_id; result.company_ids = companies.company_ids;
     res.json(result);
   } catch (err) {
     next(err);
