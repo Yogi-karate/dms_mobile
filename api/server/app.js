@@ -57,7 +57,6 @@ const sess = {
     cookie: {
         secure:false,
         httpOnly: false,
-        domain:'http://localhost:8003',
         maxAge: 14 * 24 * 60 * 60 * 1000,
     },
 };
