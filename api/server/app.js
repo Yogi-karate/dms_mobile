@@ -6,6 +6,9 @@ const auth_pass = require('./passport');
 const api_v1 = require('./api/v1');
 const api_v2 = require('./api/v2');
 const odoo = require('./models/core/odoo_server')
+const cors = require('cors');
+const AWS = require('aws-sdk');
+
 // const admin = require('firebase-admin');
 // const firebaseAccount = require("../firebase_dms.json");
 const logger = require('./logs');
@@ -34,7 +37,7 @@ logger.stream = {
         logger.info(message);
     }
 };
-
+server.use(cors({ origin: 'http://localhost:8003', credentials: true }));
 server.use(require("morgan")("combined", { "stream": logger.stream }));
 
 // confuring MongoDB session store
@@ -49,11 +52,17 @@ const sess = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        httpOnly: true,
+        secure:false,
+        httpOnly: false,
+        domain:'http://localhost:8003',
         maxAge: 14 * 24 * 60 * 60 * 1000,
     },
 };
-
+//configuring the AWS environment
+AWS.config.update({
+    accessKeyId: process.env.Amazon_accessKeyId,
+    secretAccessKey: process.env.Amazon_secretAccessKey
+  });
 server.use(session(sess));
 auth_pass({ server });
 api_v1(server);
