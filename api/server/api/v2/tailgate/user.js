@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 
-const User = require('../../../models/core/User');
+const User = require('../../../models/core/MUser');
 const logger = require('../../../logs');
 const router = express.Router();
 const passport = require('passport');

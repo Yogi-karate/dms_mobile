@@ -20,7 +20,7 @@ const locationRegSchema = new Schema({
         type: Number,
     },
     security: [{
-        type: Schema.ObjectId, ref: 'User'
+        type: Schema.ObjectId, ref: 'MUser'
     }]
 });
 

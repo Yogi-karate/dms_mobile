@@ -9,7 +9,7 @@ function api(server,URLPrefix) {
   server.use(URLPrefix+'/user', userApi);
   server.use(URLPrefix+'/event', eventApi);
   server.use(URLPrefix+'/admin', adminApi);
-  server.use(URLPrefix+'locationRegistration', locationRegistrationApi);
+  server.use(URLPrefix+'/locationRegistration', locationRegistrationApi);
 }
 
 module.exports = api;
