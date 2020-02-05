@@ -1,9 +1,9 @@
 import sendRequest from './sendRequest';
 
-const BASE_PATH = '/api/v1';
+const BASE_PATH = '/api/v2/common/user';
 
 export const getTeams = (user) =>
-  sendRequest(`${BASE_PATH}/customer/roles`, {
+  sendRequest(`${BASE_PATH}/roles`, {
     method: 'GET',
     headers: {
       'Content-type': 'application/json; charset=UTF-8'
