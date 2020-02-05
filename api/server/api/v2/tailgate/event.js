@@ -8,6 +8,8 @@ const logger = require('../../../logs');
 const router = express.Router();
 const passport = require('passport');
 const store = require('../../../ext/s3');
+const map = require('../../../ext/maps');
+const LocationRegistration = require('../../../models/tailgate/LocationRegistration');
 
 router.use((req, res, next) => {
   console.log("service api authentication ");
@@ -55,16 +57,28 @@ router.post('/createEvents', async (req, res, next) => {
   let createdEvent = null;
   try {
     console.log("Inside createEvents api");
-    createdEvent = await Event.add(req.body);
-    const vehicleImgPath = await store.s3Base64(createdEvent.vehicle_image, createdEvent.name + '_vehicle_image');
-    console.log("The vehicle image path is ", vehicleImgPath);
-    const invoiceImgPath = await store.s3Base64(createdEvent.invoice_image, createdEvent.name + '_invoice_image');
-    console.log("The invoice image path is ", invoiceImgPath);
-    const updateEvent = await Event.update({ 'eventId': createdEvent._id }, { 'invoice_image': invoiceImgPath, 'vehicle_image': vehicleImgPath });
-    res.json({ "message": "created successful" });
+    let reqBody = req.body;
+    const locationLatLong = await LocationRegistration.listById(reqBody.locationRegistration);
+    console.log("The location lat and long is ", locationLatLong);
+    const eventLatLong = { "lat": reqBody.latitude, "long": reqBody.longitude };
+    console.log("The event lat and long is ", eventLatLong);
+    const distance = await map(locationLatLong, eventLatLong);
+    console.log("The response from maps isssss ", distance);
+    if (distance < 0.6) {
+      createdEvent = await Event.add(req.body);
+      const vehicleImgPath = await store.s3Base64(createdEvent.vehicle_image, createdEvent.name + '_vehicle_image');
+      console.log("The vehicle image path is ", vehicleImgPath);
+      const invoiceImgPath = await store.s3Base64(createdEvent.invoice_image, createdEvent.name + '_invoice_image');
+      console.log("The invoice image path is ", invoiceImgPath);
+      const updateEvent = await Event.update({ 'eventId': createdEvent._id }, { 'invoice_image': invoiceImgPath, 'vehicle_image': vehicleImgPath });
+      res.json({ "message": "created successful" });
+    }
+    else {
+      res.status(500).json({ "message": "Event doesnot create, lat long doesnot match" });
+    }
   } catch (err) {
     if (createdEvent != null && createdEvent._id != undefined) {
-      console.log("error in uploading image to s3 and deeting created event");
+      console.log("error in uploading image to s3 and deleting created event");
       const deletedEvent = await Event.delete({ 'eventId': createdEvent._id });
     }
     next(err);

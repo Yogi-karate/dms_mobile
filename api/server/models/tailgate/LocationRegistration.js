@@ -44,6 +44,13 @@ class LocationRegistrationClass {
         return securityUsers;
     }
 
+    static async listById(locationId) {
+        const location = await this.findById({ "_id": locationId })
+            .sort({ createdAt: -1 })
+            .select(['latitude', 'longitude']);
+        return location;
+    }
+
     static async update({ locationId }, req) {
         let uniqueSecurityArray = [];
         if (req.security != undefined) {
