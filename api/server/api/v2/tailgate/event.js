@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 require('dotenv').config();
 
-const Event = require('../../../models/tailgate//Event');
+const Event = require('../../../models/tailgate/Event');
 const base = require('../../../models/core/base');
 const logger = require('../../../logs');
 const router = express.Router();
@@ -60,10 +60,6 @@ router.post('/createEvents', async (req, res, next) => {
     console.log("The vehicle image path is ", vehicleImgPath);
     const invoiceImgPath = await store.s3Base64(createdEvent.invoice_image, createdEvent.name + '_invoice_image');
     console.log("The invoice image path is ", invoiceImgPath);
-    /* const vehiclePath = vehicleImgPath.split('folder/');
-    console.log("The vehicle path is ", vehiclePath);
-    const invoicePath = invoiceImgPath.split('folder/');
-    console.log("The invoice path is ", invoicePath); */
     const updateEvent = await Event.update({ 'eventId': createdEvent._id }, { 'invoice_image': invoiceImgPath, 'vehicle_image': vehicleImgPath });
     res.json({ "message": "created successful" });
   } catch (err) {

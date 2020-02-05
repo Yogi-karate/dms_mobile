@@ -29,7 +29,10 @@ const URL_MAP = {
 
 const server = express();
 
-server.use(express.json());
+//server.use(express.json());
+server.use(express.json({limit: '50mb'}));
+server.use(express.urlencoded({limit: '50mb'}));
+
 logger.stream = {
     write: function(message, encoding){
         logger.info(message);
