@@ -31,6 +31,16 @@ router.use((req, res, next) => {
         })(req, res, next);
     }
 });
+router.get('/user', async (req, res, next) => {
+    try {
+        console.log("the user is",req.user);
+        res.json( req.user );
+    } catch (err) {
+        next(err);
+    }
+});
+
+
 router.get('/roles', async (req, res, next) => {
     try {
         let result = await base.getUserRole(req.user);

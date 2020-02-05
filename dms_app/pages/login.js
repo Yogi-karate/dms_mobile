@@ -10,9 +10,9 @@ import {
     Fade
 } from "@material-ui/core";
 import classnames from "classnames";
-import { getLoginCreds } from '../../lib/api/admin';
+import { getLoginCreds } from '../lib/api/admin';
 import Router from 'next/router';
-import { login } from '../../lib/store';
+import { login } from '../lib/store';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
@@ -66,11 +66,12 @@ class Login extends React.Component {
     async checkForLoginUser() {
         try {
             this.setState({ isLoading: true });
-            const data = await getLoginCreds(this.state);
+            const data = await getLoginCreds({"mobile":"1111111111","password":"admin:01"});
             console.log("The result is ", data);
             if (data.error === undefined || data.error === null || data.error === "") {
+                console.log("user from backend api ",data);
                 this.props.login(data);
-                document.location.pathname = "/"
+                Router.push('/');
             } else {
                 console.log("Wrong input", this.props.errorValue);
                 this.setState({ error: "Email/Password incorrect" });

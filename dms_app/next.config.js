@@ -9,6 +9,7 @@ module.exports = {
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
+    api_port:process.env.API_PORT,
     port:process.env.PORT,
     env:process.env.NODE_ENV,
     mode:process.env.MODE,

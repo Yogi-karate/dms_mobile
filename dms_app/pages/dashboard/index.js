@@ -4,10 +4,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
-import withAuth from '../lib/withAuth';
-import withLayout from '../lib/withLayout';
+import withAuth from '../../lib/withAuth';
+import withLayout from '../../lib/withLayout';
 
-import DMSDashboard from '../components/dashboard/DMSManagerDashboard';
+import DMSDashboard from '../../components/dashboard/DMSManagerDashboard';
 
 
 class Index extends React.Component {
