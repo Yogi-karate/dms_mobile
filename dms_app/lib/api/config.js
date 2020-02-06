@@ -6,9 +6,10 @@ export const getRootUrl = () => {
   console.log(publicRuntimeConfig.port) // Will be available on both server and client
   const port = publicRuntimeConfig.api_port || 8000;
   const dev = publicRuntimeConfig.env !== 'production';
+  const API_URL = publicRuntimeConfig.api_host;
   const host = publicRuntimeConfig.mode !='dev' ? publicRuntimeConfig.phost:publicRuntimeConfig.dhost
   console.log("the host for api is ",host) // Will only be available on the server side
-  const ROOT_URL = dev ? `http://localhost:${port}` : host;
+  const ROOT_URL = dev ? `${API_URL}:${port}` : host;
   return ROOT_URL;
 }
 export const getDashboardYear = () => {
