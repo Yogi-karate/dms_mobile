@@ -62,7 +62,7 @@ export default (
         return;
       }
       if (logoutRequired && user) {
-        Router.push('/dashboard');
+        Router.push('/');
       }
       if (adminRequired && (!user || !user.isAdmin)) {
         Router.push('/');
