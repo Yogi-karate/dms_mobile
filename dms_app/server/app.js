@@ -40,7 +40,6 @@ app.prepare().then(() => {
                 req.user = user;
             } catch (error) {
                 console.log(error);
-                res.redirect('/login');
             }
         } else {
             console.log("User is already there in request");

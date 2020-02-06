@@ -58,14 +58,14 @@ export default (
         this.props.userTeam(teams);
       }
       if (loginRequired && !logoutRequired && (!user || !loggedIn)) {
-        Router.push('/login', '/login');
+        Router.push('/');
         return;
       }
       if (logoutRequired && user) {
         Router.push('/dashboard');
       }
       if (adminRequired && (!user || !user.isAdmin)) {
-        Router.push('/daashboard');
+        Router.push('/');
       }
     }
     async getRoles() {
@@ -108,6 +108,7 @@ export default (
       const { user } = this.props;
       const  loggedIn = this.state.loggedIn;
       console.log("The loggedin props in withAuth --- render", loggedIn);
+      console.log("The loggedin props in withAuth --- render", user);
       if (loginRequired && !logoutRequired && (!user || !loggedIn)) {
         return null;
       }
