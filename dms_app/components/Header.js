@@ -20,11 +20,11 @@ const optionsMenu = [
   },
   {
     text: 'PriceList',
-    href: '/priceListImport',
+    href: '/priceList',
   },
   {
     text: 'SaleData',
-    href: '/saleDataImport',
+    href: '/sale',
   }
 ];
 

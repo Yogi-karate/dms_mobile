@@ -7,7 +7,7 @@ export default async function sendRequest(path, opts = {}) {
   });
   const response = await fetch(
     `${getRootUrl()}${path}`,
-    Object.assign({ method: 'POST', credentials: 'same-origin' }, opts, { headers }),
+    Object.assign({ method: 'POST', credentials: 'include' }, opts, { headers }),
   );
     if(response.status != 200){
     //console.log("Invalid response ",response);

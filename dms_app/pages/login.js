@@ -66,12 +66,12 @@ class Login extends React.Component {
     async checkForLoginUser() {
         try {
             this.setState({ isLoading: true });
-            const data = await getLoginCreds({"mobile":"1111111111","password":"admin:01"});
+            const data = await getLoginCreds(this.state);
             console.log("The result is ", data);
             if (data.error === undefined || data.error === null || data.error === "") {
                 console.log("user from backend api ",data);
                 this.props.login(data);
-                Router.push('/');
+                Router.push('/dashboard');
             } else {
                 console.log("Wrong input", this.props.errorValue);
                 this.setState({ error: "Email/Password incorrect" });

@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const next = require('next');
 const helmet = require('helmet');
-const getUser = require ('./user');
+const getUser = require('./user');
 
 require('dotenv').config();
 
@@ -33,12 +33,17 @@ app.prepare().then(() => {
         if (req.headers && req.headers.cookie) {
             headers.cookie = req.headers.cookie;
         }
-        try {
-            const user = await getUser({ headers });
-           // console.log("the user object from api is ",user);
-            req.user = user;
-        } catch (error) {
-            console.log(error);
+        if (!req.user) {
+            console.log("Hitting api for getting user details");
+            try {
+                const user = await getUser({ headers });
+                req.user = user;
+            } catch (error) {
+                console.log(error);
+                res.redirect('/login');
+            }
+        } else {
+            console.log("User is already there in request");
         }
         next();
     });
@@ -50,7 +55,6 @@ app.prepare().then(() => {
             console.log("the user is present in req");
             redirectUrl = `dashboard`;
         }
-        console.log("the user NOT NOT present in req");
         res.redirect(`${URL_APP}/${redirectUrl}`);
     });
     server.get('*', (req, res) => {

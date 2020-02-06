@@ -58,14 +58,14 @@ export default (
         this.props.userTeam(teams);
       }
       if (loginRequired && !logoutRequired && (!user || !loggedIn)) {
-        Router.push('/public/login', '/login');
+        Router.push('/login', '/login');
         return;
       }
       if (logoutRequired && user) {
-        Router.push('/');
+        Router.push('/dashboard');
       }
       if (adminRequired && (!user || !user.isAdmin)) {
-        Router.push('/');
+        Router.push('/daashboard');
       }
     }
     async getRoles() {
@@ -91,7 +91,7 @@ export default (
     static async getInitialProps(ctx) {
       console.log("Get intial props being called---------");
       const isFromServer = !!ctx.req;
-      const user = ctx.req ? ctx.req.user && ctx.req.user.toObject() : globalUser;
+      const user = ctx.req ? ctx.req.user && ctx.req.user : globalUser;
       if (isFromServer && user) {
         user._id = user._id.toString();
       }
