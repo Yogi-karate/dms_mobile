@@ -39,6 +39,16 @@ router.get('/listLocationRegistrations', async (req, res, next) => {
     }
 });
 
+router.get('/getLocation/:locationId', async (req, res, next) => {
+    try {
+        console.log("Inside get location based on id api");
+        const LocationRegs = await LocationRegistration.listById(req.params.locationId);
+        res.json(LocationRegs);
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/listSecurityLocations', async (req, res, next) => {
     try {
         console.log("Inside listSecurityLocations reg api");
@@ -66,17 +76,6 @@ router.post('/createLocationRegistration', async (req, res, next) => {
         const createdLocationResult = await LocationRegistration.add(req.body);
         res.json({ "message": createdLocationResult });
     } catch (err) {
-        next(err);
-    }
-});
-
-router.get('/listLocations', async (req, res, next) => {
-    try {
-        console.log("Inside list locations api to get all locations from odoo");
-        const locations = await base.listLocations(req.user);
-        res.json(locations);
-    } catch (err) {
-        //res.json({ error: err.message || err.toString() });
         next(err);
     }
 });
