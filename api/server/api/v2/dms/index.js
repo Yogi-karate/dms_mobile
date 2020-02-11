@@ -7,6 +7,8 @@ const tasksApi = require('./tasks');
 const dashboardApi = require('./dashboard');
 const adminApi = require('./admin');
 const stockApi = require('./stock');
+const serviceApi = require('./service');
+
 
 const logger = require('../../../logs');
 
@@ -26,6 +28,8 @@ function api(server,URLPrefix) {
   server.use(URLPrefix+'/admin', adminApi, handleError);
   server.use(URLPrefix+'/stock', stockApi, handleError);
   server.use(URLPrefix+'/vehicleLeads', vehicleLeadApi, handleError);
+  server.use(URLPrefix+'/service', serviceApi, handleError);
+
 }
 
 module.exports = api;
