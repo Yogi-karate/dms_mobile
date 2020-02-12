@@ -39,11 +39,11 @@ class Service {
         let server = odoo.getOdoo(user.email);
         let domain = []
         if (status) {
-            console.log("the state is ",status);
+            console.log("the state is ", status);
             domain.push(["status", "=", status]);
         }
-        bookingDetails = await server.search_read(model, { domain: domain, fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
-        if(!bookingDetails) return {result:null}
+        bookingDetails = await server.search_read(model, { domain: domain, fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant"], sort: "id desc" });
+        if (!bookingDetails) return { result: null }
         bookingDetails.records = base.cleanModels(bookingDetails.records);
         return { result: bookingDetails };
     }
@@ -54,7 +54,7 @@ class Service {
         if (callType === 'Service') {
             model = 'service.booking';
             let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
+            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant"], sort: "id desc" });
             bookingDetails.records = base.cleanModels(bookingDetails.records);
         } else {
             model = 'insurance.booking';
@@ -65,28 +65,18 @@ class Service {
         return { result: bookingDetails };
     }
 
-
-    async searchLeadsByState(user, { state, callType, userId }) {
-        let result = null;
+    async serviceBookingCount(user, { callType }) {
+        let result = [];
         let server = odoo.getOdoo(user.email);
-        let model = 'dms.vehicle.lead';
-        let domain = [];
-        if (state != null) {
-            domain = this.getActivityDomain(state, callType);
+        let model = '';
+        if (callType === 'Service') {
+            model = 'service.booking';
+        } else {
+            model = 'insurance.booking';
         }
-        if (userId != null && !isNaN(userId) && userId != '') {
-            domain.push(["user_id", "=", parseInt(userId)]);
-        }
-        result = await server.search_read(model, { domain: domain, fields: ["name", "id", "current_due_date", "mobile", "partner_name", "user_id", "team_id", "stage_id", "call_state", "disposition"] });
-        result.records.forEach(record => {
-            record.activity_date_deadline = record.current_due_date;
-            delete record.current_due_date;
-        });
-        result.records.sort(function (record1, record2) {
-            var dateA = new Date(record1.activity_date_deadline), dateB = new Date(record2.activity_date_deadline)
-            return dateA - dateB //sort by date ascending
-        });
-        result.records = base.cleanModels(result.records);
+        let self = this;
+        let count = await server.search(model, { domain: [] }, true);
+        result.push({ result: count });
         return result;
     }
 }

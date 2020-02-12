@@ -36,7 +36,7 @@ router.use((req, res, next) => {
 router.get('/dashboard', async (req, res, next) => {
     try {
 
-        console.log("In dashboard call ------",service);
+        console.log("In dashboard call ------", service);
         let result = await service.getDashboardCounts(req.user, { callType: req.query.callType });
         res.json(result);
     } catch (err) {
@@ -46,8 +46,26 @@ router.get('/dashboard', async (req, res, next) => {
 router.get('/search', async (req, res, next) => {
     try {
 
-        console.log("In dashboard call ------",service);
+        console.log("In dashboard call ------", service);
         let result = await service.searchBookings(req.user, { status: req.query.status });
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/serviceBookingCount', async (req, res, next) => {
+    try {
+        let result = await service.serviceBookingCount(req.user, { callType: req.query.callType });
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/serviceBookingDetails', async (req, res, next) => {
+    try {
+        let result = await service.serviceBookingDetails(req.user, { callType: req.query.callType });
         res.json(result);
     } catch (err) {
         next(err);

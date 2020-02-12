@@ -75,21 +75,5 @@ router.post('/activity/create', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/serviceBookingCount', async (req, res, next) => {
-  try {
-    let result = await vehicleLead.serviceBookingCount(req.user, { callType: req.query.callType });
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
-router.get('/serviceBookingDetails', async (req, res, next) => {
-  try {
-    let result = await vehicleLead.serviceBookingDetails(req.user, { callType: req.query.callType });
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
 
 module.exports = router;
