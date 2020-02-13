@@ -16,39 +16,6 @@ class VehicleLead {
         return result;
     }
 
-    async serviceBookingCount(user, { callType }) {
-        let result = [];
-        let server = odoo.getOdoo(user.email);
-        let model = '';
-        if (callType === 'Service') {
-            model = 'service.booking';
-        } else {
-            model = 'insurance.booking';
-        }
-        let self = this;
-        let count = await server.search(model, { domain: [] }, true);
-        result.push({ result: count });
-        return result;
-    }
-
-    async serviceBookingDetails(user, { callType }) {
-        let bookingDetails = null;
-        let server = odoo.getOdoo(user.email);
-        let model = '';
-        if (callType === 'Service') {
-            model = 'service.booking';
-            let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id"], sort: "id desc" });
-            bookingDetails.records = base.cleanModels(bookingDetails.records);
-        } else {
-            model = 'insurance.booking';
-            let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "idv", "previous_insurance_company", "policy_no", "cur_final_premium", "cur_ncb", "cur_dip_or_comp", "pick_up_address", "rollover_company"], sort: "id desc" });
-            bookingDetails.records = base.cleanModels(bookingDetails.records);
-        }
-        return { result: bookingDetails };
-    }
-
     getActivityDomain(state, callType) {
         let domain = [];
         var today = new Date().toISOString().slice(0, 10);
