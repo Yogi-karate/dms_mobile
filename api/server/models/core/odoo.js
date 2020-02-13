@@ -228,7 +228,7 @@ Odoo.prototype.action_feedback_disposition = async function (model, { id, feedba
             disposition_id: disposition_id
         },
         model,
-        method: 'action_feedback_disposition',
+        method: 'action_apply_disposition',
     }, callback);
     return result
 };

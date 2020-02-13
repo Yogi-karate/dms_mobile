@@ -40,7 +40,7 @@ logger.stream = {
         logger.info(message);
     }
 };
-server.use(cors({ origin: 'http://localhost:8003', credentials: true }));
+server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 server.use(require("morgan")("combined", { "stream": logger.stream }));
 
 // confuring MongoDB session store

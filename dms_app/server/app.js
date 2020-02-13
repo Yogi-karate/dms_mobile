@@ -31,10 +31,11 @@ app.prepare().then(() => {
         console.log("Calling middleware for get user");
         const headers = {};
         if (req.headers && req.headers.cookie) {
+            console.log("Heaeders cookie",req.headers.cookie);
             headers.cookie = req.headers.cookie;
         }
         if (!req.user) {
-            console.log("Hitting api for getting user details");
+            console.log("Hitting api for getting user details",headers);
             try {
                 const user = await getUser({ headers },API_URL);
                 req.user = user;

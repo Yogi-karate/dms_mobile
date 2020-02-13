@@ -88,7 +88,7 @@ class TRTable extends Component {
         return [];
       }
       let result = data.records.map(record => {
-        return [record.name, record.mobile, record.partner_name, record.stage_id[1], record.user_id[1], record.activity_date_deadline];
+        return [record.name, record.mobile, record.partner_name, record.stage_id[1], record.user_id[1]];
       })
       return result;
     } catch (err) {
