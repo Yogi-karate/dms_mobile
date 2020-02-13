@@ -1,4 +1,4 @@
-FROM tramm/dms_node_master
+FROM tramm/dms_app_master
 MAINTAINER tramm
 
 COPY . /var/www/app

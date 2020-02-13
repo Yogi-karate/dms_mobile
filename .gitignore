@@ -7,3 +7,5 @@ dist
 .next
 Android/DealerManagmentSystem/.idea/vcs.xml
 .env
+.serverless
+logs
