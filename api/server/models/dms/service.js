@@ -42,7 +42,7 @@ class Service {
             console.log("the state is ", status);
             domain.push(["status", "=", status]);
         }
-        bookingDetails = await server.search_read(model, { domain: domain, fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant"], sort: "id desc" });
+        bookingDetails = await server.search_read(model, { domain: domain, fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant", "pick_up_address"], sort: "id desc" });
         if (!bookingDetails) return { result: null }
         bookingDetails.records = base.cleanModels(bookingDetails.records);
         return { result: bookingDetails };
@@ -54,7 +54,7 @@ class Service {
         if (callType === 'Service') {
             model = 'service.booking';
             let self = this;
-            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant","pick_up_address"], sort: "id desc" });
+            bookingDetails = await server.search_read(model, { domain: [], fields: ["mobile", "partner_name", "booking_type", "dop", "vehicle_model", "location_id", "service_type", "user_id", "product_variant", "pick_up_address"], sort: "id desc" });
             bookingDetails.records = base.cleanModels(bookingDetails.records);
         } else {
             model = 'insurance.booking';
