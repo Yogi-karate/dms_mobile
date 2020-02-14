@@ -9,7 +9,7 @@ require('dotenv').config();
 const dev = process.env.NODE_ENV !== 'production';
 const sessionSecret = process.env.SESSION_SECRET;
 const port = process.env.PORT || 8003;
-const ROOT_URL = dev ? `http://localhost:${port}` : 'https://dev.api.turnright.tech';
+const ROOT_URL = dev ? process.env.URL_APP : 'http://api.turnright.tech';
 const API_URL = process.env.API_URL;
 let URL_APP = ROOT_URL;
 const app = next({ dev });
