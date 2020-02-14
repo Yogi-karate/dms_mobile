@@ -23,7 +23,7 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 const port = process.env.PORT || 8000;
 const ROOT_URL = dev ? `http://localhost:${port}` : 'http://dev.api.turnright.tech';
 const APP_URL = dev ? process.env.APP_URL : 'http://dashboard.saboo.group';
-
+const COOKIE_DOMAIN = dev ? process.env.COOKIE_DOMAIN : 'turnright.tech';
 const sessionSecret = process.env.SESSION_SECRET;
 
 const URL_MAP = {
@@ -41,7 +41,7 @@ logger.stream = {
         logger.info(message);
     }
 };
-//server.use(cors({ origin: APP_URL, credentials: true }));
+server.use(cors({ origin: APP_URL, credentials: true }));
 server.use(require("morgan")("combined", { "stream": logger.stream }));
 
 // confuring MongoDB session store
@@ -59,6 +59,7 @@ const sess = {
         secure:false,
         httpOnly: false,
         maxAge: 14 * 24 * 60 * 60 * 1000,
+        domain:COOKIE_DOMAIN,
     },
 };
 //configuring the AWS environment
