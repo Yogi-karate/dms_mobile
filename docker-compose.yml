@@ -12,7 +12,6 @@ x-apirunvars: &apirunvars
   URL_APP: ${URL_APP:-http://app.dms.localhost:3000}
   URL_API: ${URL_API:-http://api.dms.localhost:8000}
   COOKIE_DOMAIN: ${COOKIE_DOMAIN:-.dms.localhost}
-  MONGO_URL: ${MONGO_URL:-mongodb://saas:secret@saas-mongo:27017/saas}
   SESSION_NAME: ${SESSION_NAME:-saas.localhost.sid}
   SESSION_SECRET: ${SESSION_SECRET:-D0cK3RS3Cr3t!}
   GOOGLE_CLIENTID:

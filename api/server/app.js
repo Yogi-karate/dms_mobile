@@ -21,7 +21,8 @@ const MONGO_URL = process.env.MONGO_URL_TEST;
 mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const port = process.env.PORT || 8000;
-const ROOT_URL = dev ? `http://localhost:${port}` : 'https://dev.api.turnright.tech';
+const ROOT_URL = dev ? `http://localhost:${port}` : 'http://dev.api.turnright.tech';
+const APP_URL = dev ? process.env.APP_URL : 'http://dashboard.saboo.group';
 
 const sessionSecret = process.env.SESSION_SECRET;
 
@@ -40,7 +41,7 @@ logger.stream = {
         logger.info(message);
     }
 };
-server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+//server.use(cors({ origin: APP_URL, credentials: true }));
 server.use(require("morgan")("combined", { "stream": logger.stream }));
 
 // confuring MongoDB session store
